@@ -1,0 +1,42 @@
+import React, { useState, useEffect } from 'react'
+import { LazyLoadImage, trackWindowScroll } from 'react-lazy-load-image-component';
+
+function Img(props) {
+
+    const [loaded, setLoaded] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
+
+    useEffect(() => {
+        if(loaded)
+            setIsLoaded(true)
+    }, [loaded])
+
+    return (
+        <div>
+                <LazyLoadImage 
+                threshold={-100}
+                scrollPosition={props.scrollPosition}
+                src={props.src} style={{
+                    ...props.style, 
+                    transition: isLoaded ? "1s ease-out" : 0,
+                    opacity: isLoaded ? 1 : 0,
+                    transform: isLoaded ? "scale(1)" : "scale(0.1)",
+                    position: loaded ? "relative" : "absolute", 
+                    top: 0, left: 0,
+                    zIndex: loaded ? 0 : -1,
+                    }} afterLoad={() => setLoaded(true)} />
+                <div className="flone-preloader-wrapper" 
+                    style={{
+                        ...props.style, position: "relative", zIndex: 1,
+                        display: loaded ? "none": "block",
+                        }}>
+                    <div className="flone-preloader">
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div> 
+        </div>
+    )
+}
+
+export default trackWindowScroll(Img)

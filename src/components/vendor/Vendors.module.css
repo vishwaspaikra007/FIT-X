@@ -1,0 +1,13 @@
+.vendorsWrap {
+    width: 100%;
+    padding: 0 10px;
+    display: grid;
+    margin: 20px 0;
+}
+.vendorsWrapAsComponent {
+    width: max-content !important;
+    grid-auto-flow: column;
+}
+.vendorsWrapAsPage {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}

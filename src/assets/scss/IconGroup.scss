@@ -1,0 +1,6 @@
+.pe-7s-like, .pe-7s-shopbag, .pe-7s-shuffle {
+    color: white;
+    &:hover {
+        color: $theme-color;
+    }
+}
