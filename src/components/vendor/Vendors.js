@@ -30,12 +30,12 @@ export default function Vendors(props) {
                 top: 0,
                 zIndex: -1,
                 margin: "10px",
-                background: props.asComponent ? "yellow" : "radial-gradient(#bba22f, yellow)",
-                boxShadow: "inset 0 -50px 100px",
+                background: "orange",
                 borderRadius: "10px",
                 width: "calc(100% - 20px)",
                 height: "100%",
                 boxSizing: "border-box",
+                boxShadow: "0 0 12px -4px", 
             }}
             ></div>
             <div style={{
@@ -56,7 +56,7 @@ export default function Vendors(props) {
                                 borderRadius: "5px",
                                 margin: "10px",
                                 overflow: "hidden",
-                                boxShadow: "0px 0px 6px -3px",
+                                boxShadow: "0px 0px 12px -4px black",
                                 display: "block",
                                 cursor: "pointer",
                                 background: "white",

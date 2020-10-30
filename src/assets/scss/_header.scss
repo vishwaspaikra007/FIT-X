@@ -216,6 +216,12 @@
             &:hover a::before {
               opacity: 1;
             }
+            .submenu > li > a::before {
+              opacity: 0;
+            }
+            .submenu > li > a:hover::before {
+              opacity: 1;
+            }
             &:hover a {
               padding-left: 12px;
             }
@@ -639,7 +645,11 @@
       opacity: 0;
       border: 1px solid #ebebeb;
       border-radius: 5px;
+      color: white;
       background: #353434 none repeat scroll 0 0;
+      h6, h4, a {
+      color: white;
+      }
       &.cart-visible,
       &.active {
         visibility: visible;
@@ -703,7 +713,7 @@
               a {
                 line-height: 1.2;
 
-                color: #353434;
+                color: white;
                 &:hover {
                   color: $theme-color;
                   // background: $theme-contrast-color;
@@ -756,6 +766,9 @@
 
           margin-bottom: 20px;
           padding: 16px 40px 17px;
+          &:hover{
+            color: black;
+          }
         }
       }
     }
@@ -764,7 +777,8 @@
     margin-top: 40px;
     .same-style {
       > a {
-        color: #fff;
+        // color: #fff;
+        
       }
 
       &.cart-wrap,
@@ -774,7 +788,7 @@
       &.header-search {
         > button,
         & > a {
-          color: #fff;
+          // color: #fff;
           span {
             &.count-style {
               color: #353434;
