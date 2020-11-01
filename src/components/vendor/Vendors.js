@@ -19,25 +19,45 @@ export default function Vendors(props) {
             })
     }, [])
     return (
-        <div  style={{
+        <div style={{
             width: "100%",
             position: "relative",
-            marginBottom: "45px"
+            marginBottom: "45px",
+            paddingTop: "60px",
         }}>
             <div style={{
                 display: props.asComponent ? "block" : "hidden",
                 position: "absolute",
                 top: 0,
-                zIndex: -1,
+                zIndex: 0,
                 margin: "10px",
                 background: "orange",
                 borderRadius: "10px",
                 width: "calc(100% - 20px)",
                 height: "100%",
                 boxSizing: "border-box",
-                boxShadow: "0 0 12px -4px", 
+                boxShadow: "0px 0px 12px -4px, inset 0 -12px 63px #764c00",
             }}
-            ></div>
+            >
+                <div style={{
+                    padding: "30px 20px",
+                    fontWeight: "bold",
+                    color: "white"
+                }}>
+                    <span style={{
+                        float: "Left",
+                    }}>Vendors</span>
+                    {
+                        props.asComponent && vendors.length > 0 ?
+                            <Link to="/vendors">
+                                <span style={{
+                                    float: "right",
+                                    color: "white",
+                                }}>See All</span>
+                            </Link> : null
+                    }
+                </div>
+            </div>
             <div style={{
                 width: "100%",
                 position: "relative",
@@ -72,12 +92,13 @@ export default function Vendors(props) {
                                     zIndex: "2",
                                     position: "relative",
                                     borderRadius: "0 0 5px",
+                                    height: "100%",
                                 }}><b>{vendor.name}</b></p>
                             </Link>
                         ))
                     }
                     <Link to="/vendors" style={{
-                        display: props.asComponent ? "flex" : "none"
+                        display: props.asComponent && vendors.length > 0 ? "flex" : "none"
                     }}>
                         <div
                             style={{
@@ -86,7 +107,7 @@ export default function Vendors(props) {
                                 display: "flex",
                                 justifyContent: "center",
                                 fontWeight: "bold",
-                                color: "black"
+                                color: "white"
                             }}>
                             Show more
                 </div>

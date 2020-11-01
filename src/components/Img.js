@@ -12,12 +12,15 @@ function Img(props) {
     }, [loaded])
 
     return (
-        <div>
+        <div style={{
+            position: "relative",
+        }}>
                 <LazyLoadImage 
-                threshold={-100}
+                className={[props.className, props.className].join(" ")}
                 scrollPosition={props.scrollPosition}
                 src={props.src} style={{
                     ...props.style, 
+                    display: "block",
                     transition: isLoaded ? "1s ease-out" : 0,
                     opacity: isLoaded ? 1 : 0,
                     transform: isLoaded ? "scale(1)" : "scale(0.1)",
@@ -25,7 +28,7 @@ function Img(props) {
                     top: 0, left: 0,
                     zIndex: loaded ? 0 : -1,
                     }} afterLoad={() => setLoaded(true)} />
-                <div className="flone-preloader-wrapper" 
+                <div className={["flone-preloader-wrapper", props.className].join(" ")} 
                     style={{
                         ...props.style, position: "relative", zIndex: 1,
                         display: loaded ? "none": "block",

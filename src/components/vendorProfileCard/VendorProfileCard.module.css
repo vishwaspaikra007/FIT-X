@@ -1,0 +1,41 @@
+.vendorCardWrap {
+    width: 250px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr;
+    margin: 10px auto;
+    box-shadow: 0 0 12px -4px black;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.vendorCardWrap .vendorCardProfileBackground {
+    background-color: orange;
+    height: 100px;
+    box-shadow: inset 0 0 46px rgb(65, 46, 11);
+}
+.vendorCardWrap .img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid white;
+    margin: auto;
+    margin-top: -50px;
+}
+.vendorCardWrap p {
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    margin: auto;
+    padding: 10px 0;
+    animation: letter-spacing-animation 2s ease-in-out;
+}
+.vendorCardWrap .rating {
+    margin: auto;
+    padding-bottom: 10px;
+}
+@keyframes letter-spacing-animation {
+    0% {
+        letter-spacing: 5px;
+    } 100% {
+        letter-spacing: 2px;
+    }
+}

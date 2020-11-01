@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import LayoutOne from '../layouts/LayoutOne'
+import VendorProfileCard from '../components/vendorProfileCard/VendorProfileCard'
 
 export default function Vendor(props) {
     
@@ -7,7 +8,7 @@ export default function Vendor(props) {
     return (
         <LayoutOne>
             <div>
-                {vendor.name}
+                <VendorProfileCard vendor={vendor}/>
             </div>
         </LayoutOne>
     )
