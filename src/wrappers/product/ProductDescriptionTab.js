@@ -43,7 +43,13 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="productDescription">
-                {productFullDesc}
+                {productFullDesc.map((point, index) => {
+                  return (
+                    <div key={index}>
+                      * {point}
+                    </div>
+                  )
+                })}
               </Tab.Pane>
               <Tab.Pane eventKey="productReviews">
                 <div className="row">
@@ -178,9 +184,9 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
   );
 };
 
-ProductDescriptionTab.propTypes = {
-  productFullDesc: PropTypes.string,
-  spaceBottomClass: PropTypes.string
-};
+// ProductDescriptionTab.propTypes = {
+//   productFullDesc: PropTypes.string,
+//   spaceBottomClass: PropTypes.string
+// };
 
 export default ProductDescriptionTab;

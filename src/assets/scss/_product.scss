@@ -382,6 +382,9 @@
       font-size: 16px;
 
       margin: 0;
+      a {
+        color: black;
+      }
     }
     .product-rating {
       margin: 3px 0 3px;
@@ -1581,7 +1584,7 @@
       &.title-price-wrap-2-white {
         h3 {
           a {
-            color: #fff;
+            color: $theme-contrast-color;
             &:hover {
               color: $theme-color;
             }
@@ -2887,6 +2890,7 @@
     .product-content {
       h3 {
         a {
+
           &:hover {
             color: #bca487;
           }

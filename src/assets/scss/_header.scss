@@ -2,7 +2,7 @@
 
 .header-area {
   position: relative;
-  background: #353434;
+  background: #1a1a1a;
   &.header-absolute {
     position: absolute;
     z-index: 99;
@@ -30,7 +30,7 @@
   animation: 700ms ease-in-out 0s normal none 1 running fadeInDown;
 
   border-bottom: 0 solid #4a90e2;
-  background-color: #353434;
+  background-color: #1a1a1a;
   box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.06);
 
   .center-menu-logo {
@@ -139,12 +139,10 @@
 }
 
 .main-menu {
-  background: #353434;
+  background: #1a1a1a;
   nav {
     ul {
       display: block;
-
-      margin-top: -5px;
 
       text-align: center;
       li {
@@ -154,7 +152,7 @@
 
         padding: 0 15px;
         ul.submenu {
-          background: #353434;
+          background: #1a1a1a;
           position: absolute;
           z-index: 999;
           top: 100%;
@@ -171,7 +169,7 @@
           transform: rotateX(90deg);
           transform-origin: center top 0;
 
-          background: #353434 none repeat scroll 0 0;
+          background: #1a1a1a none repeat scroll 0 0;
           box-shadow: 0 0 7px 0.5px rgba(0, 0, 0, 0.15);
           li {
             display: block;
@@ -228,7 +226,7 @@
           }
         }
         ul.mega-menu {
-          background: #353434;
+          background: #1a1a1a;
           position: absolute;
           z-index: 999;
           top: 100%;
@@ -245,7 +243,7 @@
           transform-origin: center top 0;
           text-align: left;
 
-          background-color: #353434;
+          background-color: #1a1a1a;
           box-shadow: 0 1px 7px -2px rgba(0, 0, 0, 0.3);
           @media #{$lg-layout} {
             left: -75px;
@@ -345,13 +343,13 @@
         }
         &:hover > ul.submenu {
           visibility: visible;
-          background: #353434;
+          background: #1a1a1a;
 
           transform: rotateX(0deg);
         }
         &:hover > ul.mega-menu {
           visibility: visible;
-          background: #353434;
+          background: #1a1a1a;
 
           transform: rotateX(0deg);
         }
@@ -364,7 +362,7 @@
         > a {
           font-size: 15px;
           font-weight: 500;
-          line-height: 94px;
+          line-height: 75px;
 
           display: inline-block;
 
@@ -389,7 +387,7 @@
   }
   &.menu-white {
     nav {
-      background: #353434;
+      background: #1a1a1a;
       ul {
         text-align: left;
         li {
@@ -461,7 +459,7 @@
   display: flex;
   justify-content: flex-end;
 
-  margin-top: 32px;
+  margin-top: 22px;
   @media #{$md-layout} {
     margin-top: 0;
   }
@@ -516,7 +514,7 @@
       text-align: left;
 
       opacity: 0;
-      background: #353434 none repeat scroll 0 0;
+      background: #1a1a1a none repeat scroll 0 0;
       box-shadow: 0 1px 7px -2px rgba(0, 0, 0, 0.3);
       &.active {
         visibility: visible;
@@ -646,7 +644,7 @@
       border: 1px solid #ebebeb;
       border-radius: 5px;
       color: white;
-      background: #353434 none repeat scroll 0 0;
+      background: #1a1a1a none repeat scroll 0 0;
       h6, h4, a {
       color: white;
       }
@@ -865,7 +863,7 @@
       transform-origin: center top 0;
 
       opacity: 0;
-      background: #353434 none repeat scroll 0 0;
+      background: #1a1a1a none repeat scroll 0 0;
       box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
       &.active {
         visibility: visible;
@@ -984,7 +982,6 @@
 }
 
 .header-top-area {
-  border-bottom: 1px solid #d5d4d4;
   .header-top-wap {
     display: flex;
     align-items: center;
@@ -1048,7 +1045,7 @@
       content: "";
       transform: translateY(-50%);
 
-      background-color: #353434;
+      background-color: #1a1a1a;
       @media #{$xs-layout} {
         right: -10px;
       }
@@ -1102,7 +1099,7 @@
       text-align: left;
 
       opacity: 0;
-      background: #353434 none repeat scroll 0 0;
+      background: #1a1a1a none repeat scroll 0 0;
       box-shadow: 0 1px 7px -2px rgba(0, 0, 0, 0.3);
       ul {
         li {
@@ -1338,7 +1335,7 @@
           z-index: 999;
           top: 0;
           left: 100%;
-          background: #353434;
+          background: #1a1a1a;
 
           display: block;
           visibility: hidden;
@@ -1350,7 +1347,7 @@
           transform: rotateX(90deg);
           transform-origin: center top 0;
 
-          background: #353434 none repeat scroll 0 0;
+          background: #1a1a1a none repeat scroll 0 0;
           box-shadow: 0 0 7px 0.5px rgba(0, 0, 0, 0.15);
           @media #{$lg-layout} {
             overflow-y: auto;
@@ -1381,7 +1378,7 @@
               }
               &:hover > ul.submenu {
                 visibility: visible;
-                background: #353434;
+                background: #1a1a1a;
 
                 transform: rotateX(0deg);
               }
@@ -1413,7 +1410,7 @@
         
         &:hover > ul.submenu {
           visibility: visible;
-          background: #353434;
+          background: #1a1a1a;
 
           transform: rotateX(0deg);
         }
@@ -1422,7 +1419,7 @@
           z-index: 999;
           top: 0;
           left: 100%;
-          background: #353434;
+          background: #1a1a1a;
 
           display: block;
           visibility: hidden;
@@ -1435,7 +1432,7 @@
           transform-origin: center top 0;
           text-align: left;
 
-          background-color: #353434;
+          background-color: #1a1a1a;
           box-shadow: 0 1px 7px -2px rgba(0, 0, 0, 0.3);
           @media #{$xx-layout} {
             top: -50px;
@@ -1539,7 +1536,7 @@
         }
         &:hover > ul.mega-menu {
           visibility: visible;
-          background: #353434;
+          background: #1a1a1a;
 
           transform: rotateX(0deg);
         }
@@ -1674,7 +1671,7 @@
   transform: translateX(-110%);
 
   color: #353535;
-  background: #353434 none repeat scroll 0 0;
+  background: #1a1a1a none repeat scroll 0 0;
   &.inside {
     z-index: 9999;
 
@@ -1975,7 +1972,7 @@
 
 .header-hm8 {
   .main-menu {
-    background: #353434;
+    background: #1a1a1a;
     padding-bottom: 8px;
     nav {
       ul {
@@ -1994,7 +1991,7 @@
 
 
 .header-hm9 {
-  background: #353434;
+  background: #1a1a1a;
   .main-menu {
     nav {
       ul {
@@ -2563,14 +2560,14 @@
 }
 .main-menu ul {
   color: white;
-  background: #353434;
+  background: #1a1a1a;
 }
 .main-menu {
   width: max-content;
-  background: #353434;
+  background: #1a1a1a;
 }
 .sub-menu {
-  background: #353434;
+  background: #1a1a1a;
 }
 .mega-menu {
   max-height: 75vh;

@@ -38,16 +38,21 @@ const ProductGridSingle = ({
           className={`product-wrap ${spaceBottomClass ? spaceBottomClass : ""}`}
         >
           <div className="product-img">
-            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+            <Link 
+            product={product}
+            to={{
+                pathname: process.env.PUBLIC_URL + "/product/" + product.id,
+                state: {product: product}
+                }}>
               <img
                 className="default-img"
-                src={process.env.PUBLIC_URL + product.image[0]}
+                src={process.env.PUBLIC_URL + product.images[0]}
                 alt=""
               />
-              {product.image.length > 1 ? (
+              {product.images.length > 1 ? (
                 <img
                   className="hover-img"
-                  src={process.env.PUBLIC_URL + product.image[1]}
+                  src={process.env.PUBLIC_URL + product.images[1]}
                   alt=""
                 />
               ) : (
@@ -131,7 +136,7 @@ const ProductGridSingle = ({
           <div className="product-content text-center">
             <h3>
               <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                {product.name}
+                {product.productName}
               </Link>
             </h3>
             {product.rating && product.rating > 0 ? (
@@ -150,7 +155,7 @@ const ProductGridSingle = ({
                   </span>
                 </Fragment>
               ) : (
-                <span>{currency.currencySymbol + finalProductPrice} </span>
+                <span>{currency.currencySymbol + product.price[0]} </span>
               )}
             </div>
           </div>

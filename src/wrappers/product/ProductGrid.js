@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getProducts } from "../../helpers/product";
 import ProductGridSingle from "../../components/product/ProductGridSingle";
 import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
 import { addToCompare } from "../../redux/actions/compareActions";
+import { firestore } from "../../firebase";
 
 const ProductGrid = ({
-  products,
   currency,
   addToCart,
   addToWishlist,
@@ -17,13 +17,29 @@ const ProductGrid = ({
   wishlistItems,
   compareItems,
   sliderClassName,
-  spaceBottomClass
+  spaceBottomClass,
+  limit
 }) => {
+
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    let productsList = []
+    firestore.collection("products")
+      .orderBy('productName').limit(8).get().then(docs => {
+        docs.forEach(doc => {
+          productsList.push({...doc.data(), id: doc.id})
+        })
+        setProducts(productsList)
+      })
+  }, [])
+
   return (
     <Fragment>
-      {products.map(product => {
+      {products.map((product, index) => {
         return (
           <ProductGridSingle
+            key={index}
             sliderClassName={sliderClassName}
             spaceBottomClass={spaceBottomClass}
             product={product}
@@ -44,7 +60,6 @@ const ProductGrid = ({
                 compareItem => compareItem.id === product.id
               )[0]
             }
-            key={product.id}
           />
         );
       })}

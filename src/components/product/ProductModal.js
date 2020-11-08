@@ -99,13 +99,13 @@ function ProductModal(props) {
         <div className="modal-body">
           <div className="row">
             <div className="col-md-5 col-sm-12 col-xs-12">
-              <div className="product-large-image-wrapper">
+              <div className="product-large-images-wrapper">
                 <Swiper {...gallerySwiperParams}>
-                  {product.image &&
-                    product.image.map((single, key) => {
+                  {product.images &&
+                    product.images.map((single, key) => {
                       return (
                         <div key={key}>
-                          <div className="single-image">
+                          <div className="single-images">
                             <img
                               src={process.env.PUBLIC_URL + single}
                               className="img-fluid"
@@ -117,13 +117,13 @@ function ProductModal(props) {
                     })}
                 </Swiper>
               </div>
-              <div className="product-small-image-wrapper mt-15">
+              <div className="product-small-images-wrapper mt-15">
                 <Swiper {...thumbnailSwiperParams}>
-                  {product.image &&
-                    product.image.map((single, key) => {
+                  {product.images &&
+                    product.images.map((single, key) => {
                       return (
                         <div key={key}>
-                          <div className="single-image">
+                          <div className="single-images">
                             <img
                               src={process.env.PUBLIC_URL + single}
                               className="img-fluid"
@@ -138,7 +138,7 @@ function ProductModal(props) {
             </div>
             <div className="col-md-7 col-sm-12 col-xs-12">
               <div className="product-details-content quickview-content">
-                <h2>{product.name}</h2>
+                <h2>{product.title}</h2>
                 <div className="product-details-price">
                   {discountedprice !== null ? (
                     <Fragment>
@@ -150,7 +150,7 @@ function ProductModal(props) {
                       </span>
                     </Fragment>
                   ) : (
-                    <span>{currency.currencySymbol + finalproductprice} </span>
+                    <span>{currency.currencySymbol + product.price[0]} </span>
                   )}
                 </div>
                 {product.rating && product.rating > 0 ? (
@@ -163,7 +163,7 @@ function ProductModal(props) {
                   ""
                 )}
                 <div className="pro-details-list">
-                  <p>{product.shortDescription}</p>
+                  <p>{product.productDetails[0]}</p>
                 </div>
 
                 {product.variation ? (

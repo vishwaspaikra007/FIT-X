@@ -22,4 +22,4 @@ var firebaseConfig = {
   const increment = firebase.firestore.FieldValue.increment(1)
   const arrayUnion = (newElement) => firebase.firestore.FieldValue.arrayUnion(newElement)
 
-  export {storage, firestore, auth, timestamp, increment, arrayUnion}
+  export {storage, firestore, auth, timestamp, increment, arrayUnion, firebase as default}

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { connect } from "react-redux";
@@ -8,10 +8,23 @@ import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import RelatedProductSlider from "../../wrappers/product/RelatedProductSlider";
 import ProductDescriptionTab from "../../wrappers/product/ProductDescriptionTab";
 import ProductImageDescription from "../../wrappers/product/ProductImageDescription";
+import { firestore } from '../../firebase'
 
-const Product = ({ location, product }) => {
-  const { pathname } = location;
+const Product = ({ location, product: productS1, match }) => {
+  const { params: id } = match;
+  const { pathname } = location
+  const { state: { product: productS2 } } = location
 
+  const [product, setProduct] = useState(
+    productS1 ? productS1 : productS2 ? productS2 : {}
+  )
+  useEffect(() => {
+    if (!productS2 && !productS1) {
+      firestore.collection('products').doc(id).get().then(doc => {
+        setProduct({ ...doc.data(), id: doc.id })
+      })
+    }
+  }, [])
   return (
     <Fragment>
       <MetaTags>
@@ -26,30 +39,34 @@ const Product = ({ location, product }) => {
       <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
         Shop Product
       </BreadcrumbsItem>
+      {
+        !product ? null :
 
-      <LayoutOne headerTop="visible">
-        {/* breadcrumb */}
-        <Breadcrumb />
 
-        {/* product description with image */}
-        <ProductImageDescription
-          spaceTopClass="pt-100"
-          spaceBottomClass="pb-100"
-          product={product}
-        />
+          <LayoutOne headerTop="visible">
+            {/* breadcrumb */}
+            <Breadcrumb />
 
-        {/* product description tab */}
-        <ProductDescriptionTab
-          spaceBottomClass="pb-90"
-          productFullDesc={product.fullDescription}
-        />
+            {/* product description with image */}
+            <ProductImageDescription
+              spaceTopClass="pt-100"
+              spaceBottomClass="pb-100"
+              product={product}
+            />
 
-        {/* related product slider */}
-        <RelatedProductSlider
-          spaceBottomClass="pb-95"
-          category={product.category[0]}
-        />
-      </LayoutOne>
+            {/* product description tab */}
+            <ProductDescriptionTab
+              spaceBottomClass="pb-90"
+              productFullDesc={product.productDetails}
+            />
+            {/*  */}
+            {/* related product slider */}
+            <RelatedProductSlider
+              spaceBottomClass="pb-95"
+              // category={product.weight[0]}
+            />
+          </LayoutOne>
+      }
     </Fragment>
   );
 };

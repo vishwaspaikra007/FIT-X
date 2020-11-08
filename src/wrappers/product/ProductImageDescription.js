@@ -18,6 +18,7 @@ const ProductImageDescription = ({
   wishlistItems,
   compareItems
 }) => {
+  console.log("product", product)
   const wishlistItem = wishlistItems.filter(
     wishlistItem => wishlistItem.id === product.id
   )[0];
@@ -26,11 +27,9 @@ const ProductImageDescription = ({
   )[0];
   const { addToast } = useToasts();
 
-  const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
-  const finalDiscountedPrice = +(
-    discountedPrice * currency.currencyRate
-  ).toFixed(2);
+  const discountedPrice = product.price[0];
+  const finalProductPrice = product.price[0];
+  const finalDiscountedPrice = product.price[0]-100;
 
   return (
     <div

@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect} from "react";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import MenuCart from "./sub-components/MenuCart";
 import { deleteFromCart } from "../../redux/actions/cartActions";
+import { auth } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux"
 
 const IconGroup = ({
   currency,
@@ -11,8 +13,20 @@ const IconGroup = ({
   wishlistData,
   compareData,
   deleteFromCart,
-  iconWhiteClass
+  iconWhiteClass,
 }) => {
+
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.userData.user)
+
+  useEffect(() => {
+  console.log("user from", user)
+    
+  }, [user])
+  console.log("user from", user)
+
+  const history = useHistory()
+
   const handleClick = e => {
     e.currentTarget.nextSibling.classList.toggle("active");
   };
@@ -23,6 +37,13 @@ const IconGroup = ({
     );
     offcanvasMobileMenu.classList.add("active");
   };
+
+  const logout = () => {
+    auth.signOut().then( _ => {
+      dispatch({type: "USER", user: {}})
+      history.push({path: process.env.PUBLIC_URL + "/", state: {}})
+    })
+  }
 
   return (
     <div
@@ -50,19 +71,18 @@ const IconGroup = ({
         </button>
         <div className="account-dropdown">
           <ul>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link>
-            </li>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                Register
-              </Link>
-            </li>
+            {
+              user && user.uid ? null : <li><Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link></li>
+            }
+            
             <li>
               <Link to={process.env.PUBLIC_URL + "/my-account"}>
                 my account
               </Link>
             </li>
+            {
+              user && user.uid ? <li onClick={() => logout()}><a>Logout</a></li> : null
+            }
           </ul>
         </div>
       </div>
@@ -122,7 +142,7 @@ IconGroup.propTypes = {
   currency: PropTypes.object,
   iconWhiteClass: PropTypes.string,
   deleteFromCart: PropTypes.func,
-  wishlistData: PropTypes.array
+  wishlistData: PropTypes.array,
 };
 
 const mapStateToProps = state => {
@@ -130,7 +150,7 @@ const mapStateToProps = state => {
     currency: state.currencyData,
     cartData: state.cartData,
     wishlistData: state.wishlistData,
-    compareData: state.compareData
+    compareData: state.compareData,
   };
 };
 

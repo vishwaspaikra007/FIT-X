@@ -42,11 +42,11 @@ const ProductDescriptionInfo = ({
 
   return (
     <div className="product-details-content ml-70">
-      <h2>{product.name}</h2>
+      <h2>{product.title}</h2>
       <div className="product-details-price">
         {discountedPrice !== null ? (
           <Fragment>
-            <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
+            <span>{ finalDiscountedPrice}</span>{" "}
             <span className="old">
               {currency.currencySymbol + finalProductPrice}
             </span>
@@ -58,14 +58,14 @@ const ProductDescriptionInfo = ({
       {product.rating && product.rating > 0 ? (
         <div className="pro-details-rating-wrap">
           <div className="pro-details-rating">
-            <Rating ratingValue={product.rating} />
+            <Rating ratingValue={product.rating ? product.rating: 4.5} />
           </div>
         </div>
       ) : (
         ""
       )}
       <div className="pro-details-list">
-        <p>{product.shortDescription}</p>
+        <p>{product.productDetails[0]}</p>
       </div>
 
       {product.variation ? (
