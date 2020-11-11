@@ -6,6 +6,8 @@ import FeatureIcon from "../../wrappers/feature-icon/FeatureIcon";
 import TabProduct from "../../wrappers/product/TabProduct";
 import BlogFeatured from "../../wrappers/blog-featured/BlogFeatured";
 import Vendors from "../../components/vendor/Vendors";
+import Search from "../../components/search/Search";
+import TabVendor from "../../wrappers/vendor/VendorTab";
 
 const HomeFashion = () => {
   return (
@@ -22,18 +24,18 @@ const HomeFashion = () => {
         headerPaddingClass="header-padding-1"
       >
         {/* hero slider */}
-        <HeroSliderOne />
-
+        {/* <HeroSliderOne /> */}
+        <Search />
         {/* featured icon */}
-        <FeatureIcon spaceTopClass="pt-100" spaceBottomClass="pb-60" />
-
-        <Vendors asComponent={true}/>
+        {/* <FeatureIcon spaceTopClass="pt-100" spaceBottomClass="pb-60" /> */}
+        <TabVendor />
+        {/* <Vendors asComponent={true}/> */}
 
         {/* tab product */}
         <TabProduct spaceBottomClass="pb-60" category="fashion" />
 
         {/* blog featured */}
-        <BlogFeatured spaceBottomClass="pb-55" />
+        {/* <BlogFeatured spaceBottomClass="pb-55" /> */}
       </LayoutOne>
     </Fragment>
   );

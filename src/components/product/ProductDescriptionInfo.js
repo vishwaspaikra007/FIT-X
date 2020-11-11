@@ -7,6 +7,7 @@ import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
 import { addToCompare } from "../../redux/actions/compareActions";
 import Rating from "./sub-components/ProductRating";
+import RichTextEditor from 'react-rte'
 
 const ProductDescriptionInfo = ({
   product,
@@ -65,7 +66,7 @@ const ProductDescriptionInfo = ({
         ""
       )}
       <div className="pro-details-list">
-        <p>{product.productDetails[0]}</p>
+        {/* <p>{RichTextEditor.createValueFromString(product.brief, 'html')}</p> */}
       </div>
 
       {product.variation ? (
@@ -89,7 +90,8 @@ const ProductDescriptionInfo = ({
                       onChange={() => {
                         setSelectedProductColor(single.color);
                         setSelectedProductSize(single.size[0].name);
-                        setProductStock(single.size[0].stock);
+                        setProductStock(5);
+                        // setProductStock(single.stock);
                         setQuantityCount(1);
                       }}
                     />

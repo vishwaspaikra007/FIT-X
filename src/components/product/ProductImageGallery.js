@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
 import { LightgalleryProvider, LightgalleryItem } from "react-lightgallery";
 import Swiper from "react-id-swiper";
+import Img from '../Img'
 
 const ProductImageGallery = ({ product }) => {
   const [gallerySwiper, getGallerySwiper] = useState(null);
@@ -62,19 +63,21 @@ const ProductImageGallery = ({ product }) => {
             {product.discount ? (
               <span className="pink">-{product.discount}%</span>
             ) : (
-              ""
-            )}
+                ""
+              )}
             {product.new ? <span className="purple">New</span> : ""}
           </div>
         ) : (
-          ""
-        )}
+            ""
+          )}
         <LightgalleryProvider>
           <Swiper {...gallerySwiperParams}>
             {product.images &&
               product.images.map((single, key) => {
                 return (
-                  <div key={key}>
+                  <div key={key}  style={{
+                    paddingBottm: "133.33%"
+                  }}>
                     <LightgalleryItem
                       group="any"
                       src={process.env.PUBLIC_URL + single}
@@ -85,6 +88,11 @@ const ProductImageGallery = ({ product }) => {
                     </LightgalleryItem>
                     <div className="single-image">
                       <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover"
+                        }}
                         src={process.env.PUBLIC_URL + single}
                         className="img-fluid"
                         alt=""
@@ -101,9 +109,19 @@ const ProductImageGallery = ({ product }) => {
           {product.images &&
             product.images.map((single, key) => {
               return (
-                <div key={key}>
-                  <div className="single-image">
+                <div key={key}  style={{
+                  paddingBottm: "133.33%"
+                }}>
+                  <div className="single-image" style={{
+                        width: "100%",
+                        height: "100%",
+                      }}>
                     <img
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover"
+                      }}
                       src={process.env.PUBLIC_URL + single}
                       className="img-fluid"
                       alt=""

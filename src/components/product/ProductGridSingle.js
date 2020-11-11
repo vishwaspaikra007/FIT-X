@@ -5,6 +5,7 @@ import { useToasts } from "react-toast-notifications";
 import { getDiscountPrice } from "../../helpers/product";
 import Rating from "./sub-components/ProductRating";
 import ProductModal from "./ProductModal";
+import Img from '../Img'
 
 const ProductGridSingle = ({
   product,
@@ -32,45 +33,55 @@ const ProductGridSingle = ({
       <div
         className={`col-xl-3 col-md-6 col-lg-4 col-sm-6 ${
           sliderClassName ? sliderClassName : ""
-        }`}
+          }`}
       >
         <div
           className={`product-wrap ${spaceBottomClass ? spaceBottomClass : ""}`}
         >
           <div className="product-img">
-            <Link 
-            product={product}
-            to={{
+            <Link
+              product={product}
+              to={{
                 pathname: process.env.PUBLIC_URL + "/product/" + product.id,
-                state: {product: product}
-                }}>
-              <img
+                state: { product: product }
+              }}>
+              <Img
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  objectFit: "cover",
+                }}
                 className="default-img"
                 src={process.env.PUBLIC_URL + product.images[0]}
                 alt=""
               />
               {product.images.length > 1 ? (
                 <img
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    objectFit: "cover",
+                  }}
                   className="hover-img"
                   src={process.env.PUBLIC_URL + product.images[1]}
                   alt=""
                 />
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </Link>
             {product.discount || product.new ? (
               <div className="product-img-badges">
                 {product.discount ? (
                   <span className="pink">-{product.discount}%</span>
                 ) : (
-                  ""
-                )}
+                    ""
+                  )}
                 {product.new ? <span className="purple">New</span> : ""}
               </div>
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             <div className="product-action">
               <div className="pro-same-action pro-wishlist">
@@ -121,10 +132,10 @@ const ProductGridSingle = ({
                       : "Add to cart"}
                   </button>
                 ) : (
-                  <button disabled className="active">
-                    Out of Stock
+                        <button disabled className="active">
+                          Out of Stock
                   </button>
-                )}
+                      )}
               </div>
               <div className="pro-same-action pro-quickview">
                 <button onClick={() => setModalShow(true)} title="Quick View">
@@ -144,8 +155,8 @@ const ProductGridSingle = ({
                 <Rating ratingValue={product.rating} />
               </div>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <div className="product-price">
               {discountedPrice !== null ? (
                 <Fragment>
@@ -155,8 +166,8 @@ const ProductGridSingle = ({
                   </span>
                 </Fragment>
               ) : (
-                <span>{currency.currencySymbol + product.price[0]} </span>
-              )}
+                  <span>{currency.currencySymbol + product.price[0]} </span>
+                )}
             </div>
           </div>
         </div>

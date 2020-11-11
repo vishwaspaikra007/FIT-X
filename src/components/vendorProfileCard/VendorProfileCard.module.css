@@ -10,6 +10,7 @@
 }
 .vendorCardWrap .vendorCardProfileBackground {
     background-color: orange;
+    background-image: url(https://wallpapercave.com/wp/wp2844805.jpg);
     height: 100px;
     box-shadow: inset 0 0 46px rgb(65, 46, 11);
 }

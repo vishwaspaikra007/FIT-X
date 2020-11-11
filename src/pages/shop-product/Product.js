@@ -11,16 +11,24 @@ import ProductImageDescription from "../../wrappers/product/ProductImageDescript
 import { firestore } from '../../firebase'
 
 const Product = ({ location, product: productS1, match }) => {
-  const { params: id } = match;
+  const { params: {id} } = match;
   const { pathname } = location
-  const { state: { product: productS2 } } = location
+
+  let productS2
+  if(location && location.state && location.state.product)
+    productS2 = location.state.product
 
   const [product, setProduct] = useState(
-    productS1 ? productS1 : productS2 ? productS2 : {}
+    productS1 ? productS1 : productS2 ? productS2 : undefined
   )
+
+  console.log("productS1",productS1,"productS2", productS2.toString('html') )  
+
   useEffect(() => {
-    if (!productS2 && !productS1) {
+    if (!product) {
+      console.log(id)
       firestore.collection('products').doc(id).get().then(doc => {
+        console.log("doc.data()", doc.data())
         setProduct({ ...doc.data(), id: doc.id })
       })
     }
@@ -57,7 +65,7 @@ const Product = ({ location, product: productS1, match }) => {
             {/* product description tab */}
             <ProductDescriptionTab
               spaceBottomClass="pb-90"
-              productFullDesc={product.productDetails}
+              productFullDesc={[]}
             />
             {/*  */}
             {/* related product slider */}

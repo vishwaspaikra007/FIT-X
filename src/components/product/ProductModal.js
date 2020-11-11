@@ -163,7 +163,7 @@ function ProductModal(props) {
                   ""
                 )}
                 <div className="pro-details-list">
-                  <p>{product.productDetails[0]}</p>
+                  <p>{product.description}</p>
                 </div>
 
                 {product.variation ? (

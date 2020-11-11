@@ -1,0 +1,38 @@
+.searchWrap {
+    background-image: url(https://wallpapercave.com/wp/wp2844805.jpg);
+    height: 70vh;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-size: cover;
+}
+.input {
+    border-radius: 5px;
+    margin: 10px;
+    width: auto;
+    background: white;
+    font-size: 20px;
+    text-transform: capitalize;
+    outline: none;
+    text-indent: 50px;
+    transform: translate(10vw, 0px);
+    color: black;
+}
+@media only screen and (max-width: 500px) {
+    .input {
+        width: calc(200% - 20px);
+        margin: 10px;
+        transform: none;
+        z-index: 2;
+        text-indent: 0;
+    }
+}
+.input:focus {
+    background: white;
+}
+.img {
+    margin: auto;
+    height: calc(70vh - 20px);
+}
