@@ -1,0 +1,6 @@
+.customCarouselScrollBar .MuiButtonBase-root:hover path{
+    fill: white;
+}
+:root {
+    --main-scrollbar-color: orange;  
+}

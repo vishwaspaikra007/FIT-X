@@ -18,8 +18,8 @@ export default function VendorTab() {
     return (
         <>
             {
-                vendors.map(vendor => (
-                    <VendorProfileCard vendor={vendor} />
+                vendors.map((vendor, i) => (
+                    <VendorProfileCard vendor={vendor} key={i}/>
                 ))
             }
 

@@ -19,12 +19,6 @@ const IconGroup = ({
   const dispatch = useDispatch()
   const user = useSelector(state => state.userData.user)
 
-  useEffect(() => {
-  console.log("user from", user)
-    
-  }, [user])
-  console.log("user from", user)
-
   const history = useHistory()
 
   const handleClick = e => {

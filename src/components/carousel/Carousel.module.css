@@ -1,0 +1,88 @@
+.parentWrapper {
+    width: 100%;
+    display: grid;
+    overflow: hidden;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    grid-auto-flow: column;
+    scroll-behavior: smooth;
+}
+
+.parentWrapperScrollbar::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+}
+.parentWrapperScrollbar::-webkit-scrollbar-track {
+    background: #00000056;
+}
+.parentWrapperScrollbar::-webkit-scrollbar-thumb {
+    background: var(--main-scrollbar-color);
+}
+
+.parentWrapperScrollbar::-webkit-scrollbar-thumb:hover {
+    background: black;
+}
+
+.parentWrapperScrollbar:hover ::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+}
+
+.noScrollbar::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+}
+.noScrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.noScrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.noScrollbar::-webkit-scrollbar-thumb:hover {
+    background: #00000044;
+}
+
+.noScrollbar:hover ::-webkit-scrollbar {
+    height: 1px;
+    width: 1px;
+}
+
+.childWrap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    position: relative;
+    
+}
+.child {
+    padding: 20px;
+    margin: auto;
+    display: inline-block;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+}
+.nextIcon, .backIcon {
+    width: 30px;
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 2px;
+    z-index: 2;
+    border-radius: 3px;
+    margin: 2px 2px 7px 2px;
+    box-sizing: border-box;
+}
+.backIcon {
+    left: 2px;
+    right: auto;
+}
+.nextIcon:hover, .backIcon:hover {
+    background: #00000056;
+} 
+.customCarousel {
+    display: grid;
+    grid-template-columns: 0 100% 0;
+    overflow: hidden;
+}

@@ -11,7 +11,6 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
   useEffect(() => {
     firestore.collection('general').doc('categories').get()
       .then(docs => {
-        console.log(docs.data())
         setCategories(docs.data())
       })
   }, [])

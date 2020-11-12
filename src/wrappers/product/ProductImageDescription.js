@@ -27,9 +27,11 @@ const ProductImageDescription = ({
   )[0];
   const { addToast } = useToasts();
 
-  const discountedPrice = product.price[0];
-  const finalProductPrice = product.price[0];
-  const finalDiscountedPrice = product.price[0]-100;
+  const discountedPrice = getDiscountPrice(product.price, product.discount);
+  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
+  const finalDiscountedPrice = +(
+    discountedPrice * currency.currencyRate
+  ).toFixed(2);
 
   return (
     <div

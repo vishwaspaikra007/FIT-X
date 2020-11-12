@@ -17,7 +17,6 @@ const userReducer = (state = initialState, action) => {
     // }
     if(action.type == "USER")
     {
-        console.log("action", action)
         const stateCopy = JSON.parse(JSON.stringify(state))
         stateCopy.user = action.user
         return {...stateCopy}

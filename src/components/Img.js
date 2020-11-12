@@ -27,6 +27,7 @@ function Img(props) {
                     position: loaded ? "relative" : "absolute", 
                     top: 0, left: 0,
                     zIndex: loaded ? 0 : -1,
+                    objectFit: "cover",
                     }} afterLoad={() => setLoaded(true)} />
                 <div className={["flone-preloader-wrapper", props.className].join(" ")} 
                     style={{
