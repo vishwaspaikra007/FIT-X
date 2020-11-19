@@ -22,7 +22,7 @@ const Product = ({ location, product: productS1, match }) => {
     productS1 ? productS1 : productS2 ? productS2 : undefined
   )
 
-  console.log("productS1",productS1,"productS2", productS2.toString('html') )  
+  console.log("productS1",productS1,"productS2", productS2)  
 
   useEffect(() => {
     if (!product) {
@@ -36,10 +36,10 @@ const Product = ({ location, product: productS1, match }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Product Page</title>
+        <title>fitX | Product Page</title>
         <meta
           name="description"
-          content="Product page of flone react minimalist eCommerce template."
+          content="Product page of fitX Running Towards The Future."
         />
       </MetaTags>
 

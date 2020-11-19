@@ -29,12 +29,12 @@ function Img(props) {
                     zIndex: loaded ? 0 : -1,
                     objectFit: "cover",
                     }} afterLoad={() => setLoaded(true)} />
-                <div className={["flone-preloader-wrapper", props.className].join(" ")} 
+                <div className={["fitX-preloader-wrapper", props.className].join(" ")} 
                     style={{
                         ...props.style, position: "relative", zIndex: 1,
                         display: loaded ? "none": "block",
                         }}>
-                    <div className="flone-preloader">
+                    <div className="fitX-preloader">
                         <span></span>
                         <span></span>
                     </div>

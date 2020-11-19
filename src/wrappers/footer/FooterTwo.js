@@ -116,7 +116,7 @@ const FooterTwo = ({
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Flone
+                fitX
               </a>
               . All Rights Reserved.
             </p>

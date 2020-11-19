@@ -1,11 +1,9 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector, connect } from 'react-redux'
-import { auth } from './firebase'
-
+import { auth, firestore } from './firebase'
 export default function useFirebase() {
 
     const dispatch = useDispatch()
-    const user = useSelector(state => state.user)
     useEffect(() => {
         auth.onAuthStateChanged(function (user) {
             if (user) {
@@ -18,5 +16,12 @@ export default function useFirebase() {
                 dispatch({ type: "USER", user: {} })
             }
         });
+
+        
+    firestore.collection('web_config').doc('product_categories').get()
+      .then(docs => {
+        dispatch({type: "CATEGORIES",categories: docs.data()})
+    })
+
     }, [])
 }

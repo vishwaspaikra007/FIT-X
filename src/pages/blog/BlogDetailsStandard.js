@@ -14,10 +14,10 @@ const BlogDetailsStandard = ({ location }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Blog Post</title>
+        <title>fitX | Blog Post</title>
         <meta
           name="description"
-          content="Blog post page of flone react minimalist eCommerce template."
+          content="Blog post page of fitX Running Towards The Future."
         />
       </MetaTags>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>

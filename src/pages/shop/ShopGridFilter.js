@@ -9,8 +9,35 @@ import LayoutOne from '../../layouts/LayoutOne';
 import Breadcrumb from '../../wrappers/breadcrumb/Breadcrumb';
 import ShopTopbarFilter from '../../wrappers/product/ShopTopbarFilter';
 import ShopProducts from '../../wrappers/product/ShopProducts';
+import {firestore} from '../../firebase'
 
-const ShopGridFilter = ({location, products}) => {
+const ShopGridFilter = ({location, match}) => {
+
+    console.log(match)
+
+    let tag1, tag2
+    if(location.state && location.state)
+        tag1 = location.state
+    if(match && match.params && match.params.tag)
+        tag2 = match.params.tag.split(" ")
+
+    const tag = tag1 ? tag1 : tag2 ? tag2 : undefined
+
+    const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        if(tag) {
+            firestore.collection('products').where("tags", 'array-contains-any', tag)
+            .get().then(docs => {
+                let productList = []
+                docs.forEach(doc => {
+                    productList.push({id: doc.id, ...doc.data()})
+                })
+                setProducts(productList)
+            })
+        }
+    }, [])
+
     const [layout, setLayout] = useState('grid three-column');
     const [sortType, setSortType] = useState('');
     const [sortValue, setSortValue] = useState('');
@@ -49,8 +76,8 @@ const ShopGridFilter = ({location, products}) => {
     return (
         <Fragment>
             <MetaTags>
-                <title>Flone | Shop Page</title>
-                <meta name="description" content="Shop page of flone react minimalist eCommerce template." />
+                <title>fitX | Shop Page</title>
+                <meta name="description" content="Shop page of fitX Running Towards The Future." />
             </MetaTags>
 
             <BreadcrumbsItem to={process.env.PUBLIC_URL + '/'}>Home</BreadcrumbsItem>
@@ -72,17 +99,6 @@ const ShopGridFilter = ({location, products}) => {
 
                                 {/* shop product pagination */}
                                 <div className="pro-pagination-style text-center mt-30">
-                                    <Paginator
-                                        totalRecords={sortedProducts.length}
-                                        pageLimit={pageLimit}
-                                        pageNeighbours={2}
-                                        setOffset={setOffset}
-                                        currentPage={currentPage}
-                                        setCurrentPage={setCurrentPage}
-                                        pageContainerClass="mb-0 mt-0"
-                                        pagePrevText="«"
-                                        pageNextText="»"
-                                    />
                                 </div>
                             </div>
                         </div>

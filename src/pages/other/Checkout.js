@@ -15,10 +15,10 @@ const Checkout = ({ location, cartItems, currency }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Checkout</title>
+        <title>fitX | Checkout</title>
         <meta
           name="description"
-          content="Checkout page of flone react minimalist eCommerce template."
+          content="Checkout page of fitX Running Towards The Future."
         />
       </MetaTags>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
@@ -160,7 +160,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                               return (
                                 <li key={key}>
                                   <span className="order-middle-left">
-                                    {cartItem.name} X {cartItem.quantity}
+                                    {cartItem.productName} X {cartItem.quantity}
                                   </span>{" "}
                                   <span className="order-price">
                                     {discountedPrice !== null

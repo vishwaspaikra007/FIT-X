@@ -33,10 +33,10 @@ const Cart = ({
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Cart</title>
+        <title>fitX | Cart</title>
         <meta
           name="description"
-          content="Cart page of flone react minimalist eCommerce template."
+          content="Cart page of fitX Running Towards The Future."
         />
       </MetaTags>
 
@@ -95,14 +95,16 @@ const Cart = ({
                                       cartItem.id
                                     }
                                   >
-                                    <img
+                                    {
+                                      cartItem.images && cartItem.images.length > 0 ?
+                                      <img
                                       className="img-fluid"
                                       src={
                                         process.env.PUBLIC_URL +
                                         cartItem.images[0]
                                       }
                                       alt=""
-                                    />
+                                    /> : null}
                                   </Link>
                                 </td>
 
@@ -114,7 +116,7 @@ const Cart = ({
                                       cartItem.id
                                     }
                                   >
-                                    {cartItem.name}
+                                    {cartItem.productName}
                                   </Link>
                                   {cartItem.selectedProductColor &&
                                   cartItem.selectedProductSize ? (

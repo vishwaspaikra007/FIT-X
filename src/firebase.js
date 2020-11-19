@@ -3,22 +3,22 @@ import 'firebase/storage'
 import 'firebase/firestore'
 import 'firebase/auth'
 
-var firebaseConfig = {
-    apiKey: "AIzaSyD2kw2jmZ6BaiYToJHttTeseQPi6BEo71Y",
-    authDomain: "fit-x-fc353.firebaseapp.com",
-    databaseURL: "https://fit-x-fc353.firebaseio.com",
-    projectId: "fit-x-fc353",
-    storageBucket: "fit-x-fc353.appspot.com",
-    messagingSenderId: "625222878652",
-    appId: "1:625222878652:web:317cc6718cfb3d8f0197b9"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCbKM4kMIUHSG9b1HytV6pfPctLSPZEhlM",
+  authDomain: "fitx-c9b1d.firebaseapp.com",
+  databaseURL: "https://fitx-c9b1d.firebaseio.com",
+  projectId: "fitx-c9b1d",
+  storageBucket: "fitx-c9b1d.appspot.com",
+  messagingSenderId: "109210468067",
+  appId: "1:109210468067:web:841ffb013f16b2f92bcfd6"
+};
 
   firebase.initializeApp(firebaseConfig);
 
   const storage = firebase.storage()
   const firestore = firebase.firestore()
   const auth = firebase.auth()
-  const timestamp = firebase.firestore.FieldValue.serverTimestamp
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
   const increment = firebase.firestore.FieldValue.increment(1)
   const arrayUnion = (newElement) => firebase.firestore.FieldValue.arrayUnion(newElement)
 

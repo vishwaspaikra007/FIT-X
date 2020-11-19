@@ -14,10 +14,10 @@ export default function Vendor(props) {
     const id = props.match ? props.match.params ? props.match.params.id : undefined : undefined
     const [vendor, setVendor] = useState(vendorS1)
     useEffect(() => {
-        if(!vendorS1) {
+        if (!vendorS1) {
             firestore.collection('vendors').doc(id).get()
                 .then(doc => {
-                    setVendor({id: id, ...doc.data()})
+                    setVendor({ id: id, ...doc.data() })
                 })
         }
     }, [])
@@ -26,11 +26,31 @@ export default function Vendor(props) {
             {
                 !vendor ? <PreLoader /> :
                     <div>
-                        <VendorProfileCard vendor={vendor} />
-                        <VendorWhatWeDo vendor={vendor} />
-                        <VendorPointOfSale vendor={vendor} />
-                        <VendorPricing vendor={vendor} />
-                        <VendorTestimonials vendor={vendor} />
+                        {
+                            !vendor ? null :
+                                <VendorProfileCard vendor={vendor} />
+                        }
+
+                        {
+                            !vendor.whatWeDo ? null :
+                                <VendorWhatWeDo vendor={vendor} />
+                        }
+
+                        {
+                            !vendor.pointOfSale ? null :
+                                <VendorPointOfSale vendor={vendor} />
+                        }
+
+                        {
+                            !vendor.pricings ? null :
+                                <VendorPricing vendor={vendor} />
+                        }
+
+                        {
+                            !vendor.testimonials ? null :
+                                <VendorTestimonials vendor={vendor} />
+                        }
+
                     </div>
             }
         </LayoutOne>

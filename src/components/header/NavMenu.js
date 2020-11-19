@@ -3,17 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { multilanguage } from "redux-multilanguage";
 import { firestore } from "../../firebase"
+import { useSelector } from 'react-redux'
 
 const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
 
-  const [categories, setCategories] = useState({})
-
-  useEffect(() => {
-    firestore.collection('general').doc('categories').get()
-      .then(docs => {
-        setCategories(docs.data())
-      })
-  }, [])
+  const categories = useSelector(state => state.generalData.categories)
 
   return (
     <div

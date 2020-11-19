@@ -54,10 +54,10 @@ const ShopListStandard = ({ location, products }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Shop Page</title>
+        <title>fitX | Shop Page</title>
         <meta
           name="description"
-          content="Shop page of flone react minimalist eCommerce template."
+          content="Shop page of fitX Running Towards The Future."
         />
       </MetaTags>
 

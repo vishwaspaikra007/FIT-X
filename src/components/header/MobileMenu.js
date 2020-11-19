@@ -3,7 +3,6 @@ import MobileMenuSearch from "./sub-components/MobileSearch";
 import MobileNavMenu from "./sub-components/MobileNavMenu";
 import MobileLangCurChange from "./sub-components/MobileLangCurrChange";
 import MobileWidgets from "./sub-components/MobileWidgets";
-
 const MobileMenu = () => {
   useEffect(() => {
     const offCanvasNav = document.querySelector("#offcanvas-navigation");
@@ -56,16 +55,16 @@ const MobileMenu = () => {
       <div className="offcanvas-wrapper">
         <div className="offcanvas-inner-content">
           {/* mobile search */}
-          <MobileMenuSearch />
+          {/* <MobileMenuSearch /> */}
 
           {/* mobile nav menu */}
           <MobileNavMenu />
 
           {/* mobile language and currency */}
-          <MobileLangCurChange />
+          {/* <MobileLangCurChange /> */}
 
           {/* mobile widgets */}
-          <MobileWidgets />
+          {/* <MobileWidgets /> */}
         </div>
       </div>
     </div>

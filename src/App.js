@@ -82,8 +82,8 @@ const App = (props) => {
           <ScrollToTop>
             <Suspense
               fallback={
-                <div className="flone-preloader-wrapper">
-                  <div className="flone-preloader">
+                <div className="fitX-preloader-wrapper">
+                  <div className="fitX-preloader">
                     <span></span>
                     <span></span>
                   </div>
@@ -110,15 +110,15 @@ const App = (props) => {
                 />
 
                 {/* Shop pages */}
-                <Route
+                {/* <Route
                   path={process.env.PUBLIC_URL + "/shop-grid-standard"}
                   component={ShopGridStandard}
-                />
+                /> */}
                 <Route
-                  path={process.env.PUBLIC_URL + "/shop-grid-filter"}
+                  path={process.env.PUBLIC_URL + "/products/:tags"}
                   component={ShopGridFilter}
                 />
-                <Route
+                {/* <Route
                   path={process.env.PUBLIC_URL + "/shop-grid-two-column"}
                   component={ShopGridTwoColumn}
                 />
@@ -145,7 +145,7 @@ const App = (props) => {
                 <Route
                   path={process.env.PUBLIC_URL + "/shop-list-two-column"}
                   component={ShopListTwoColumn}
-                />
+                /> */}
 
                 {/* Shop product pages */}
                 <Route
@@ -154,7 +154,7 @@ const App = (props) => {
                     <Product {...routeProps} key={routeProps.match.params.id} />
                   )}
                 />
-                <Route
+                {/* <Route
                   path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
                   component={ProductTabLeft}
                 />
@@ -173,10 +173,10 @@ const App = (props) => {
                 <Route
                   path={process.env.PUBLIC_URL + "/product-fixed-image/:id"}
                   component={ProductFixedImage}
-                />
+                /> */}
 
                 {/* Blog pages */}
-                <Route
+                {/* <Route
                   path={process.env.PUBLIC_URL + "/blog-standard"}
                   component={BlogStandard}
                 />
@@ -191,7 +191,7 @@ const App = (props) => {
                 <Route
                   path={process.env.PUBLIC_URL + "/blog-details-standard"}
                   component={BlogDetailsStandard}
-                />
+                /> */}
 
                 {/* Other pages */}
                 <Route

@@ -2294,7 +2294,10 @@
   flex-direction: column;
 
   height: 100%;
-  padding: 90px 35px 0;
+  padding: 20px 35px 0;
+
+  overflow: hidden;
+  height: max-content;
 
   @media #{$sm-layout} {
     padding: 70px 25px 0;
@@ -2333,7 +2336,9 @@
 
         padding: 10px 0;
 
-        color: #111;
+        // color: #111;
+        color: #1a1a1a;
+
         &:hover {
           color: $theme-color;
           // background: $theme-contrast-color;
@@ -2358,6 +2363,8 @@
           font-weight: 400;
 
           padding: 10px 0;
+        color: #1a1a1a;
+
           &:hover {
             color: $theme-color;
             // background: $theme-contrast-color;
@@ -2567,7 +2574,8 @@
   background: #1a1a1a;
 }
 .sub-menu {
-  background: #1a1a1a;
+  // background: #1a1a1a;
+  color: #1a1a1a
 }
 .mega-menu {
   max-height: 75vh;

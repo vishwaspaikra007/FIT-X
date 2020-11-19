@@ -1,0 +1,15 @@
+.wrap {
+    background-color: white;
+    transform: translate(0, -15px);
+    padding-top: 15px !important;
+    border-radius: 5px;
+    z-index: -1;
+    max-height: 400px;
+    overflow: auto;
+}
+.wrap li {
+    color: black;
+}
+.wrap li:hover {
+    background: #00000011;
+}

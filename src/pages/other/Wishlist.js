@@ -30,10 +30,10 @@ const Wishlist = ({
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Wishlist</title>
+        <title>fitX | Wishlist</title>
         <meta
           name="description"
-          content="Wishlist page of flone react minimalist eCommerce template."
+          content="Wishlist page of fitX Running Towards The Future."
         />
       </MetaTags>
 
@@ -88,14 +88,16 @@ const Wishlist = ({
                                       wishlistItem.id
                                     }
                                   >
-                                    <img
+                                    {
+                                      wishlistItem.images && wishlistItem.images.length > 0 ?
+                                      <img
                                       className="img-fluid"
                                       src={
                                         process.env.PUBLIC_URL +
-                                        wishlistItem.image[0]
+                                        wishlistItem.images[0]
                                       }
                                       alt=""
-                                    />
+                                    /> : null}
                                   </Link>
                                 </td>
 
@@ -107,7 +109,7 @@ const Wishlist = ({
                                       wishlistItem.id
                                     }
                                   >
-                                    {wishlistItem.name}
+                                    {wishlistItem.productName}
                                   </Link>
                                 </td>
 
