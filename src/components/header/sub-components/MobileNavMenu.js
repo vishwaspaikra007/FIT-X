@@ -4,25 +4,39 @@ import { Link } from "react-router-dom";
 import { multilanguage } from "redux-multilanguage";
 import { useSelector } from 'react-redux'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { auth } from '../../../firebase'
 
 const MobileNavMenu = ({ strings }) => {
-
   const categories = useSelector(state => state.generalData.categories)
   const user = useSelector(state => state.userData.user)
 
   return (
     <nav className="offcanvas-navigation" id="offcanvas-navigation">
       <ul>
-        <li  className="menu-item-has-children">
-          <Link to={user && user.uid ? "/my-account": "/login-register"} style={{
+        <li className="menu-item-has-children">
+          <Link to={user && user.uid ? "/my-account" : "/login-register"} style={{
             display: "flex",
             justifyContent: "center",
           }}>
-          <AccountCircleIcon style={{
-            width: "50px",
-            height: "50px",
-          }}/>
+            <AccountCircleIcon style={{
+              width: "50px",
+              height: "50px",
+            }} />
           </Link>
+
+          {
+            user && user.uid ?
+              <ul className="submenu" style={{
+                textAlign: "center",
+                lineHeight: "5px",
+              }}>
+                <li className="menu-item-has-children" onClick={() => auth.signOut()}><a>Logout</a></li>
+                <li>
+                  <Link to={"/my-account"}>Profile
+                  </Link></li></ul>
+              : null
+          }
+
         </li>
         <li className="menu-item-has-children">
           <Link to={process.env.PUBLIC_URL + "/"}>{strings["home"]}</Link>
@@ -62,6 +76,8 @@ const MobileNavMenu = ({ strings }) => {
         <li>
           <Link to={process.env.PUBLIC_URL + "/contact"}>
             {strings["contact_us"]}
+          </Link>
+          <Link to={"/become-vendor"}>Become Vendor
           </Link>
         </li>
       </ul>

@@ -7,13 +7,18 @@ import Accordion from "react-bootstrap/Accordion";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import firebase, { firestore, timestamp } from '../../firebase'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PreLoader from '../../components/PreLoader'
+import { useToasts } from 'react-toast-notifications'
 
 const MyAccount = ({ location }) => {
+  const { addToast } = useToasts()
+
   const { pathname } = location;
 
   const user = useSelector(state => state.userData.user)
+  const dispatch = useDispatch()
+  const userInfoRedux = useSelector(state => state.generalData.userInfo)
 
   const [userInfo, setUserInfo] = useState({
     firstName: "",
@@ -37,18 +42,23 @@ const MyAccount = ({ location }) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (user && user.uid && userInfo.firstName == "") {
+    if (user && user.uid && userInfo.firstName == "" && !userInfoRedux) {
       console.log(user)
       firestore.collection('users').doc(user.uid).get()
         .then(doc => {
           if (doc && doc.data()) {
             setUserInfo(doc.data())
             setUserInfoOld(doc.data())
+            dispatch({ type: "USER_INFO", userInfo: doc.data() })
           }
         })
-    }
+    } else if (userInfoRedux) {
+      setUserInfo(userInfoRedux)
+      setUserInfoOld(userInfoRedux)
+  }
 
   }, [user])
+
 
   const handleChange = (e, type) => {
     e.preventDefault()
@@ -70,6 +80,12 @@ const MyAccount = ({ location }) => {
             .then(doc => {
               setLoading(false)
               setStateChanged(false)
+              dispatch({ type: "USER_INFO", userInfo: userInfo })
+              setUserInfoOld(userInfo)
+              addToast('Saved Successfully', { appearance: 'success' })
+            })
+            .catch(err => {
+              addToast("error occured", { appearance: 'error' })
             }); break;
       case 'changePwd':
         if (cpwd == pwd) {
@@ -85,16 +101,17 @@ const MyAccount = ({ location }) => {
               setPwd("")
               setCpwd("")
               setLoading(false)
+              addToast('Saved Successfully', { appearance: 'success' })
             }).catch(function (err) {
-              alert(err)
               setLoading(false)
+              addToast("error occured", { appearance: 'error' })
             });
           }).catch(function (err) {
-            alert(err)
             setLoading(false)
+            addToast("error occured", { appearance: 'error' })
           });
         } else {
-          alert("password did not match")
+          addToast("password did not match", { appearance: 'error' })
         }
 
         break;

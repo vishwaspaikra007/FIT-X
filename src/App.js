@@ -7,6 +7,7 @@ import { multilanguage, loadLanguages } from "redux-multilanguage";
 import { connect } from "react-redux";
 import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 import useFirebase from "./useFirebase";
+import BecomeVendor from "./pages/BecomeVendor";
 
 const Vendor = lazy(() => import("./pages/Vendor"));
 const Vendors = lazy(() => import("./pages/Vendors"));
@@ -205,6 +206,10 @@ const App = (props) => {
                 <Route
                   path={process.env.PUBLIC_URL + "/my-account"}
                   component={MyAccount}
+                />
+                <Route
+                  path={process.env.PUBLIC_URL + "/become-vendor"}
+                  component={BecomeVendor}
                 />
                 <Route
                   path={process.env.PUBLIC_URL + "/login-register"}

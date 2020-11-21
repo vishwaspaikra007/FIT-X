@@ -11,9 +11,10 @@ import firebase, { auth } from "../../firebase"
 import { useHistory } from 'react-router-dom'
 import PreLoader from "../../components/PreLoader";
 import { useSelector } from 'react-redux'
+import { useToasts } from "react-toast-notifications";
 
 const LoginRegister = ({ location }) => {
-
+  const { addToast } = useToasts()
   const user = useSelector(state => state.userData.user)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [isPhoneNumberVerified, setIsPhoneNumberVerified] = useState(false)
@@ -67,6 +68,7 @@ const LoginRegister = ({ location }) => {
         // user in with confirmationResult.confirm(code).
         let otp = window.prompt("Enter OTP")
         confirmationResult.confirm(otp).then(result => {
+          addToast('Phone Verified Successfully', { appearance: 'success' })
           console.log("result", result)
           console.log("result.user", result.user)
           setIsPhoneNumberVerified(true)
@@ -76,6 +78,7 @@ const LoginRegister = ({ location }) => {
       }).catch(function (error) {
         // Error; SMS not sent
         // ...
+        addToast('SMS not sent', { appearance: 'error' })
         setRequesting(false)
       });
   }
@@ -89,10 +92,15 @@ const LoginRegister = ({ location }) => {
     auth.currentUser.linkWithCredential(credential)
       .then(function (usercred) {
         let user = usercred.user;
+        addToast('Registeration Successfull', { appearance: 'success' })
         console.log("Account linking success", user);
         setRequesting(false)
-        history.push("/")
+        if (location && location.state && location.state.from == "become-seller")
+          history.push('/become-vendor')
+        else
+          history.push("/")
       }).catch(function (error) {
+        addToast('registration error occured', { appearance: 'error' })
         console.log("Account linking error", error);
         setRequesting(false)
       });
@@ -104,17 +112,20 @@ const LoginRegister = ({ location }) => {
 
     let email = "fakeemail" + phoneNumber + "@gmail.com"
     firebase.auth().signInWithEmailAndPassword(email, pwd)
-    .then(result => {
-      console.log(result)
-      setRequesting(false)
-      history.push("/")
-    }).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-      setRequesting(false)
-    });
+      .then(result => {
+        console.log(result)
+        setRequesting(false)
+        addToast('login Successfull', { appearance: 'success' })
+        if (location && location.state && location.state.from == "become-seller")
+          history.push('/become-vendor')
+        else
+          history.push("/")
+      }).catch(function (error) {
+        // Handle Errors here.
+        addToast('login error occured', { appearance: 'error' })
+        // ...
+        setRequesting(false)
+      });
   }
 
   return (
@@ -157,56 +168,56 @@ const LoginRegister = ({ location }) => {
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
-                    <Tab.Content style={{position: "relative"}}>
+                    <Tab.Content style={{ position: "relative" }}>
                       {
                         requesting ? <PreLoader style={{
                           position: "absolute",
                           background: "#ffffff56",
                           backdropFilter: "blur(2px)",
                           zIndex: 1,
-                        }}/> : null
+                        }} /> : null
                       }
                       <Tab.Pane eventKey="login">
                         <div className="login-form-container">
                           <div className="login-register-form">
                             <form>
-                            <input
-                              type="string"
-                              name="phone-number"
-                              placeholder="phone number"
-                              value={phoneNumber}
-                              onChange={handleChange}
-                            />
-                            <input
-                              type="password"
-                              name="user-password"
-                              placeholder="Password"
-                              value={pwd}
-                              onChange={handleChange}
-                            />
-                            <div className="button-box">
-                              <div className="login-toggle-btn">
-                                <input type="checkbox" />
-                                <label className="ml-10">Remember me</label>
-                                <Link to={process.env.PUBLIC_URL + "/"}>
-                                  Forgot Password?
+                              <input
+                                type="string"
+                                name="phone-number"
+                                placeholder="phone number"
+                                value={phoneNumber}
+                                onChange={handleChange}
+                              />
+                              <input
+                                type="password"
+                                name="user-password"
+                                placeholder="Password"
+                                value={pwd}
+                                onChange={handleChange}
+                              />
+                              <div className="button-box">
+                                <div className="login-toggle-btn">
+                                  <input type="checkbox" />
+                                  <label className="ml-10">Remember me</label>
+                                  <Link to={process.env.PUBLIC_URL + "/"}>
+                                    Forgot Password?
                                   </Link>
+                                </div>
+                                <button onClick={e => login(e)}
+                                  disabled
+                                  disabled={requesting}>
+                                  <span>Login</span>
+                                </button>
+                                <button
+                                  disabled={requesting}
+                                  style={{
+                                    display: "block",
+                                    margin: "20px auto",
+                                  }} onClick={e => verifyPhoneNumber(e)}>
+                                  <span>or Send an OTP</span>
+                                </button>
                               </div>
-                              <button onClick={e => login(e)}
-                              disabled
-                              disabled={requesting}>
-                                <span>Login</span>
-                              </button>
-                              <button 
-                              disabled={requesting}
-                              style={{
-                                display: "block",
-                                margin: "20px auto",
-                              }} onClick={e => verifyPhoneNumber(e)}>
-                                <span>or Send an OTP</span>
-                            </button>
-                            </div>
-                            
+
                             </form>
                           </div>
                         </div>
@@ -215,37 +226,37 @@ const LoginRegister = ({ location }) => {
                         <div className="login-form-container">
                           <div className="login-register-form">
                             <form>
-                            <input
-                              type="string"
-                              name="phone-number"
-                              placeholder="phone number"
-                              value={phoneNumber}
-                              onChange={handleChange}
-                              style={{
-                                opacity: isPhoneNumberVerified ? "0.6" : "1"
-                              }}
-                              disabled={isPhoneNumberVerified}
-                            />
-                            {
-                              isPhoneNumberVerified ?
-                                <input
-                                  type="password"
-                                  name="user-password"
-                                  placeholder="Password"
-                                  value={pwd}
-                                  onChange={handleChange}
-                                /> : null
-                            }
+                              <input
+                                type="string"
+                                name="phone-number"
+                                placeholder="phone number"
+                                value={phoneNumber}
+                                onChange={handleChange}
+                                style={{
+                                  opacity: isPhoneNumberVerified ? "0.6" : "1"
+                                }}
+                                disabled={isPhoneNumberVerified}
+                              />
+                              {
+                                isPhoneNumberVerified ?
+                                  <input
+                                    type="password"
+                                    name="user-password"
+                                    placeholder="Password"
+                                    value={pwd}
+                                    onChange={handleChange}
+                                  /> : null
+                              }
 
-                            <div className="button-box">
-                              <button
-                                disabled={requesting}
-                                onClick={
-                                  isPhoneNumberVerified ? e => register(e) : e => verifyPhoneNumber(e)
-                                }>
-                                <span>{isPhoneNumberVerified ? "Register" : "Send OTP"}</span>
-                              </button>
-                            </div>
+                              <div className="button-box">
+                                <button
+                                  disabled={requesting}
+                                  onClick={
+                                    isPhoneNumberVerified ? e => register(e) : e => verifyPhoneNumber(e)
+                                  }>
+                                  <span>{isPhoneNumberVerified ? "Register" : "Send OTP"}</span>
+                                </button>
+                              </div>
                             </form>
                           </div>
                         </div>
