@@ -221,8 +221,8 @@ const ProductGridListSingle = ({
                 ) : (
                   ""
                 )}
-                {product.shortDescription ? (
-                  <p>{product.shortDescription}</p>
+                {product.brief ? (
+                  <p>{product.brief.slice(0, 100)}</p>
                 ) : (
                   ""
                 )}

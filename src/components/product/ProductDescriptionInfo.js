@@ -43,7 +43,7 @@ const ProductDescriptionInfo = ({
 
   return (
     <div className="product-details-content ml-70">
-      <h2>{product.title}</h2>
+      <h2>{product.productName}</h2>
       <div className="product-details-price">
         {discountedPrice !== null ? (
           <Fragment>
@@ -66,7 +66,7 @@ const ProductDescriptionInfo = ({
         ""
       )}
       <div className="pro-details-list">
-        {/* <p>{RichTextEditor.createValueFromString(product.brief, 'html')}</p> */}
+        <p>{product.brief.slice(0, 100)}</p>
       </div>
 
       {product.variation ? (

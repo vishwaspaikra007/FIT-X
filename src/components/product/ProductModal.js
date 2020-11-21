@@ -138,7 +138,7 @@ function ProductModal(props) {
             </div>
             <div className="col-md-7 col-sm-12 col-xs-12">
               <div className="product-details-content quickview-content">
-                <h2>{product.title}</h2>
+                <h2>{product.productName}</h2>
                 <div className="product-details-price">
                   {discountedprice !== null ? (
                     <Fragment>
@@ -163,7 +163,7 @@ function ProductModal(props) {
                   ""
                 )}
                 <div className="pro-details-list">
-                  <p>{product.description}</p>
+                  <p>{product.brief}</p>
                 </div>
 
                 {product.variation ? (
