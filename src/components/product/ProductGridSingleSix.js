@@ -71,12 +71,12 @@ const ProductGridSingleSix = ({
               {discountedPrice !== null ? (
                 <Fragment>
                   <span className="old">
-                    {currency.currencySymbol + finalProductPrice}
+                    {"₹" + finalProductPrice}
                   </span>
-                  <span>{currency.currencySymbol + finalDiscountedPrice}</span>
+                  <span>{"₹" + finalDiscountedPrice}</span>
                 </Fragment>
               ) : (
-                <span>{currency.currencySymbol + finalProductPrice} </span>
+                <span>{"₹" + finalProductPrice} </span>
               )}
             </div>
 

@@ -75,7 +75,7 @@ const ProductImageGallery = ({ product }) => {
             {product.images &&
               product.images.map((single, key) => {
                 return (
-                  <div key={key}  style={{
+                  <div key={key} style={{
                     paddingBottm: "133.33%"
                   }}>
                     <LightgalleryItem
@@ -86,12 +86,24 @@ const ProductImageGallery = ({ product }) => {
                         <i className="pe-7s-expand1"></i>
                       </button>
                     </LightgalleryItem>
-                    <div className="single-image">
+                    <div className="single-image" style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      background: "white",
+                      overflow: "hidden",
+                      paddingBottom: "100%",
+                      position: "relative",
+                      height: "0",
+                      justifyContent: "center",
+                    }}>
                       <img
                         style={{
-                          width: "100%",
+                          width: "auto",
                           height: "100%",
-                          objectFit: "cover"
+                          objectFit: "cover",
+                          margin: "auto",
+                          position: "absolute",
                         }}
                         src={process.env.PUBLIC_URL + single}
                         className="img-fluid"
@@ -109,30 +121,38 @@ const ProductImageGallery = ({ product }) => {
           {product.images &&
             product.images.map((single, key) => {
               return (
-                <div key={key}  style={{
+                <div key={key} style={{
                   paddingBottm: "133.33%"
                 }}>
                   <div className="single-image" style={{
-                        width: "100%",
-                        height: "100%",
-                      }}>
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    background: "white",
+                    overflow: "hidden",
+                    paddingBottom: "100%",
+                    position: "relative",
+                    height: "0",
+                    justifyContent: "center",
+                }}>
                     <img
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover"
-                      }}
-                      src={process.env.PUBLIC_URL + single}
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </div>
+                    style={{
+                      width: "auto",
+                      height: "100%",
+                      objectFit: "cover",
+                      position: "absolute"
+                    }}
+                    src={process.env.PUBLIC_URL + single}
+                    className="img-fluid"
+                    alt=""
+                  />
                 </div>
-              );
-            })}
+                </div>
+        );
+      })}
         </Swiper>
       </div>
-    </Fragment>
+    </Fragment >
   );
 };
 

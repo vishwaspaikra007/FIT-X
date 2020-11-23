@@ -15,13 +15,16 @@ const MobileNavMenu = ({ strings }) => {
       <ul>
         <li className="menu-item-has-children">
           <Link to={user && user.uid ? "/my-account" : "/login-register"} style={{
-            display: "flex",
+            display: "grid",
             justifyContent: "center",
           }}>
             <AccountCircleIcon style={{
               width: "50px",
               height: "50px",
             }} />
+            <span style={{
+              textAlign: "center"
+            }} >{user && user.uid ? null : "Login"}</span>
           </Link>
 
           {
@@ -32,8 +35,9 @@ const MobileNavMenu = ({ strings }) => {
               }}>
                 <li className="menu-item-has-children" onClick={() => auth.signOut()}><a>Logout</a></li>
                 <li>
-                  <Link to={"/my-account"}>Profile
-                  </Link></li></ul>
+                  <Link to={"/my-account"}>Profile</Link>
+                </li>
+              </ul>
               : null
           }
 
@@ -43,7 +47,7 @@ const MobileNavMenu = ({ strings }) => {
         </li>
 
         <li className="menu-item-has-children active">
-          <Link to={process.env.PUBLIC_URL + "/products"}>
+          <Link to={process.env.PUBLIC_URL + "/products/all"}>
             {strings["shop"]}
           </Link>
           <ul className="sub-menu">
@@ -51,7 +55,7 @@ const MobileNavMenu = ({ strings }) => {
               categories ? Object.keys(categories).map((key, i) => {
                 return (
                   <li className="menu-item-has-children" key={i}>
-                    <Link to={process.env.PUBLIC_URL + "/products/" + key}>
+                    <Link to={process.env.PUBLIC_URL + "/products/category " + key}>
                       {key}
                     </Link>
                     <ul className="sub-menu">
@@ -59,7 +63,7 @@ const MobileNavMenu = ({ strings }) => {
                         categories[key].map((value, index) => {
                           return (
                             <li key={index}>
-                              <Link to={process.env.PUBLIC_URL + "/products/" + value}>
+                              <Link to={process.env.PUBLIC_URL + "/products/subCategory " + value}>
                                 {value}
                               </Link>
                             </li>
@@ -79,6 +83,9 @@ const MobileNavMenu = ({ strings }) => {
           </Link>
           <Link to={"/become-vendor"}>Become Vendor
           </Link>
+        </li>
+        <li>
+          <Link to={"/vendors"}>See All Vendors</Link>
         </li>
       </ul>
     </nav>

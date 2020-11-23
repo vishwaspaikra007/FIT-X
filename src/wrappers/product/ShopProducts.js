@@ -5,7 +5,10 @@ import ProductgridList from "./ProductgridList";
 const ShopProducts = ({ products, layout }) => {
   return (
     <div className="shop-bottom-area mt-35">
-      <div className={`row ${layout ? layout : ""}`}>
+      <div className={` ${layout ? layout : ""}`} style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+      }}>
         <ProductgridList products={products} spaceBottomClass="mb-25" />
       </div>
     </div>

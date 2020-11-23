@@ -250,7 +250,8 @@
 
     overflow: hidden;
     img {
-      width: 100%;
+      height: 100%;
+      margin: auto;
     }
 
     &-badges {
@@ -270,7 +271,7 @@
         color: #fff;
         border-radius: 3px;
         &.pink {
-          background-color: #fa6bff;
+          background-color: $theme-color;
         }
         &.purple {
           background-color: $theme-color;
@@ -413,7 +414,7 @@
           position: absolute;
           top: 10px;
           right: -13px;
-
+          display: none;
           width: 7px;
           height: 2px;
 
@@ -521,7 +522,7 @@
     span {
       font-size: 24px;
 
-      color: #fe5252;
+      color: $theme-color;
       &.old {
         font-size: 18px;
 
@@ -1375,7 +1376,7 @@
       transition: all 0.0s ease 0s;
 
       border: none;
-      background: #fa6bff none repeat scroll 0 0;
+      background: $theme-color none repeat scroll 0 0;
     }
     .ui-slider-handle {
       width: 15px;
@@ -1383,7 +1384,7 @@
       margin-left: 0;
 
       border: medium none;
-      border: 4px solid #fa6bff;
+      border: 4px solid $theme-color;
       border-radius: 50%;
       background: #fff none repeat scroll 0 0;
     }
@@ -1425,7 +1426,7 @@
       top: 20px;
       right: 20px;
       &.pink {
-        color: #fa6bff;
+        color: $theme-color;
       }
       &.red {
         color: #ff3d2a;
@@ -1483,7 +1484,7 @@
         background-color: $theme-color;
         &:hover,
         &.active {
-          background-color: #fa6bff;
+          background-color: $theme-color;
         }
       }
       &.product-action-2-red {
@@ -1515,7 +1516,7 @@
 
         border-radius: 3px;
         &.pink {
-          color: #fa6bff;
+          color: $theme-color;
         }
         &.purple {
           color: $theme-color;
@@ -1558,7 +1559,7 @@
           &.old {
             text-decoration: line-through;
 
-            color: #fa6bff;
+            color: $theme-color;
             &.red {
               color: #ff3d2a;
             }
@@ -1596,7 +1597,7 @@
             &.old {
               text-decoration: line-through;
 
-              color: #fa6bff;
+              color: $theme-color;
             }
           }
         }
@@ -1871,7 +1872,7 @@
                 background-color: $theme-color;
         }
         &.pink {
-          background-color: #fa6bff;
+          background-color: $theme-color;
         }
         &:last-child {
           margin-bottom: 0;
@@ -2170,7 +2171,7 @@
         &.old {
           text-decoration: line-through;
 
-          color: #fa6bff;
+          color: $theme-color;
         }
       }
       &.price-4-center {
@@ -2316,7 +2317,7 @@
                 background-color: $theme-color;
       }
       &.pink {
-        background-color: #fa6bff;
+        background-color: $theme-color;
       }
       &:last-child {
         margin-bottom: 0;
@@ -2410,7 +2411,7 @@
         &.old {
           text-decoration: line-through;
 
-          color: #fa6bff;
+          color: $theme-color;
         }
       }
     }

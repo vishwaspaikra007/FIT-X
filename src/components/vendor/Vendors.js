@@ -3,21 +3,37 @@ import style from './Vendors.module.css'
 import { firestore } from '../../firebase'
 import { Link } from 'react-router-dom'
 import Img from '../Img'
+import LoadContent from '../LoadContent'
 
 export default function Vendors(props) {
-
+    const [loadNewContent, setLoadNewContent] = useState(true)
     const [vendors, setVendors] = useState([])
+    const [lastDoc, setLastDoc] = useState()
+    const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
+    const limit = 3
     useEffect(() => {
-        firestore.collection('vendors').get()
-            .then(docs => {
-                console.log(docs)
-                let list = []
-                docs.forEach(doc => {
-                    list.push({ ...doc.data(), id: doc.id })
-                })
-                setVendors(list)
+        let ref
+        if (!lastDoc)
+            ref = firestore.collection('vendors').orderBy('name').limit(3).get()
+        else
+            ref = firestore.collection('vendors').orderBy('name').startAfter(lastDoc).limit(limit).get()
+        if (loadNewContent) {
+            ref.then(docs => {
+                console.log(allowFurtherFetch)
+                if (docs.docs.length > 0) {
+                    let list = JSON.parse(JSON.stringify(vendors))
+                    docs.forEach(doc => {
+                        list.push({ ...doc.data(), id: doc.id })
+                    })
+                    setLastDoc(docs.docs[docs.docs.length - 1])
+                    setVendors(list)
+                    setLoadNewContent(false)
+                    if(docs.docs.length < limit)
+                        setAllowFurtherFetch(false)
+                }
             })
-    }, [])
+        }
+    }, [loadNewContent])
     return (
         <div style={{
             width: "100%",
@@ -97,6 +113,8 @@ export default function Vendors(props) {
                             </Link>
                         ))
                     }
+                    <LoadContent onChange={(bool) => setLoadNewContent(bool)} />
+
                     <Link to="/vendors" style={{
                         display: props.asComponent && vendors.length > 0 ? "flex" : "none"
                     }}>

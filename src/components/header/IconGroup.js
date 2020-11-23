@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import MenuCart from "./sub-components/MenuCart";
@@ -33,9 +33,9 @@ const IconGroup = ({
   };
 
   const logout = () => {
-    auth.signOut().then( _ => {
-      dispatch({type: "USER", user: {}})
-      history.push({path: process.env.PUBLIC_URL + "/", state: {}})
+    auth.signOut().then(_ => {
+      dispatch({ type: "USER", user: {} })
+      history.push({ path: process.env.PUBLIC_URL + "/", state: {} })
     })
   }
 
@@ -66,16 +66,12 @@ const IconGroup = ({
         <div className="account-dropdown">
           <ul>
             {
-              user && user.uid ? null : <li><Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link></li>
-            }
-            
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/my-account"}>
-                my account
-              </Link>
-            </li>
-            {
-              user && user.uid ? <li onClick={() => logout()}><a>Logout</a></li> : null
+              user && user.uid ?
+                <>
+                  <li><Link to={process.env.PUBLIC_URL + "/my-account"}>my account</Link></li>
+                  <li onClick={() => logout()}><a>Logout</a></li>
+                </>
+                : <li><Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link></li>
             }
           </ul>
         </div>

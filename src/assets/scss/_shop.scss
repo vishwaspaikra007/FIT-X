@@ -57,7 +57,7 @@
         margin-left: 0;
       }
       &.active {
-        color: #fa6bff;
+        color: $theme-color;
       }
     }
   }
@@ -111,7 +111,7 @@
 
         display: inline-block;
 
-        color: #fe5252;
+        color: $theme-color;
         &.old {
           font-size: 18px;
 

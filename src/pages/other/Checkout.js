@@ -164,12 +164,12 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   </span>{" "}
                                   <span className="order-price">
                                     {discountedPrice !== null
-                                      ? currency.currencySymbol +
+                                      ? "₹" +
                                         (
                                           finalDiscountedPrice *
                                           cartItem.quantity
                                         ).toFixed(2)
-                                      : currency.currencySymbol +
+                                      : "₹" +
                                         (
                                           finalProductPrice * cartItem.quantity
                                         ).toFixed(2)}
@@ -189,7 +189,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                           <ul>
                             <li className="order-total">Total</li>
                             <li>
-                              {currency.currencySymbol +
+                              {"₹" +
                                 cartTotalPrice.toFixed(2)}
                             </li>
                           </ul>

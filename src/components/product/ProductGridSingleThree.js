@@ -135,14 +135,14 @@ const ProductGridSingleThree = ({
                 {discountedPrice !== null ? (
                   <Fragment>
                     <span>
-                      {currency.currencySymbol + finalDiscountedPrice}
+                      {"₹" + finalDiscountedPrice}
                     </span>{" "}
                     <span className="old">
-                      {currency.currencySymbol + finalProductPrice}
+                      {"₹" + finalProductPrice}
                     </span>
                   </Fragment>
                 ) : (
-                  <span>{currency.currencySymbol + finalProductPrice} </span>
+                  <span>{"₹" + finalProductPrice} </span>
                 )}
               </div>
             </div>

@@ -3,7 +3,7 @@ import LayoutOne from '../layouts/LayoutOne'
 import { BreadcrumbsItem } from 'react-breadcrumbs-dynamic'
 import Breadcrumb from "../wrappers/breadcrumb/Breadcrumb"
 import { useSelector, useDispatch } from 'react-redux'
-import { firestore, timestamp } from '../firebase'
+import { firestore, timestamp, increment } from '../firebase'
 import { useToasts } from 'react-toast-notifications'
 import { useHistory } from 'react-router-dom'
 import Card from "react-bootstrap/Card";
@@ -72,14 +72,18 @@ export default function BecomeVendor() {
                 if (user && user.uid) {
                     console.log(sellerInfoRedux)
                     let ref
+                    const batch = firestore.batch()
                     if(sellerInfoRedux && sellerInfoRedux.createdAt)
                     {
                         ref = firestore.collection("vendors").doc(user.uid).update(sellerInfo)
+
                     } else {
-                        ref = firestore.collection("vendors").doc(user.uid).set({
+                        batch.set(firestore.collection("vendors").doc(user.uid), {
                             ...sellerInfo,
                             createdAt: sellerInfoRedux && sellerInfoRedux.createdAt ? sellerInfoRedux.createdAt : timestamp
                         })
+                        batch.update(firestore.collection('analytics').doc('count'),{vendors: increment})
+                        ref = batch.commit()
                     }
                     ref.then(doc => {
                             setLoading(false)

@@ -30,21 +30,34 @@ const ProductGridListSingle = ({
   return (
     <Fragment>
       <div
-        className={`col-xl-4 col-sm-6 ${
+        className={` ${
           sliderClassName ? sliderClassName : ""
-        }`}
+        }`} style={{
+          margin: "20px",
+        }}
       >
         <div
-          className={`product-wrap ${spaceBottomClass ? spaceBottomClass : ""}`}
+          className={`product-wrap ${spaceBottomClass ? spaceBottomClass : ""}`} style={{
+            borderBottom: "1px solid #9a9a9a",
+            paddingBottom: "20px",
+          }}
         >
-          <div className="product-img">
-            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+          <div className="product-img" style={{
+            paddingBottom: "100%"
+          }}>
+            <Link to={process.env.PUBLIC_URL + "/product/" + product.id} style={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}>
               <img
                 className="default-img"
                 src={process.env.PUBLIC_URL + product.images[0]}
                 alt=""
               />
-              {product.image.length > 1 ? (
+              {product.images.length > 1 ? (
                 <img
                   className="hover-img"
                   src={process.env.PUBLIC_URL + product.images[1]}
@@ -129,9 +142,13 @@ const ProductGridListSingle = ({
             </div>
           </div>
           <div className="product-content text-center">
-            <h3>
+            <h3 style={{
+              height: "90px",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+            }}>
               <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                {product.name}
+                {product.productName}
               </Link>
             </h3>
             {product.rating && product.rating > 0 ? (
@@ -144,13 +161,19 @@ const ProductGridListSingle = ({
             <div className="product-price">
               {discountedPrice !== null ? (
                 <Fragment>
-                  <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
+                  <span style={{
+                    fontSize: "25px",
+                    color: "orange"
+                  }}>{"₹" + finalDiscountedPrice}</span>{" "}
                   <span className="old">
-                    {currency.currencySymbol + finalProductPrice}
+                    ({"₹" + finalProductPrice})
                   </span>
                 </Fragment>
               ) : (
-                <span>{currency.currencySymbol + finalProductPrice} </span>
+                <span style={{
+                  fontSize: "25px",
+                  color: "orange"
+                }}>{"₹" + finalProductPrice} </span>
               )}
             </div>
           </div>
@@ -166,7 +189,7 @@ const ProductGridListSingle = ({
                       src={process.env.PUBLIC_URL + product.images[0]}
                       alt=""
                     />
-                    {product.image.length > 1 ? (
+                    {product.images.length > 1 ? (
                       <img
                         className="hover-img img-fluid"
                         src={process.env.PUBLIC_URL + product.images[1]}
@@ -195,21 +218,21 @@ const ProductGridListSingle = ({
               <div className="shop-list-content">
                 <h3>
                   <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                    {product.name}
+                    {product.productName}
                   </Link>
                 </h3>
                 <div className="product-list-price">
                   {discountedPrice !== null ? (
                     <Fragment>
                       <span>
-                        {currency.currencySymbol + finalDiscountedPrice}
+                        {"₹" + finalDiscountedPrice}
                       </span>{" "}
                       <span className="old">
-                        {currency.currencySymbol + finalProductPrice}
+                        {"₹" + finalProductPrice}
                       </span>
                     </Fragment>
                   ) : (
-                    <span>{currency.currencySymbol + finalProductPrice} </span>
+                    <span>{"₹" + finalProductPrice} </span>
                   )}
                 </div>
                 {product.rating && product.rating > 0 ? (

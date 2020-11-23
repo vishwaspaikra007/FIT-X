@@ -20,7 +20,7 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
       <nav>
         <ul>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+            <Link to={process.env.PUBLIC_URL + "/products/all"}>
               Products
               {sidebarMenu ? (
                 <span>
@@ -38,7 +38,7 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
                 Object.entries(categories).map(([key, value]) => {
                   return (
                     <li key={key} className="submenu-title">
-                      <Link to={process.env.PUBLIC_URL + `/products/${key}`}>
+                      <Link to={process.env.PUBLIC_URL + `/products/category ${key}`}>
                         {key}
                       </Link>
                       <ul className="submenu" style={{
@@ -49,7 +49,7 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
 
                           value.map((val, i) => (
                             <li key={i}>
-                              <Link to={process.env.PUBLIC_URL + "/products/" + val}>
+                              <Link to={process.env.PUBLIC_URL + "/products/subCategory " + val}>
                                 {val}
                               </Link>
                             </li>
@@ -67,6 +67,12 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
             <Link to={process.env.PUBLIC_URL + "/contact"}>
               {strings["contact_us"]}
             </Link>
+          </li>
+          <li>
+          <Link to={"/become-vendor"}>Become Vendor</Link>
+          </li>
+          <li>
+          <Link to={"/vendors"}>See All Vendors</Link>
           </li>
         </ul>
       </nav>

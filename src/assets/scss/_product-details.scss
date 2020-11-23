@@ -439,7 +439,7 @@
 
       color: #fff;
       border-radius: 3px;
-      background-color: #fa6bff;
+      background-color: $theme-color;
     }
     .product-video {
       position: absolute;
@@ -455,7 +455,7 @@
 
         color: #fff;
         border-radius: 3px;
-        background-color: #fa6bff;
+        background-color: $theme-color;
         @media #{$xs-layout} {
           padding: 3px 10px 3px;
         }
@@ -487,7 +487,7 @@
 
     color: #fff;
     border-radius: 3px;
-    background-color: #fa6bff;
+    background-color: $theme-color;
   }
 }
 .sidebar-active {
@@ -572,7 +572,6 @@
 }
 
 .product-large-image-wrapper {
-  position: relative;
   .product-img-badges {
     position: absolute;
     z-index: 3;
@@ -591,7 +590,7 @@
       color: #fff;
       border-radius: 3px;
       &.pink {
-        background-color: #fa6bff;
+        background-color: $theme-color;
       }
       &.purple {
         background-color: #a749ff;

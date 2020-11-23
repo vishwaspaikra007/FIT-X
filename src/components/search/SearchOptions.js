@@ -18,7 +18,7 @@ export default function SearchOptions(props) {
                     </ListItem>
                 </Link>
             ))}
-            <Link to={{pathname: "/products", state: props.searchOptions}}>
+            <Link to={{pathname: "/products/all", state: props.searchOptions}}>
                 <ListItem>
                     <ListItemText
                         primary={"See all ..."}

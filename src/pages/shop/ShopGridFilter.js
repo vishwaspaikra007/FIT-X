@@ -9,34 +9,68 @@ import LayoutOne from '../../layouts/LayoutOne';
 import Breadcrumb from '../../wrappers/breadcrumb/Breadcrumb';
 import ShopTopbarFilter from '../../wrappers/product/ShopTopbarFilter';
 import ShopProducts from '../../wrappers/product/ShopProducts';
-import {firestore} from '../../firebase'
+import { firestore } from '../../firebase'
+import LoadContent from "../../components/LoadContent";
 
-const ShopGridFilter = ({location, match}) => {
+const ShopGridFilter = ({ location, match }) => {
 
-    console.log(match)
+    const [loadContent, setLoadContent] = useState(true)
+    const [lastDoc, setLastDoc] = useState()
+    const [tagState, setTagState] = useState()
+    const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
 
     let tag1, tag2
-    if(location.state && location.state)
+    const limit = 3
+    if (location.state && location.state)
         tag1 = location.state
-    if(match && match.params && match.params.tag)
-        tag2 = match.params.tag.split(" ")
+    if (match && match.params && match.params.tags)
+        tag2 = match.params.tags
 
     const tag = tag1 ? tag1 : tag2 ? tag2 : undefined
 
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        if(tag) {
-            firestore.collection('products').where("tags", 'array-contains-any', tag)
-            .get().then(docs => {
-                let productList = []
-                docs.forEach(doc => {
-                    productList.push({id: doc.id, ...doc.data()})
-                })
-                setProducts(productList)
+        // console.log(allowFurtherFetch)
+        if (loadContent && allowFurtherFetch) {
+            let ref
+            if (lastDoc)
+                ref = firestore.collection('products').startAfter(lastDoc)
+            else
+                ref = firestore.collection('products')
+
+            if (tag == "all")
+                ref = ref.limit(3).get()
+            else
+                ref = ref.where(tag.slice(0,tag.indexOf(" ")), '==', tag.slice(tag.indexOf(" ")+1,).toLowerCase()).limit(limit).get()
+
+            ref.then(docs => {
+                if (docs.docs.length > 0) {
+                    let productList = JSON.parse(JSON.stringify(products))
+                    console.log(docs)
+                    docs.forEach(doc => {
+                        productList.push({ id: doc.id, ...doc.data() })
+                    })
+                    setLoadContent(false)
+                    setProducts(productList)
+                    setLastDoc(docs.docs[docs.docs.length - 1])
+                    if(docs.docs.length < limit)
+                        setAllowFurtherFetch(false)
+                } else {
+                    setAllowFurtherFetch(false)
+                }
             })
         }
-    }, [])
+    }, [loadContent])
+
+    useEffect(() => {
+        if(tagState != tag)
+        {
+            setTagState(tag)
+            setProducts([])
+            setAllowFurtherFetch(true)
+        }
+    }, [tag])
 
     const [layout, setLayout] = useState('grid three-column');
     const [sortType, setSortType] = useState('');
@@ -49,7 +83,7 @@ const ShopGridFilter = ({location, match}) => {
     const [sortedProducts, setSortedProducts] = useState([]);
 
     const pageLimit = 15;
-    const {pathname} = location;
+    const { pathname } = location;
 
     const getLayout = (layout) => {
         setLayout(layout)
@@ -71,7 +105,7 @@ const ShopGridFilter = ({location, match}) => {
         sortedProducts = filterSortedProducts;
         setSortedProducts(sortedProducts);
         setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
-    }, [offset, products, sortType, sortValue, filterSortType, filterSortValue ]);
+    }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
     return (
         <Fragment>
@@ -88,21 +122,14 @@ const ShopGridFilter = ({location, match}) => {
                 <Breadcrumb />
 
                 <div className="shop-area pt-95 pb-100">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                {/* shop topbar filter */}
-                                <ShopTopbarFilter getLayout={getLayout} getFilterSortParams={getFilterSortParams} productCount={products.length} sortedProductCount={currentData.length} products={products} getSortParams={getSortParams}/>
+                    {/* shop topbar filter */}
+                    {/* <ShopTopbarFilter getLayout={getLayout} getFilterSortParams={getFilterSortParams} productCount={products.length} sortedProductCount={currentData.length} products={products} getSortParams={getSortParams}/> */}
 
-                                {/* shop page content default */}
-                                <ShopProducts layout={layout} products={currentData} />
-
-                                {/* shop product pagination */}
-                                <div className="pro-pagination-style text-center mt-30">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* shop page content default */}
+                    <ShopProducts layout={layout} products={currentData} />
+                    <LoadContent onChange={bool => setLoadContent(bool)} />
+                    {/* shop product pagination */}
+                    <div className="pro-pagination-style text-center mt-30"></div>
                 </div>
             </LayoutOne>
         </Fragment>
@@ -110,12 +137,12 @@ const ShopGridFilter = ({location, match}) => {
 }
 
 ShopGridFilter.propTypes = {
-  location: PropTypes.object,
-  products: PropTypes.array
+    location: PropTypes.object,
+    products: PropTypes.array
 }
 
 const mapStateToProps = state => {
-    return{
+    return {
         products: state.productData.products
     }
 }

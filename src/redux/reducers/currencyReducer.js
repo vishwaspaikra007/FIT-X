@@ -1,7 +1,7 @@
 import { SET_CURRENCY } from "../actions/currencyActions";
 
 const initState = {
-  currencySymbol: "$",
+  currencySymbol: "₹",
   currencyName: "USD",
   currencyRate: 1
 };
