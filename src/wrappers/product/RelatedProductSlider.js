@@ -31,20 +31,26 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
         spaceBottomClass ? spaceBottomClass : ""
       }`}
     >
-      <div className="container">
+      <div className="container" style={{
+        maxWidth: "100%"
+      }}>
         <SectionTitle
           titleText="Related Products"
           positionClass="text-center"
-          spaceClass="mb-50"
+          // spaceClass="mb-50"
         />
-        <div className="row">
-          <Swiper {...settings}>
+        <div className="" style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridGap: "20px"
+        }}>
+          {/* <Swiper {...settings}> */}
             <ProductGrid
               category={category}
               limit={6}
               sliderClassName="swiper-slide"
             />
-          </Swiper>
+          {/* </Swiper> */}
         </div>
       </div>
     </div>

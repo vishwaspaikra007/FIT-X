@@ -31,16 +31,29 @@ const ProductGridSingle = ({
   return (
     <Fragment>
       <div
-        className={`col-xl-3 col-md-6 col-lg-4 col-sm-6 ${
+        className={` ${
           sliderClassName ? sliderClassName : ""
           }`}
+          style={{
+            paddingBottom: "20px",
+            borderBottom: "1px solid #7a7a7a",
+          }}
       >
         <div
           className={`product-wrap ${spaceBottomClass ? spaceBottomClass : ""}`}
         >
-          <div className="product-img">
+          <div className="product-img" style={{
+            height: "0",
+            overflow: 'hidden',
+            paddingBottom: "100%",
+          }}>
             <Link
               product={product}
+              style={{
+                width: '100%',
+                height: "100%",
+                position: "absolute"
+              }}
               to={{
                 pathname: process.env.PUBLIC_URL + "/product/" + product.id,
                 state: { product: product }
@@ -48,7 +61,7 @@ const ProductGridSingle = ({
               <Img
                 style={{
                   width: "100%",
-                  height: "400px",
+                  height: "100%",
                   objectFit: "cover",
                 }}
                 className="default-img"
@@ -59,7 +72,7 @@ const ProductGridSingle = ({
                 <img
                   style={{
                     width: "100%",
-                    height: "400px",
+                    height: "100%",
                     objectFit: "cover",
                   }}
                   className="hover-img"
@@ -145,7 +158,11 @@ const ProductGridSingle = ({
             </div>
           </div>
           <div className="product-content text-center">
-            <h3>
+            <h3 style={{
+              height: "90px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}>
               <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
                 {product.productName}
               </Link>
@@ -160,13 +177,19 @@ const ProductGridSingle = ({
             <div className="product-price">
               {discountedPrice !== null ? (
                 <Fragment>
-                  <span>{"₹" + finalDiscountedPrice}</span>{" "}
+                  <span style={{
+                  fontSize: "25px",
+                  color: "orange"
+                }}>{"₹" + finalDiscountedPrice}</span>{" "}
                   <span className="old">
                     {"₹" + finalProductPrice}
                   </span>
                 </Fragment>
               ) : (
-                  <span>{"₹" + product.price[0]} </span>
+                  <span style={{
+                    fontSize: "25px",
+                    color: "orange"
+                  }}>{"₹" + product.price[0]} </span>
                 )}
             </div>
           </div>

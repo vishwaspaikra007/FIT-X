@@ -58,6 +58,9 @@
     }
     .login-register-form {
       form {
+        label {
+          width: 100%;
+        }
         input {
           background-color: transparent;
           border: 1px solid #ebebeb;
@@ -78,6 +81,7 @@
           .login-toggle-btn {
             padding: 10px 0 19px;
             label {
+              width: 100%;
               color: #242424;
               font-size: 15px;
               font-weight: 400;

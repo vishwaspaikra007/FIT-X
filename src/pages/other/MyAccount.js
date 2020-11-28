@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import firebase, { firestore, timestamp } from '../../firebase'
+import firebase, { firestore } from '../../firebase'
 import { useSelector, useDispatch } from 'react-redux'
 import PreLoader from '../../components/PreLoader'
 import { useToasts } from 'react-toast-notifications'
@@ -47,14 +47,14 @@ const MyAccount = ({ location }) => {
       firestore.collection('users').doc(user.uid).get()
         .then(doc => {
           if (doc && doc.data()) {
-            setUserInfo(doc.data())
-            setUserInfoOld(doc.data())
+            setUserInfo({...userInfo,...doc.data()})
+            setUserInfoOld({...userInfoOld,...doc.data()})
             dispatch({ type: "USER_INFO", userInfo: doc.data() })
           }
         })
     } else if (userInfoRedux) {
-      setUserInfo(userInfoRedux)
-      setUserInfoOld(userInfoRedux)
+      setUserInfo({...userInfo,...userInfoRedux})
+      setUserInfoOld({...userInfoOld,...userInfoRedux})
   }
 
   }, [user])
@@ -74,9 +74,7 @@ const MyAccount = ({ location }) => {
       case 'save':
         setLoading(true)
         if (user && user.uid)
-          firestore.collection("users").doc(user.uid).set({
-            ...userInfo, createdAt: timestamp
-          })
+          firestore.collection("users").doc(user.uid).update(userInfo)
             .then(doc => {
               setLoading(false)
               setStateChanged(false)

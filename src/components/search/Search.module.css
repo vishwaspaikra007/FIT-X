@@ -32,7 +32,7 @@
 @media only screen and (max-width: 550px) {
     .inputWrap {
         width: calc(200% - 20px);
-        margin: 50% 10px;
+        margin: auto 10px;
         text-indent: 0;
     }
 }

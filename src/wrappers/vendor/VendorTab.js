@@ -42,7 +42,11 @@ const TabVendor = ({
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="newVendors">
-              <div className="row">
+              <div className="row" style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                display: "grid",
+                gridGap: "20px"
+              }}>
                 <VendorTab
                   category={category}
                   type="newVendors"
@@ -52,7 +56,11 @@ const TabVendor = ({
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="bestSeller">
-              <div className="row">
+              <div className="row" style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                display: "grid",
+                gridGap: "20px"
+              }}>
                 <VendorTab
                   category={category}
                   type="bestSeller"
@@ -62,7 +70,11 @@ const TabVendor = ({
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="bestCombos">
-              <div className="row">
+              <div className="row" style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                display: "grid",
+                gridGap: "20px"
+              }}>
                 <VendorTab
                   category={category}
                   type="bestCombos"

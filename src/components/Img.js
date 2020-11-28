@@ -14,6 +14,8 @@ function Img(props) {
     return (
         <div style={{
             position: "relative",
+            width: '100%',
+            height: '100%'
         }}>
                 <LazyLoadImage 
                 className={[props.className, props.className].join(" ")}

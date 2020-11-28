@@ -7,7 +7,7 @@ import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import firebase, { auth } from "../../firebase"
+import firebase, { auth, firestore, timestamp } from "../../firebase"
 import { useHistory } from 'react-router-dom'
 import PreLoader from "../../components/PreLoader";
 import { useSelector } from 'react-redux'
@@ -20,7 +20,15 @@ const LoginRegister = ({ location }) => {
   const [isPhoneNumberVerified, setIsPhoneNumberVerified] = useState(false)
   const [pwd, setPwd] = useState("")
   const [requesting, setRequesting] = useState(false)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
 
+  // forgot password related states
+  const [initiateForgotPasswordProcess, setInitiateForgotPasswordProcess] = useState(false)
+  const [isPhoneNumberVerifiedForPWDChange, setIsPhoneNumberVerifiedForPWDChange] = useState(false)
+  const [newPWD, setNewPWD] = useState("")
+  const [confirmNewPWD, setConfirmNewPWD] = useState("")
+  const [credentialToChangePassword, setCredentialToChangePassword] = useState(undefined)
   const { pathname } = location;
   const history = useHistory()
 
@@ -36,31 +44,60 @@ const LoginRegister = ({ location }) => {
         setPwd(e.target.value)
         break
 
+      case "email":
+        setEmail(e.target.value)
+        break
+
+      case "name":
+        setName(e.target.value)
+        break
+
+      case "confirm-new-password":
+        setConfirmNewPWD(e.target.value)
+        break
+
+      case "new-password":
+        setNewPWD(e.target.value)
+        break
+
       default: break
     }
   }
 
-  const setUpReCaptcha = () => {
+  const setUpReCaptcha = (type) => {
 
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
       'size': 'invisible',
       'callback': function (response) {
         // reCAPTCHA solved, allow signInWithPhoneNumber.
-        verifyPhoneNumber();
+        if(type === "authentication")
+          verifyPhoneNumber();
+        else if(type === "changePassword")
+          verifyPhoneNumberToChangePassword()
       }
     })
 
   }
 
-  const verifyPhoneNumber = (e) => {
-    e.preventDefault()
-    setRequesting(true)
-    setUpReCaptcha()
+  const verifyPhoneNumber = (e, type) => {
 
     if (phoneNumber.length != 10) {
       alert("wrong phone number please enter 10 digit phone number")
       return
     }
+    if (!name && type === "register") {
+      alert("please enter your name")
+      return
+    }
+    if (pwd.length < 6 && type === "register") {
+      alert("password must be atleast 6 character long")
+      return
+    }
+
+    e.preventDefault()
+    setRequesting(true)
+    setUpReCaptcha("authentication")
+
     var appVerifier = window.recaptchaVerifier;
     auth.signInWithPhoneNumber("+91" + phoneNumber, appVerifier)
       .then(function (confirmationResult) {
@@ -68,37 +105,52 @@ const LoginRegister = ({ location }) => {
         // user in with confirmationResult.confirm(code).
         let otp = window.prompt("Enter OTP")
         confirmationResult.confirm(otp).then(result => {
+          console.log(result)
           addToast('Phone Verified Successfully', { appearance: 'success' })
-          console.log("result", result)
-          console.log("result.user", result.user)
           setIsPhoneNumberVerified(true)
-          setRequesting(false)
+          if (type === "register")
+            register()
+          else
+            setRequesting(false)
         })
 
       }).catch(function (error) {
         // Error; SMS not sent
         // ...
-        addToast('SMS not sent', { appearance: 'error' })
+        addToast(error.message, { appearance: 'error' })
         setRequesting(false)
       });
   }
 
   const register = (e) => {
-    e.preventDefault()
-    setRequesting(true)
 
     let credential = firebase.auth.EmailAuthProvider.credential("fakeEmail" + phoneNumber + "@gmail.com", pwd);
 
     auth.currentUser.linkWithCredential(credential)
       .then(function (usercred) {
         let user = usercred.user;
-        addToast('Registeration Successfull', { appearance: 'success' })
-        console.log("Account linking success", user);
-        setRequesting(false)
-        if (location && location.state && location.state.from == "become-seller")
-          history.push('/become-vendor')
-        else
-          history.push("/")
+        auth.currentUser.updateProfile({ displayName: name }).then(() => {
+          firestore.collection("users").doc(user.uid).set({
+            displayName: name,
+            phoneNumber: phoneNumber,
+            email: email,
+            createdAt: timestamp
+          }).then(() => {
+            addToast('Registeration Successfull', { appearance: 'success' })
+            console.log("Account linking success", user);
+            setRequesting(false)
+            if (location && location.state && location.state.from == "become-seller")
+              history.push('/become-vendor')
+            else
+              history.push("/")
+          }).catch(err => {
+            addToast('registration error occured', { appearance: 'error' })
+            console.log("some error occured")
+          })
+        }).catch(err => {
+          addToast('registration error occured', { appearance: 'error' })
+          console.log("some error occured")
+        })
       }).catch(function (error) {
         addToast('registration error occured', { appearance: 'error' })
         console.log("Account linking error", error);
@@ -106,11 +158,23 @@ const LoginRegister = ({ location }) => {
       });
   }
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault()
+    if (!phoneNumber || !pwd) {
+      alert("Please enter phone number and password")
+      return
+    }
     setRequesting(true)
+    let email
+    if (phoneNumber.includes('@')) {
+      const docs = await firestore.collection('users').where('email', "==", phoneNumber).get()
+      if (docs.docs.length > 0) {
+        email = docs.docs[0].data().email
+      }
+    } else {
+      email = "fakeemail" + phoneNumber + "@gmail.com"
+    }
 
-    let email = "fakeemail" + phoneNumber + "@gmail.com"
     firebase.auth().signInWithEmailAndPassword(email, pwd)
       .then(result => {
         console.log(result)
@@ -120,10 +184,73 @@ const LoginRegister = ({ location }) => {
           history.push('/become-vendor')
         else
           history.push("/")
-      }).catch(function (error) {
+      }).catch(function (err) {
         // Handle Errors here.
-        addToast('login error occured', { appearance: 'error' })
+        console.log(err)
+        addToast(err.message, { appearance: 'error' })
         // ...
+        setRequesting(false)
+      });
+  }
+
+  const forgotPassword = (e) => {
+    e.preventDefault()
+    if(newPWD != confirmNewPWD) {
+      alert("password did not match")
+      return
+    }
+    if(newPWD < 6) {
+      alert("password must have atleast 6 characters")
+      return
+    }
+    
+    setRequesting(true)
+    auth.signInWithCredential(credentialToChangePassword).then(function () {
+      let firebaseUser = auth.currentUser;
+      firebaseUser.updatePassword(newPWD).then(function () {
+        alert("password changed successfuly")
+        setNewPWD("")
+        setConfirmNewPWD("")
+        setRequesting(false)
+        setCredentialToChangePassword(undefined)
+        setInitiateForgotPasswordProcess(false)
+        addToast('Password Successfully Changed', { appearance: 'success' })
+        history.push("/")
+      }).catch(function (err) {
+        setRequesting(false)
+        addToast(err.message, { appearance: 'error' })
+      });
+    }).catch(function (err) {
+      setRequesting(false)
+      addToast(err.message, { appearance: 'error' })
+    });
+  }
+
+  const verifyPhoneNumberToChangePassword = (e) => {
+    e.preventDefault()
+    setRequesting(true)
+    var applicationVerifier = new firebase.auth.RecaptchaVerifier(
+      'sign-in-button');
+
+    setUpReCaptcha("changePassword")
+
+    var appVerifier = window.recaptchaVerifier;
+    var provider = new firebase.auth.PhoneAuthProvider();
+    provider.verifyPhoneNumber("+91" + phoneNumber, appVerifier)
+      .then(function (verificationId) {
+        var verificationCode = window.prompt('Please enter the verification ' +
+          'code that was sent to your mobile device.');
+        return firebase.auth.PhoneAuthProvider.credential(verificationId,
+          verificationCode);
+      })
+      .catch(err => {
+        setRequesting(false)
+        addToast(err.message, { appearance: 'error' })
+      })
+      .then(function (phoneCredential) {
+        // return firebase.auth().signInWithCredential(phoneCredential);
+        setCredentialToChangePassword(phoneCredential)
+        setIsPhoneNumberVerifiedForPWDChange(true)
         setRequesting(false)
       });
   }
@@ -132,7 +259,7 @@ const LoginRegister = ({ location }) => {
     <Fragment>
       <div id="sign-in-button" style={{
         position: "fixed",
-        bottom: 0, right: 0, zIndex: 1
+        bottom: 0, right: 0, zIndex: 999, background: "white"
       }}>
 
       </div>
@@ -180,45 +307,118 @@ const LoginRegister = ({ location }) => {
                       <Tab.Pane eventKey="login">
                         <div className="login-form-container">
                           <div className="login-register-form">
-                            <form>
-                              <input
-                                type="string"
-                                name="phone-number"
-                                placeholder="phone number"
-                                value={phoneNumber}
-                                onChange={handleChange}
-                              />
-                              <input
-                                type="password"
-                                name="user-password"
-                                placeholder="Password"
-                                value={pwd}
-                                onChange={handleChange}
-                              />
-                              <div className="button-box">
-                                <div className="login-toggle-btn">
-                                  <input type="checkbox" />
-                                  <label className="ml-10">Remember me</label>
-                                  <Link to={process.env.PUBLIC_URL + "/"}>
-                                    Forgot Password?
-                                  </Link>
-                                </div>
-                                <button onClick={e => login(e)}
-                                  disabled
-                                  disabled={requesting}>
-                                  <span>Login</span>
-                                </button>
-                                <button
-                                  disabled={requesting}
-                                  style={{
-                                    display: "block",
-                                    margin: "20px auto",
-                                  }} onClick={e => verifyPhoneNumber(e)}>
-                                  <span>or Send an OTP</span>
-                                </button>
-                              </div>
+                            {
+                              !initiateForgotPasswordProcess ?
+                                <form>
+                                  <input
+                                    type="string"
+                                    name="phone-number"
+                                    placeholder="phone number"
+                                    value={phoneNumber}
+                                    onChange={handleChange}
+                                  />
+                                  <input
+                                    type="password"
+                                    name="user-password"
+                                    placeholder="Password"
+                                    value={pwd}
+                                    onChange={handleChange}
+                                  />
+                                  <div className="button-box">
+                                    <button onClick={e => login(e)}
+                                      disabled
+                                      disabled={requesting}>
+                                      <span>Login</span>
+                                    </button>
+                                    <button
+                                      disabled={requesting}
+                                      style={{
+                                        display: "block",
+                                        margin: "20px auto",
+                                      }} onClick={e => verifyPhoneNumber(e)}>
+                                      <span>or Send an OTP</span>
+                                    </button>
+                                    <p style={{
+                                      fontSize: "10px",
+                                      marginTop: "10px",
+                                    }}>
+                                      We will send you a text to verify your phone.
+                                      Message and Data rates may apply.
+                                    </p>
+                                  </div>
+                                  <p onClick={() => setInitiateForgotPasswordProcess(true)}
+                                    style={{
+                                      textAlign: "right",
+                                      cursor: "pointer",
+                                      fontSize: "12px",
+                                      marginTop: "20px",
+                                      color: "#8f8f8f",
+                                    }}
+                                  >
+                                    Forgot Password ?
+                                  </p>
+                                </form>
+                                :
+                                <form>
+                                  <input
+                                    type="string"
+                                    name="phone-number"
+                                    placeholder="phone number"
+                                    value={phoneNumber}
+                                    onChange={handleChange}
+                                    disabled={isPhoneNumberVerifiedForPWDChange}
+                                  />
+                                  {
+                                    !isPhoneNumberVerifiedForPWDChange ?
+                                      <>
+                                        <div className="button-box">
+                                          <button
+                                            disabled={requesting}
+                                            style={{
+                                              display: "block",
+                                              margin: "20px auto",
+                                            }} onClick={e => verifyPhoneNumberToChangePassword(e)}>
+                                            <span>Send an OTP</span>
+                                          </button>
+                                        </div>
+                                        <p style={{
+                                          fontSize: "10px",
+                                          marginTop: "10px",
+                                        }}>
+                                          We will send you a text to verify your phone.
+                                          Message and Data rates may apply.
+                                      </p>
+                                      </> : null
+                                  }
 
-                            </form>
+                                  {
+                                    !isPhoneNumberVerifiedForPWDChange ? null :
+                                      <>
+                                        <input
+                                          type="password"
+                                          name="new-password"
+                                          placeholder="New Password"
+                                          value={newPWD}
+                                          onChange={handleChange}
+                                        />
+                                        <input
+                                          type="password"
+                                          name="confirm-new-password"
+                                          placeholder="Confirm New Password"
+                                          value={confirmNewPWD}
+                                          onChange={handleChange}
+                                        />
+                                        <div className="button-box">
+                                          <button
+                                            disabled={requesting}
+                                            onClick={e => forgotPassword(e)}>
+                                            <span>Continue</span>
+                                          </button>
+                                        </div>
+                                      </>
+                                  }
+                                </form>
+                            }
                           </div>
                         </div>
                       </Tab.Pane>
@@ -226,37 +426,67 @@ const LoginRegister = ({ location }) => {
                         <div className="login-form-container">
                           <div className="login-register-form">
                             <form>
+                              <label>Name
                               <input
-                                type="string"
-                                name="phone-number"
-                                placeholder="phone number"
-                                value={phoneNumber}
-                                onChange={handleChange}
-                                style={{
-                                  opacity: isPhoneNumberVerified ? "0.6" : "1"
-                                }}
-                                disabled={isPhoneNumberVerified}
-                              />
-                              {
-                                isPhoneNumberVerified ?
-                                  <input
-                                    type="password"
-                                    name="user-password"
-                                    placeholder="Password"
-                                    value={pwd}
-                                    onChange={handleChange}
-                                  /> : null
-                              }
-
+                                  type="string"
+                                  name="name"
+                                  placeholder=""
+                                  value={name}
+                                  onChange={handleChange}
+                                  style={{
+                                    opacity: isPhoneNumberVerified ? "0.6" : "1"
+                                  }}
+                                  disabled={isPhoneNumberVerified}
+                                /></label>
+                              <label>Mobile Number
+                              <input
+                                  type="string"
+                                  name="phone-number"
+                                  placeholder="phone number"
+                                  value={phoneNumber}
+                                  onChange={handleChange}
+                                  style={{
+                                    opacity: isPhoneNumberVerified ? "0.6" : "1"
+                                  }}
+                                  disabled={isPhoneNumberVerified}
+                                /></label>
+                              <label>email (optional)
+                              <input
+                                  type="string"
+                                  name="email"
+                                  placeholder="(optional)"
+                                  value={email}
+                                  onChange={handleChange}
+                                  style={{
+                                    opacity: isPhoneNumberVerified ? "0.6" : "1"
+                                  }}
+                                  disabled={isPhoneNumberVerified}
+                                /></label>
+                              <label>Password (atleast 6 character)
+                                <input
+                                  type="password"
+                                  name="user-password"
+                                  placeholder="Password"
+                                  value={pwd}
+                                  onChange={handleChange}
+                                /> </label>
                               <div className="button-box">
                                 <button
                                   disabled={requesting}
                                   onClick={
-                                    isPhoneNumberVerified ? e => register(e) : e => verifyPhoneNumber(e)
+                                    pwd.length > 5 ? e => verifyPhoneNumber(e, "register")
+                                      : e => alert("password must have atleast 6 characters")
                                   }>
-                                  <span>{isPhoneNumberVerified ? "Register" : "Send OTP"}</span>
+                                  <span>Continue</span>
                                 </button>
                               </div>
+                              <p style={{
+                                fontSize: "10px",
+                                marginTop: "10px",
+                              }}>
+                                We will send you a text to verify your phone.
+                                Message and Data rates may apply.
+                              </p>
                             </form>
                           </div>
                         </div>
@@ -269,7 +499,7 @@ const LoginRegister = ({ location }) => {
           </div>
         </div>
       </LayoutOne>
-    </Fragment>
+    </Fragment >
   );
 };
 
