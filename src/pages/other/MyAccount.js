@@ -21,18 +21,22 @@ const MyAccount = ({ location }) => {
   const userInfoRedux = useSelector(state => state.generalData.userInfo)
 
   const [userInfo, setUserInfo] = useState({
-    firstName: "",
-    lastName: "",
+    displayName: "",
     email: "",
     phoneNumber: "",
     address: "",
+    pincode: "",
+    city: "",
+    state: "",
   })
   const [userInfoOld, setUserInfoOld] = useState({
-    firstName: "",
-    lastName: "",
+    displayName: "",
     email: "",
     phoneNumber: "",
     address: "",
+    pincode: "",
+    city: "",
+    state: "",
   })
 
   const [pwd, setPwd] = useState("")
@@ -42,14 +46,14 @@ const MyAccount = ({ location }) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (user && user.uid && userInfo.firstName == "" && !userInfoRedux) {
+    if (user && user.uid && userInfo.displayName == "" && !userInfoRedux) {
       console.log(user)
       firestore.collection('users').doc(user.uid).get()
         .then(doc => {
           if (doc && doc.data()) {
-            setUserInfo({...userInfo,...doc.data()})
-            setUserInfoOld({...userInfoOld,...doc.data()})
-            dispatch({ type: "USER_INFO", userInfo: doc.data() })
+            setUserInfo({...userInfo,...doc.data(), uid: doc.id})
+            setUserInfoOld({...userInfoOld,...doc.data(), uid: doc.id})
+            dispatch({ type: "USER_INFO", userInfo: {...doc.data(),uid: doc.id} })
           }
         })
     } else if (userInfoRedux) {
@@ -163,14 +167,8 @@ const MyAccount = ({ location }) => {
                             <div className="row">
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
-                                  <label>First Name</label>
-                                  <input name="firstName" value={userInfo.firstName} onChange={e => handleChange(e, 'userInfo')} type="text" />
-                                </div>
-                              </div>
-                              <div className="col-lg-6 col-md-6">
-                                <div className="billing-info">
-                                  <label>Last Name</label>
-                                  <input name="lastName" value={userInfo.lastName} onChange={e => handleChange(e, 'userInfo')} type="text" />
+                                  <label>Name</label>
+                                  <input name="displayName" value={userInfo.displayName} onChange={e => handleChange(e, 'userInfo')} type="text" />
                                 </div>
                               </div>
                               <div className="col-lg-12 col-md-12">
@@ -212,7 +210,24 @@ const MyAccount = ({ location }) => {
                                 </div> */}
                                 </div>
                               </div>
-
+                              <div className="col-lg-6 col-md-6">
+                                <div className="billing-info">
+                                  <label>Pincode</label>
+                                  <input name="pincode" value={userInfo.pincode} onChange={e => handleChange(e, 'userInfo')} type="text" maxLength="6"/>
+                                </div>
+                              </div>
+                              <div className="col-lg-6 col-md-6">
+                                <div className="billing-info">
+                                  <label>city</label>
+                                  <input name="city" value={userInfo.city} onChange={e => handleChange(e, 'userInfo')} type="text" />
+                                </div>
+                              </div>
+                              <div className="col-lg-6 col-md-6">
+                                <div className="billing-info">
+                                  <label>State</label>
+                                  <input name="phoneNumber" value={userInfo.state} onChange={e => handleChange(e, 'userInfo')} type="text" />
+                                </div>
+                              </div>
                             </div>
                             {
                               !stateChanged ? null :

@@ -65,8 +65,7 @@ const Product = ({ location, product: productS1, match }) => {
             {/* product description tab */}
             <ProductDescriptionTab
               spaceBottomClass="pb-90"
-              brief={product.brief}
-              specification={product.specification}
+              product={product}
             />
             {/*  */}
             {/* related product slider */}

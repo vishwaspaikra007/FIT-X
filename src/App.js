@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 import useFirebase from "./useFirebase";
 import BecomeVendor from "./pages/BecomeVendor";
+import useRazorPay from './useRazorPay'
 
 const Vendor = lazy(() => import("./pages/Vendor"));
 const Vendors = lazy(() => import("./pages/Vendors"));
@@ -63,6 +64,7 @@ const Checkout = lazy(() => import("./pages/other/Checkout"));
 const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = (props) => {
+  useRazorPay()
   useFirebase()
   useEffect(() => {
     props.dispatch(

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import MetaTags from "react-meta-tags";
 import { connect } from "react-redux";
@@ -7,13 +7,107 @@ import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { getDiscountPrice } from "../../helpers/product";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import { useSelector, useDispatch } from 'react-redux'
+import { firestore } from '../../firebase'
+import { useToasts } from 'react-toast-notifications'
+import axios from 'axios'
+import PreLoader from '../../components/PreLoader'
 
 const Checkout = ({ location, cartItems, currency }) => {
+
+  const { addToast } = useToasts()
   const { pathname } = location;
   let cartTotalPrice = 0;
 
+  const [requesting, setRequesting] = useState(false)
+  const userInfoRedux = useSelector(state => state.generalData.userInfo)
+  const user = useSelector(state => state.userData.user)
+  const dispatch = useDispatch()
+  const [userInfo, setUserInfo] = useState({
+    displayName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    pincode: "",
+    city: "",
+    state: "",
+  })
+
+
+  useEffect(() => {
+    if (user && user.uid && userInfo.displayName == "" && !userInfoRedux) {
+      console.log(user)
+      firestore.collection('users').doc(user.uid).get()
+        .then(doc => {
+          if (doc && doc.data()) {
+            setUserInfo({ ...userInfo, ...doc.data(), uid: doc.id })
+            dispatch({ type: "USER_INFO", userInfo: {...doc.data(), uid: doc.id} })
+          }
+        })
+    } else if (userInfoRedux) {
+      setUserInfo({ ...userInfo, ...userInfoRedux })
+    }
+
+  }, [user])
+
+
+  const checkout = async (e) => {
+    e.preventDefault()
+    console.log(cartTotalPrice.toFixed(2))
+    if (
+      userInfo.phoneNumber ||
+      userInfo.address ||
+      userInfo.email ||
+      userInfo.displayName ||
+      userInfo.city ||
+      userInfo.pincode ||
+      userInfo.state) {
+      alert("All inputs are necessary")
+      return
+    }
+    setRequesting(true)
+    const response = (await axios.post('http://localhost:3001/razorpay', { 
+        amount: cartTotalPrice.toFixed(2),
+        userInfo, cartItems
+       })).data
+    console.log(response)
+
+    if(!response.success) {
+      alert("payment failed try again")
+      setRequesting(false)
+      return
+    }
+    console.log(response)
+    
+    const options = {
+      key: "rzp_test_5GYgTGJ0LVCc6x",
+      currency: response.currency,
+      amount: response.amount.toString(), 
+      order_id: response.id,
+      name: 'FitX',
+      description: cartItems.length + " products",
+      image: 'https://avatars1.githubusercontent.com/u/44310959?s=460&u=ba991aaa71f29a628093f19348452aafa9db1717&v=4',
+      handler: function (response) {
+        alert(response.razorpay_payment_id)
+        alert(response.razorpay_order_id)
+        alert(response.razorpay_signature)
+        setRequesting(false)
+      },
+      prefill: {
+        name: userInfo.name,
+        email: userInfo.email,
+        contact: userInfo.phoneNumber
+      }
+    }
+    const paymentObject = new window.Razorpay(options)
+    paymentObject.open()
+  }
   return (
     <Fragment>
+      { requesting ? <PreLoader  style={{
+          background: "#ffffff56",
+          backdropFilter: "blur(2px)",
+        }} /> : null}
       <MetaTags>
         <title>fitX | Checkout</title>
         <meta
@@ -38,33 +132,9 @@ const Checkout = ({ location, cartItems, currency }) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
-                          <label>First Name</label>
-                          <input type="text" />
-                        </div>
-                      </div>
-                      <div className="col-lg-6 col-md-6">
-                        <div className="billing-info mb-20">
-                          <label>Last Name</label>
-                          <input type="text" />
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="billing-info mb-20">
-                          <label>Company Name</label>
-                          <input type="text" />
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="billing-select mb-20">
-                          <label>Country</label>
-                          <select>
-                            <option>Select a country</option>
-                            <option>Azerbaijan</option>
-                            <option>Bahamas</option>
-                            <option>Bahrain</option>
-                            <option>Bangladesh</option>
-                            <option>Barbados</option>
-                          </select>
+                          <label>Name</label>
+                          <input type="text" name="displayName" value={userInfo.displayName}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
                       </div>
                       <div className="col-lg-12">
@@ -74,54 +144,45 @@ const Checkout = ({ location, cartItems, currency }) => {
                             className="billing-address"
                             placeholder="House number and street name"
                             type="text"
-                          />
-                          <input
-                            placeholder="Apartment, suite, unit etc."
-                            type="text"
+                            name="address" value={userInfo.address}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })}
                           />
                         </div>
                       </div>
                       <div className="col-lg-12">
                         <div className="billing-info mb-20">
                           <label>Town / City</label>
-                          <input type="text" />
+                          <input type="text" name="city" value={userInfo.city}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
-                          <label>State / County</label>
-                          <input type="text" />
+                          <label>State </label>
+                          <input type="text" name="state" value={userInfo.state}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
-                          <label>Postcode / ZIP</label>
-                          <input type="text" />
+                          <label>Pincode</label>
+                          <input type="text" name="pincode" value={userInfo.pincode}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
                           <label>Phone</label>
-                          <input type="text" />
+                          <input type="text" name="phoneNumber" value={userInfo.phoneNumber}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
                           <label>Email Address</label>
-                          <input type="text" />
+                          <input type="text" name="email" value={userInfo.email}
+                            onChange={e => setUserInfo({ ...userInfo, [e.target.name]: e.target.value })} />
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="additional-info-wrap">
-                      <h4>Additional information</h4>
-                      <div className="additional-info">
-                        <label>Order notes</label>
-                        <textarea
-                          placeholder="Notes about your order, e.g. special notes for delivery. "
-                          name="message"
-                          defaultValue={""}
-                        />
                       </div>
                     </div>
                   </div>
@@ -154,9 +215,9 @@ const Checkout = ({ location, cartItems, currency }) => {
 
                               discountedPrice != null
                                 ? (cartTotalPrice +=
-                                    finalDiscountedPrice * cartItem.quantity)
+                                  finalDiscountedPrice * cartItem.quantity)
                                 : (cartTotalPrice +=
-                                    finalProductPrice * cartItem.quantity);
+                                  finalProductPrice * cartItem.quantity);
                               return (
                                 <li key={key}>
                                   <span className="order-middle-left">
@@ -165,14 +226,14 @@ const Checkout = ({ location, cartItems, currency }) => {
                                   <span className="order-price">
                                     {discountedPrice !== null
                                       ? "₹" +
-                                        (
-                                          finalDiscountedPrice *
-                                          cartItem.quantity
-                                        ).toFixed(2)
+                                      (
+                                        finalDiscountedPrice *
+                                        cartItem.quantity
+                                      ).toFixed(2)
                                       : "₹" +
-                                        (
-                                          finalProductPrice * cartItem.quantity
-                                        ).toFixed(2)}
+                                      (
+                                        finalProductPrice * cartItem.quantity
+                                      ).toFixed(2)}
                                   </span>
                                 </li>
                               );
@@ -197,29 +258,32 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="payment-method"></div>
                     </div>
-                    <div className="place-order mt-25">
-                      <button className="btn-hover">Place Order</button>
+                    <div className="place-order mt-25 btn-hover" style={{
+                      overflow: "hidden",
+                      borderRadius: "50px",
+                    }}>
+                      <button onClick={e => checkout(e)}>Place Order</button>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="row">
-                <div className="col-lg-12">
-                  <div className="item-empty-area text-center">
-                    <div className="item-empty-area__icon mb-30">
-                      <i className="pe-7s-cash"></i>
-                    </div>
-                    <div className="item-empty-area__text">
-                      No items found in cart to checkout <br />{" "}
-                      <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
-                        Shop Now
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="item-empty-area text-center">
+                      <div className="item-empty-area__icon mb-30">
+                        <i className="pe-7s-cash"></i>
+                      </div>
+                      <div className="item-empty-area__text">
+                        No items found in cart to checkout <br />{" "}
+                        <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                          Shop Now
                       </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </LayoutOne>

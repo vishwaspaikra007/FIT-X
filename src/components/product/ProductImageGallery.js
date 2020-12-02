@@ -134,22 +134,23 @@ const ProductImageGallery = ({ product }) => {
                     position: "relative",
                     height: "0",
                     justifyContent: "center",
-                }}>
+                  }}>
                     <img
-                    style={{
-                      width: "auto",
-                      height: "100%",
-                      objectFit: "cover",
-                      position: "absolute"
-                    }}
-                    src={process.env.PUBLIC_URL + single}
-                    className="img-fluid"
-                    alt=""
-                  />
+                      style={{
+                        width: "auto",
+                        height: "100%",
+                        objectFit: "cover",
+                        position: "absolute"
+
+                      }}
+                      src={process.env.PUBLIC_URL + single}
+                      className="img-fluid"
+                      alt=""
+                    />
+                  </div>
                 </div>
-                </div>
-        );
-      })}
+              );
+            })}
         </Swiper>
       </div>
     </Fragment >

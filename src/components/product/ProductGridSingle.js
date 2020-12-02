@@ -60,7 +60,7 @@ const ProductGridSingle = ({
               }}>
               <Img
                 style={{
-                  width: "100%",
+                  // width: "100%",
                   height: "100%",
                   objectFit: "cover",
                 }}
@@ -71,7 +71,6 @@ const ProductGridSingle = ({
               {product.images.length > 1 ? (
                 <img
                   style={{
-                    width: "100%",
                     height: "100%",
                     objectFit: "cover",
                   }}
