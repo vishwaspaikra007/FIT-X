@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom'
 import PreLoader from "../../components/PreLoader";
 import { useSelector } from 'react-redux'
 import { useToasts } from "react-toast-notifications";
+import Axios from "axios";
 
 const LoginRegister = ({ location }) => {
   const { addToast } = useToasts()
@@ -70,16 +71,16 @@ const LoginRegister = ({ location }) => {
       'size': 'invisible',
       'callback': function (response) {
         // reCAPTCHA solved, allow signInWithPhoneNumber.
-        if(type === "authentication")
+        if (type === "authentication")
           verifyPhoneNumber();
-        else if(type === "changePassword")
+        else if (type === "changePassword")
           verifyPhoneNumberToChangePassword()
       }
     })
 
   }
 
-  const verifyPhoneNumber = (e, type) => {
+  const verifyPhoneNumber = async (e, type) => {
 
     if (phoneNumber.length != 10) {
       alert("wrong phone number please enter 10 digit phone number")
@@ -99,6 +100,17 @@ const LoginRegister = ({ location }) => {
     setUpReCaptcha("authentication")
 
     var appVerifier = window.recaptchaVerifier;
+
+    const url = 'http://localhost:3001/login'
+    // const url = 'https://fit-x-backend.herokuapp.com/login'
+
+    const user = (await Axios.post(url, { phoneNumber: "+91" + phoneNumber })).data
+    if (!user) {
+      setRequesting(false)
+      addToast("No user with the given phone number", { appearance: 'warning' })
+      return
+    }
+
     auth.signInWithPhoneNumber("+91" + phoneNumber, appVerifier)
       .then(function (confirmationResult) {
         // SMS sent. Prompt user to type the code from the message, then sign the
@@ -110,8 +122,13 @@ const LoginRegister = ({ location }) => {
           setIsPhoneNumberVerified(true)
           if (type === "register")
             register()
-          else
+          else {
             setRequesting(false)
+            if (location && location.state && location.state.from)
+              history.push(location.state.from)
+            else
+              history.push("/")
+          }
         })
 
       }).catch(function (error) {
@@ -123,6 +140,8 @@ const LoginRegister = ({ location }) => {
   }
 
   const register = (e) => {
+
+    // password length is > 6 is verfied via register button
 
     let credential = firebase.auth.EmailAuthProvider.credential("fakeEmail" + phoneNumber + "@gmail.com", pwd);
 
@@ -139,10 +158,10 @@ const LoginRegister = ({ location }) => {
             addToast('Registeration Successfull', { appearance: 'success' })
             console.log("Account linking success", user);
             setRequesting(false)
-            if (location && location.state && location.state.from == "become-seller")
-              history.push('/become-vendor')
-            else
-              history.push("/")
+            // if (location && location.state && location.state.from)
+            //   history.push(location.state.from)
+            // else
+            history.push("/")
           }).catch(err => {
             addToast('registration error occured', { appearance: 'error' })
             console.log("some error occured")
@@ -168,20 +187,21 @@ const LoginRegister = ({ location }) => {
     let email
     if (phoneNumber.includes('@')) {
       const docs = await firestore.collection('users').where('email', "==", phoneNumber).get()
+      console.log(docs)
       if (docs.docs.length > 0) {
-        email = docs.docs[0].data().email
+        email = "fakeemail" + docs.docs[0].data().phoneNumber + "@gmail.com"
       }
     } else {
       email = "fakeemail" + phoneNumber + "@gmail.com"
     }
-
+    console.log(email)
     firebase.auth().signInWithEmailAndPassword(email, pwd)
       .then(result => {
         console.log(result)
         setRequesting(false)
         addToast('login Successfull', { appearance: 'success' })
-        if (location && location.state && location.state.from == "become-seller")
-          history.push('/become-vendor')
+        if (location && location.state && location.state.from)
+          history.push(location.state.from)
         else
           history.push("/")
       }).catch(function (err) {
@@ -195,15 +215,15 @@ const LoginRegister = ({ location }) => {
 
   const forgotPassword = (e) => {
     e.preventDefault()
-    if(newPWD != confirmNewPWD) {
+    if (newPWD != confirmNewPWD) {
       alert("password did not match")
       return
     }
-    if(newPWD < 6) {
+    if (newPWD < 6) {
       alert("password must have atleast 6 characters")
       return
     }
-    
+
     setRequesting(true)
     auth.signInWithCredential(credentialToChangePassword).then(function () {
       let firebaseUser = auth.currentUser;
@@ -257,6 +277,7 @@ const LoginRegister = ({ location }) => {
 
   return (
     <Fragment>
+      {user && user.uid && location.state && location.state.from ? <Redirect to={location.state.from} /> : null}
       <div id="sign-in-button" style={{
         position: "fixed",
         bottom: 0, right: 0, zIndex: 999, background: "white"
@@ -313,7 +334,7 @@ const LoginRegister = ({ location }) => {
                                   <input
                                     type="string"
                                     name="phone-number"
-                                    placeholder="phone number"
+                                    placeholder="phone number / email"
                                     value={phoneNumber}
                                     onChange={handleChange}
                                   />

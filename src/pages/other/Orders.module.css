@@ -1,0 +1,33 @@
+.itemBox {
+    display: grid;
+    grid-template-columns: 100px auto;
+    overflow: hidden;
+    height: 100px;
+}
+.itemsWrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+    margin: 20px;
+}
+.img {
+    height: 100px;
+    margin: 0 auto;
+}
+.text {
+    height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.link {
+    padding: 2px 5px;
+    background-color: #3e3e3e;
+    border-radius: 5px;
+}
+.status {
+    color: green;
+}
+.description {
+    padding: 10px;
+}

@@ -10,6 +10,7 @@ import firebase, { firestore } from '../../firebase'
 import { useSelector, useDispatch } from 'react-redux'
 import PreLoader from '../../components/PreLoader'
 import { useToasts } from 'react-toast-notifications'
+import { Redirect } from 'react-router-dom'
 
 const MyAccount = ({ location }) => {
   const { addToast } = useToasts()
@@ -123,6 +124,10 @@ const MyAccount = ({ location }) => {
 
   return (
     <Fragment>
+      { 
+        user && user.uid ? null : 
+        <Redirect to={{pathname: "/login-register", state: {from: location.pathname}}} />
+      }
       {
         loading ? <PreLoader style={{
           background: "#ffffff56",
@@ -225,7 +230,7 @@ const MyAccount = ({ location }) => {
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
                                   <label>State</label>
-                                  <input name="phoneNumber" value={userInfo.state} onChange={e => handleChange(e, 'userInfo')} type="text" />
+                                  <input name="state" value={userInfo.state} onChange={e => handleChange(e, 'userInfo')} type="text" />
                                 </div>
                               </div>
                             </div>

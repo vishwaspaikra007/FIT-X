@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { LazyLoadImage, trackWindowScroll } from 'react-lazy-load-image-component';
+import PreLoader from "./PreLoader";
 
 function Img(props) {
 
@@ -21,7 +22,6 @@ function Img(props) {
                 className={[props.className, props.className].join(" ")}
                 scrollPosition={props.scrollPosition}
                 src={props.src} style={{
-                    ...props.style, 
                     display: "block",
                     transition: isLoaded ? "1s ease-out" : 0,
                     opacity: isLoaded ? 1 : 0,
@@ -29,7 +29,9 @@ function Img(props) {
                     position: loaded ? "relative" : "absolute", 
                     top: 0, left: 0,
                     zIndex: loaded ? 0 : -1,
+                    width: loaded ? 'auto' : "100%",
                     objectFit: "cover",
+                    ...props.style, 
                     }} afterLoad={() => setLoaded(true)} />
                 <div className={["fitX-preloader-wrapper", props.className].join(" ")} 
                     style={{

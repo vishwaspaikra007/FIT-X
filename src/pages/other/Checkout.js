@@ -12,10 +12,12 @@ import { firestore } from '../../firebase'
 import { useToasts } from 'react-toast-notifications'
 import axios from 'axios'
 import PreLoader from '../../components/PreLoader'
+import { Redirect, useHistory } from 'react-router-dom'
 
 const Checkout = ({ location, cartItems, currency }) => {
 
   const { addToast } = useToasts()
+  const history = useHistory()
   const { pathname } = location;
   let cartTotalPrice = 0;
 
@@ -41,7 +43,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         .then(doc => {
           if (doc && doc.data()) {
             setUserInfo({ ...userInfo, ...doc.data(), uid: doc.id })
-            dispatch({ type: "USER_INFO", userInfo: {...doc.data(), uid: doc.id} })
+            dispatch({ type: "USER_INFO", userInfo: { ...doc.data(), uid: doc.id } })
           }
         })
     } else if (userInfoRedux) {
@@ -55,34 +57,37 @@ const Checkout = ({ location, cartItems, currency }) => {
     e.preventDefault()
     console.log(cartTotalPrice.toFixed(2))
     if (
-      userInfo.phoneNumber ||
-      userInfo.address ||
-      userInfo.email ||
-      userInfo.displayName ||
-      userInfo.city ||
-      userInfo.pincode ||
-      userInfo.state) {
+      !userInfo.phoneNumber ||
+      !userInfo.address ||
+      !userInfo.email ||
+      !userInfo.displayName ||
+      !userInfo.city ||
+      !userInfo.pincode ||
+      !userInfo.state) {
       alert("All inputs are necessary")
       return
     }
     setRequesting(true)
-    const response = (await axios.post('http://localhost:3001/razorpay', { 
-        amount: cartTotalPrice.toFixed(2),
-        userInfo, cartItems
-       })).data
+    const domain = "https://fit-x-backend.herokuapp.com/"
+    // const domain = "http://localhost:3001/"
+    const response = (await axios.post(domain + 'create-order', {
+      amount: cartTotalPrice.toFixed(2),
+      userInfo, 
+      cartItems: cartItems.map(item => ({...item, deliveryStatus: 'order sent'}))
+    })).data
     console.log(response)
 
-    if(!response.success) {
+    if (!response.success) {
       alert("payment failed try again")
       setRequesting(false)
       return
     }
     console.log(response)
-    
+
     const options = {
       key: "rzp_test_5GYgTGJ0LVCc6x",
       currency: response.currency,
-      amount: response.amount.toString(), 
+      amount: response.amount.toString(),
       order_id: response.id,
       name: 'FitX',
       description: cartItems.length + " products",
@@ -92,6 +97,15 @@ const Checkout = ({ location, cartItems, currency }) => {
         alert(response.razorpay_order_id)
         alert(response.razorpay_signature)
         setRequesting(false)
+        addToast("payment successful", {appearance: "success"})
+        history.push('/orders')
+      },
+      modal: {
+        escape: false,
+        ondismiss: function(){
+            alert("payment cancelled")
+            setRequesting(false)
+         }
       },
       prefill: {
         name: userInfo.name,
@@ -104,10 +118,14 @@ const Checkout = ({ location, cartItems, currency }) => {
   }
   return (
     <Fragment>
-      { requesting ? <PreLoader  style={{
-          background: "#ffffff56",
-          backdropFilter: "blur(2px)",
-        }} /> : null}
+      {
+        user && user.uid ? null :
+          <Redirect to={{ pathname: '/login-register', state: { from: "/checkout" } }} />
+      }
+      {requesting ? <PreLoader style={{
+        background: "#ffffff56",
+        backdropFilter: "blur(2px)",
+      }} /> : null}
       <MetaTags>
         <title>fitX | Checkout</title>
         <meta

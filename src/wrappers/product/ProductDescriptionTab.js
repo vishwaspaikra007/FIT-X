@@ -48,7 +48,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   }
   return (
     <div className={`description-review-area ${spaceBottomClass}`}>
-      <div className="container">
+      <div className="container" id="review">
         <div className="description-review-wrapper">
           <Tab.Container defaultActiveKey="productDescription">
             <Nav variant="pills" className="description-review-topbar">
