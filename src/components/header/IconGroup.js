@@ -69,6 +69,7 @@ const IconGroup = ({
               user && user.uid ?
                 <>
                   <li><Link to={process.env.PUBLIC_URL + "/my-account"}>my account</Link></li>
+                  <li><Link to={process.env.PUBLIC_URL + "/orders"}>my orders</Link></li>
                   <li onClick={() => logout()}><a>Logout</a></li>
                 </>
                 : <li><Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link></li>

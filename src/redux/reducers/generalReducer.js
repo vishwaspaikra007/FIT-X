@@ -1,6 +1,7 @@
 let initialState = {
     categories: {},
-    sellerInfo: undefined
+    sellerInfo: undefined,
+    requesting: false,
 }
 
 const generalReducer = (state = initialState, action) => {
@@ -16,6 +17,10 @@ const generalReducer = (state = initialState, action) => {
 
         case "USER_INFO":
             stateCopy.userInfo = action.userInfo
+            return { ...stateCopy }
+
+        case "REQUESTING":
+            stateCopy.requesting = action.requesting
             return { ...stateCopy }
     }
     return state

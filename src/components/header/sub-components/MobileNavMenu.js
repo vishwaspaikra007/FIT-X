@@ -29,18 +29,20 @@ const MobileNavMenu = ({ strings }) => {
 
           {
             user && user.uid ?
-              <ul className="submenu" style={{
+              <ul className="submenu">
+                <li  style={{
                 textAlign: "center",
                 lineHeight: "5px",
-              }}>
-                <li className="menu-item-has-children" onClick={() => auth.signOut()}><a>Logout</a></li>
+              }} className="menu-item-has-children" onClick={() => auth.signOut()}><a>Logout</a></li>
                 <li>
                   <Link to={"/my-account"}>Profile</Link>
+                </li>
+                <li>
+                  <Link to={"/orders"}>Orders</Link>
                 </li>
               </ul>
               : null
           }
-
         </li>
         <li className="menu-item-has-children">
           <Link to={process.env.PUBLIC_URL + "/"}>{strings["home"]}</Link>

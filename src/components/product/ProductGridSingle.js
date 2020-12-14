@@ -189,7 +189,7 @@ const ProductGridSingle = ({
                   <span style={{
                     fontSize: "25px",
                     color: "orange"
-                  }}>{"₹" + product.price[0]} </span>
+                  }}>{"₹" + finalProductPrice} </span>
                 )}
             </div>
           </div>

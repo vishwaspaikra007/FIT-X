@@ -1,6 +1,8 @@
 /*------- 6. Product style  --------*/
 .product-area {
   position: relative;
+  padding-bottom: 20px;
+  border-bottom: 10px solid darkgrey;
   .row {
     &.three-column {
       .col-xl-3 {
@@ -401,6 +403,8 @@
       }
     }
     .product-price {
+      height: 55px;
+      display: grid;
       span {
         font-size: 15px;
         font-weight: 500;
@@ -2899,7 +2903,7 @@
       }
 
       .product-price {
-        span {
+      span {
           &.old {
             color: #bca487;
           }

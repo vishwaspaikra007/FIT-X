@@ -9,6 +9,8 @@ import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 import useFirebase from "./useFirebase";
 import BecomeVendor from "./pages/BecomeVendor";
 import useRazorPay from './useRazorPay'
+import PreLoader from "./components/PreLoader";
+import { useSelector } from 'react-redux'
 
 const Vendor = lazy(() => import("./pages/Vendor"));
 const Vendors = lazy(() => import("./pages/Vendors"));
@@ -67,6 +69,8 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 const App = (props) => {
   useRazorPay()
   useFirebase()
+
+  const requesting = useSelector(state => state.generalData.requesting)
   useEffect(() => {
     props.dispatch(
       loadLanguages({
@@ -80,49 +84,57 @@ const App = (props) => {
   });
 
   return (
-    <ToastProvider placement="bottom-left">
-      <BreadcrumbsProvider>
-        <Router>
-          <ScrollToTop>
-            <Suspense
-              fallback={
-                <div className="fitX-preloader-wrapper">
-                  <div className="fitX-preloader">
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              }
-            >
-              <Switch>
-                <Route
-                  exact
-                  path={process.env.PUBLIC_URL + "/"}
-                  component={HomeFashion}
-                />
+    <>
+      <ToastProvider placement="bottom-left">
+        <BreadcrumbsProvider>
+          <Router>
+            {/* <ScrollToTop> */}
+              <Suspense
+                fallback={
+                  // <div className="fitX-preloader-wrapper">
+                  //   <div className="fitX-preloader">
+                  //     <span></span>
+                  //     <span></span>
+                  //   </div>
+                  // </div>
+                  <PreLoader />
+                }
+              >
+                {
+                  requesting ? <PreLoader style={{
+                    background: "#ffffff56",
+                    backdropFilter: "blur(2px)",
+                  }} /> : null
+                }
+                <Switch>
+                  <Route
+                    exact
+                    path={process.env.PUBLIC_URL + "/"}
+                    component={HomeFashion}
+                  />
 
-                <Route
-                  path={process.env.PUBLIC_URL + "/vendor/:id"}
-                  component={Vendor}
-                />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/vendor/:id"}
+                    component={Vendor}
+                  />
 
-                {/* Vendors */}
+                  {/* Vendors */}
 
-                <Route
-                  path={process.env.PUBLIC_URL + "/vendors"}
-                  component={Vendors}
-                />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/vendors"}
+                    component={Vendors}
+                  />
 
-                {/* Shop pages */}
-                {/* <Route
+                  {/* Shop pages */}
+                  {/* <Route
                   path={process.env.PUBLIC_URL + "/shop-grid-standard"}
                   component={ShopGridStandard}
                 /> */}
-                <Route
-                  path={process.env.PUBLIC_URL + "/products/:tags"}
-                  component={ShopGridFilter}
-                />
-                {/* <Route
+                  <Route
+                    path={process.env.PUBLIC_URL + "/products/:tags"}
+                    component={ShopGridFilter}
+                  />
+                  {/* <Route
                   path={process.env.PUBLIC_URL + "/shop-grid-two-column"}
                   component={ShopGridTwoColumn}
                 />
@@ -151,14 +163,14 @@ const App = (props) => {
                   component={ShopListTwoColumn}
                 /> */}
 
-                {/* Shop product pages */}
-                <Route
-                  path={process.env.PUBLIC_URL + "/product/:id"}
-                  render={(routeProps) => (
-                    <Product {...routeProps} key={routeProps.match.params.id} />
-                  )}
-                />
-                {/* <Route
+                  {/* Shop product pages */}
+                  <Route
+                    path={process.env.PUBLIC_URL + "/product/:id"}
+                    render={(routeProps) => (
+                      <Product {...routeProps} key={routeProps.match.params.id} />
+                    )}
+                  />
+                  {/* <Route
                   path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
                   component={ProductTabLeft}
                 />
@@ -179,8 +191,8 @@ const App = (props) => {
                   component={ProductFixedImage}
                 /> */}
 
-                {/* Blog pages */}
-                {/* <Route
+                  {/* Blog pages */}
+                  {/* <Route
                   path={process.env.PUBLIC_URL + "/blog-standard"}
                   component={BlogStandard}
                 />
@@ -197,60 +209,61 @@ const App = (props) => {
                   component={BlogDetailsStandard}
                 /> */}
 
-                {/* Other pages */}
-                <Route
-                  path={process.env.PUBLIC_URL + "/about"}
-                  component={About}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/contact"}
-                  component={Contact}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/my-account"}
-                  component={MyAccount}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/become-vendor"}
-                  component={BecomeVendor}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/login-register"}
-                  component={LoginRegister}
-                />
+                  {/* Other pages */}
+                  <Route
+                    path={process.env.PUBLIC_URL + "/about"}
+                    component={About}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/contact"}
+                    component={Contact}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/my-account"}
+                    component={MyAccount}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/become-vendor"}
+                    component={BecomeVendor}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/login-register"}
+                    component={LoginRegister}
+                  />
 
-                <Route
-                  path={process.env.PUBLIC_URL + "/cart"}
-                  component={Cart}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/wishlist"}
-                  component={Wishlist}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/compare"}
-                  component={Compare}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/checkout"}
-                  component={Checkout}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/orders"}
-                  component={Orders}
-                />
-                <Route
-                  path={process.env.PUBLIC_URL + "/not-found"}
-                  component={NotFound}
-                />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/cart"}
+                    component={Cart}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/wishlist"}
+                    component={Wishlist}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/compare"}
+                    component={Compare}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/checkout"}
+                    component={Checkout}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/orders"}
+                    component={Orders}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/not-found"}
+                    component={NotFound}
+                  />
 
-                <Route exact component={NotFound} />
-              </Switch>
-            </Suspense>
-          </ScrollToTop>
-        </Router>
-      </BreadcrumbsProvider>
-    </ToastProvider>
+                  <Route exact component={NotFound} />
+                </Switch>
+              </Suspense>
+            {/* </ScrollToTop> */}
+          </Router>
+        </BreadcrumbsProvider>
+      </ToastProvider>
+    </>
   );
 };
 

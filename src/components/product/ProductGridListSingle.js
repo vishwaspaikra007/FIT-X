@@ -33,7 +33,6 @@ const ProductGridListSingle = ({
         className={` ${
           sliderClassName ? sliderClassName : ""
         }`} style={{
-          margin: "20px",
         }}
       >
         <div

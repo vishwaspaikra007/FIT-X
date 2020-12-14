@@ -78,8 +78,8 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                   <div className="col-lg-7">
                     <div className="review-wrapper">
                       {
-                        product.reviews && product.reviews.map(review => (
-                          <div className="single-review child-review">
+                        product.reviews && product.reviews.map((review, key) => (
+                          <div key={key} className="single-review child-review">
                             <div className="review-img">
                               {/* <img
                                 src={

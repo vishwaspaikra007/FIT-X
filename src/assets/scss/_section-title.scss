@@ -1,6 +1,7 @@
 /*------- 5. Section title style  -------*/
 
 .section-title {
+  padding-top: 20px;
   @media #{$xs-layout} {
     &.mb-50 {
       margin-bottom: 30px;

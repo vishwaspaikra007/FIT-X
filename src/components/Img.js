@@ -33,7 +33,7 @@ function Img(props) {
                     objectFit: "cover",
                     ...props.style, 
                     }} afterLoad={() => setLoaded(true)} />
-                <div className={["fitX-preloader-wrapper", props.className].join(" ")} 
+                {/* <div className={["fitX-preloader-wrapper", props.className].join(" ")} 
                     style={{
                         ...props.style, position: "relative", zIndex: 1,
                         display: loaded ? "none": "block",
@@ -42,7 +42,11 @@ function Img(props) {
                         <span></span>
                         <span></span>
                     </div>
-                </div> 
+                </div>  */}
+                <PreLoader className={props.className} style={{
+                        ...props.style, position: "relative", zIndex: 1,
+                        display: loaded ? "none": "flex",
+                        }}></PreLoader>
         </div>
     )
 }

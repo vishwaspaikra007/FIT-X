@@ -90,9 +90,9 @@ export default function BecomeVendor(props) {
                         setStateChanged(false)
                         setSellerInfoOld(sellerInfo)
                         dispatch({ type: "SELLER_INFO", sellerInfo: sellerInfo })
-                        addToast('Saved Successfully', { appearance: 'success' })
+                        addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
                     }).catch(err => {
-                        addToast("error occured", { appearance: 'error' })
+                        addToast("error occured", { appearance: 'error', autoDismiss: true  })
                     });
                 } else history.push({ pathname: '/login-register', state: { from: props.location.pathname } })
                 break;

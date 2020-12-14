@@ -18,7 +18,7 @@ const TabVendor = ({
       } ${bgColorClass ? bgColorClass : ""}`}
     >
       <div className="container">
-        <SectionTitle titleText="DAILY DEALS!" positionClass="text-center" />
+        {/* <SectionTitle titleText="DAILY DEALS!" positionClass="text-center" /> */}
         <Tab.Container defaultActiveKey="bestSeller">
           <Nav
             variant="pills"
@@ -42,8 +42,8 @@ const TabVendor = ({
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="newVendors">
-              <div className="row" style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              <div style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>
@@ -56,8 +56,8 @@ const TabVendor = ({
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="bestSeller">
-              <div className="row" style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              <div style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>
@@ -70,8 +70,8 @@ const TabVendor = ({
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="bestCombos">
-              <div className="row" style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              <div style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>

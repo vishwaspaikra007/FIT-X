@@ -43,7 +43,7 @@ const TabProduct = ({
           <Tab.Content>
             <Tab.Pane eventKey="newArrival">
               <div className="" style={{
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                   display: "grid",
                   gridGap: "20px"
               }}>
@@ -51,13 +51,12 @@ const TabProduct = ({
                   category={category}
                   type="new"
                   limit={8}
-                  spaceBottomClass="mb-25"
                 />
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="bestSeller">
               <div className="" style={{
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                   display: "grid",
                   gridGap: "20px"
               }}>
@@ -65,13 +64,12 @@ const TabProduct = ({
                   category={category}
                   type="bestSeller"
                   limit={8}
-                  spaceBottomClass="mb-25"
                 />
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="saleItems">
               <div className="" style={{
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                   display: "grid",
                   gridGap: "20px"
               }}>
@@ -79,7 +77,6 @@ const TabProduct = ({
                   category={category}
                   type="saleItems"
                   limit={8}
-                  spaceBottomClass="mb-25"
                 />
               </div>
             </Tab.Pane>

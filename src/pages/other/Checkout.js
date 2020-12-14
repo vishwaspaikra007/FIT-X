@@ -68,8 +68,8 @@ const Checkout = ({ location, cartItems, currency }) => {
       return
     }
     setRequesting(true)
-    const domain = "https://fit-x-backend.herokuapp.com/"
-    // const domain = "http://localhost:3001/"
+    // const domain = "https://fit-x-backend.herokuapp.com/"
+    const domain = "http://localhost:3001/"
     const response = (await axios.post(domain + 'create-order', {
       amount: cartTotalPrice.toFixed(2),
       userInfo, 
@@ -97,7 +97,7 @@ const Checkout = ({ location, cartItems, currency }) => {
         alert(response.razorpay_order_id)
         alert(response.razorpay_signature)
         setRequesting(false)
-        addToast("payment successful", {appearance: "success"})
+        addToast("payment successful", {appearance: "success", autoDismiss: true  })
         history.push('/orders')
       },
       modal: {

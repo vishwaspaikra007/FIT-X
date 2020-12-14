@@ -85,10 +85,10 @@ const MyAccount = ({ location }) => {
               setStateChanged(false)
               dispatch({ type: "USER_INFO", userInfo: userInfo })
               setUserInfoOld(userInfo)
-              addToast('Saved Successfully', { appearance: 'success' })
+              addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
             })
             .catch(err => {
-              addToast("error occured", { appearance: 'error' })
+              addToast("error occured", { appearance: 'error', autoDismiss: true  })
             }); break;
       case 'changePwd':
         if (cpwd == pwd) {
@@ -104,17 +104,17 @@ const MyAccount = ({ location }) => {
               setPwd("")
               setCpwd("")
               setLoading(false)
-              addToast('Saved Successfully', { appearance: 'success' })
+              addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
             }).catch(function (err) {
               setLoading(false)
-              addToast("error occured", { appearance: 'error' })
+              addToast("error occured", { appearance: 'error', autoDismiss: true  })
             });
           }).catch(function (err) {
             setLoading(false)
-            addToast("error occured", { appearance: 'error' })
+            addToast("error occured", { appearance: 'error', autoDismiss: true  })
           });
         } else {
-          addToast("password did not match", { appearance: 'error' })
+          addToast("password did not match", { appearance: 'error', autoDismiss: true  })
         }
 
         break;

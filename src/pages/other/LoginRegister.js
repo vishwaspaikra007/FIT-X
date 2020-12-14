@@ -101,13 +101,17 @@ const LoginRegister = ({ location }) => {
 
     var appVerifier = window.recaptchaVerifier;
 
-    const url = 'http://localhost:3001/login'
-    // const url = 'https://fit-x-backend.herokuapp.com/login'
+    // const url = 'http://localhost:3001/auth'
+    const url = 'https://fit-x-backend.herokuapp.com/auth'
 
     const user = (await Axios.post(url, { phoneNumber: "+91" + phoneNumber })).data
-    if (!user) {
+    if (!user && type != "register") {
       setRequesting(false)
-      addToast("No user with the given phone number", { appearance: 'warning' })
+      addToast("No user with the given phone number", { appearance: 'warning', autoDismiss: true  })
+      return
+    } else if (user && type === "register") {
+      setRequesting(false)
+      addToast("User with the given phone number already exist", { appearance: 'error', autoDismiss: true  })
       return
     }
 
@@ -118,7 +122,7 @@ const LoginRegister = ({ location }) => {
         let otp = window.prompt("Enter OTP")
         confirmationResult.confirm(otp).then(result => {
           console.log(result)
-          addToast('Phone Verified Successfully', { appearance: 'success' })
+          addToast('Phone Verified Successfully', { appearance: 'success', autoDismiss: true  })
           setIsPhoneNumberVerified(true)
           if (type === "register")
             register()
@@ -134,7 +138,7 @@ const LoginRegister = ({ location }) => {
       }).catch(function (error) {
         // Error; SMS not sent
         // ...
-        addToast(error.message, { appearance: 'error' })
+        addToast(error.message, { appearance: 'error', autoDismiss: true  })
         setRequesting(false)
       });
   }
@@ -155,7 +159,7 @@ const LoginRegister = ({ location }) => {
             email: email,
             createdAt: timestamp
           }).then(() => {
-            addToast('Registeration Successfull', { appearance: 'success' })
+            addToast('Registeration Successfull', { appearance: 'error', autoDismiss: true  })
             console.log("Account linking success", user);
             setRequesting(false)
             // if (location && location.state && location.state.from)
@@ -163,15 +167,15 @@ const LoginRegister = ({ location }) => {
             // else
             history.push("/")
           }).catch(err => {
-            addToast('registration error occured', { appearance: 'error' })
+            addToast('registration error occured', { appearance: 'error', autoDismiss: true  })
             console.log("some error occured")
           })
         }).catch(err => {
-          addToast('registration error occured', { appearance: 'error' })
+          addToast('registration error occured', { appearance: 'error', autoDismiss: true  })
           console.log("some error occured")
         })
       }).catch(function (error) {
-        addToast('registration error occured', { appearance: 'error' })
+        addToast('registration error occured', { appearance: 'error', autoDismiss: true  })
         console.log("Account linking error", error);
         setRequesting(false)
       });
@@ -199,7 +203,7 @@ const LoginRegister = ({ location }) => {
       .then(result => {
         console.log(result)
         setRequesting(false)
-        addToast('login Successfull', { appearance: 'success' })
+        addToast('login Successfull', { appearance: 'error', autoDismiss: true  })
         if (location && location.state && location.state.from)
           history.push(location.state.from)
         else
@@ -207,7 +211,7 @@ const LoginRegister = ({ location }) => {
       }).catch(function (err) {
         // Handle Errors here.
         console.log(err)
-        addToast(err.message, { appearance: 'error' })
+        addToast(err.message, { appearance: 'error', autoDismiss: true  })
         // ...
         setRequesting(false)
       });
@@ -234,15 +238,15 @@ const LoginRegister = ({ location }) => {
         setRequesting(false)
         setCredentialToChangePassword(undefined)
         setInitiateForgotPasswordProcess(false)
-        addToast('Password Successfully Changed', { appearance: 'success' })
+        addToast('Password Successfully Changed', { appearance: 'error', autoDismiss: true  })
         history.push("/")
       }).catch(function (err) {
         setRequesting(false)
-        addToast(err.message, { appearance: 'error' })
+        addToast(err.message, { appearance: 'error', autoDismiss: true  })
       });
     }).catch(function (err) {
       setRequesting(false)
-      addToast(err.message, { appearance: 'error' })
+      addToast(err.message, { appearance: 'error', autoDismiss: true  })
     });
   }
 
@@ -265,7 +269,7 @@ const LoginRegister = ({ location }) => {
       })
       .catch(err => {
         setRequesting(false)
-        addToast(err.message, { appearance: 'error' })
+        addToast(err.message, { appearance: 'error', autoDismiss: true  })
       })
       .then(function (phoneCredential) {
         // return firebase.auth().signInWithCredential(phoneCredential);

@@ -1,5 +1,5 @@
 .vendorCardWrap {
-    width: 250px;
+    width: 100%;
     display: grid;
     justify-content: center;
     grid-template-columns: 1fr;
@@ -27,7 +27,7 @@
     letter-spacing: 2px;
     margin: auto;
     padding: 10px 0;
-    animation: letter-spacing-animation 2s ease-in-out;
+    /* animation: letter-spacing-animation 2s ease-in-out; */
 }
 .vendorCardWrap .rating {
     margin: auto;

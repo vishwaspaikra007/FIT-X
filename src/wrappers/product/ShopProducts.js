@@ -7,7 +7,8 @@ const ShopProducts = ({ products, layout }) => {
     <div className="shop-bottom-area mt-35">
       <div className={` ${layout ? layout : ""}`} style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+        gridGap: "20px",
       }}>
         <ProductgridList products={products} spaceBottomClass="mb-25" />
       </div>

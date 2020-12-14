@@ -18,8 +18,9 @@ const firebaseConfig = {
   const storage = firebase.storage()
   const firestore = firebase.firestore()
   const auth = firebase.auth()
-  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-  const increment = firebase.firestore.FieldValue.increment(1)
-  const arrayUnion = (newElement) => firebase.firestore.FieldValue.arrayUnion(newElement)
 
-  export {storage, firestore, auth, timestamp, increment, arrayUnion, firebase as default}
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+  const increment = (byValue) => firebase.firestore.FieldValue.increment(byValue)
+  const arrayUnion = (newElement) => firebase.firestore.FieldValue.arrayUnion(newElement)
+  const _delete = firebase.firestore.FieldValue.delete()
+  export {_delete, storage, firestore, auth, timestamp, increment, arrayUnion, firebase as default}

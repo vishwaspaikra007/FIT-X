@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from "../header/Logo";
 
 const FooterCopyright = ({ footerLogo, spaceBottomClass, colorClass }) => {
   return (
@@ -10,9 +11,8 @@ const FooterCopyright = ({ footerLogo, spaceBottomClass, colorClass }) => {
       }`}
     >
       <div className="footer-logo">
-        <Link to={process.env.PUBLIC_URL + "/"}>
-          <img alt="" src={process.env.PUBLIC_URL + footerLogo} />
-        </Link>
+          {/* <img alt="" src={process.env.PUBLIC_URL + footerLogo} /> */}
+          <Logo imageUrl={footerLogo}/>
       </div>
       <p>
         © 2020{" "}

@@ -2,7 +2,9 @@
     display: grid;
     grid-template-columns: 100px auto;
     overflow: hidden;
-    height: 100px;
+    height: 105px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid darkgrey;
 }
 .itemsWrap {
     display: grid;
