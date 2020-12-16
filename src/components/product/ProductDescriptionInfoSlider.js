@@ -44,7 +44,7 @@ const ProductDescriptionInfoSlider = ({
     <div className="product-details-content pro-details-slider-content">
       <h2>{product.name}</h2>
       <div className="product-details-price justify-content-center">
-        {discountedPrice !== null ? (
+        {discountedPrice !== null && discountedPrice !== 0 ? (
           <Fragment>
             <span>{"₹" + finalDiscountedPrice}</span>{" "}
             <span className="old">

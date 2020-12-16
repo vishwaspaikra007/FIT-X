@@ -146,7 +146,7 @@ const ProductGridSingleEleven = ({
                 </Link>
               </h3>
               <div className="price-2">
-                {discountedPrice !== null ? (
+                {discountedPrice !== null && discountedPrice !== 0 ? (
                   <Fragment>
                     <span className="old">
                       {"₹" + finalProductPrice}

@@ -69,7 +69,7 @@ const ProductGridSingleEight = ({
             </h3>
 
             <div className="product-price">
-              {discountedPrice !== null ? (
+              {discountedPrice !== null && discountedPrice !== 0 ? (
                 <Fragment>
                   <span className="old">
                     {"₹" + finalProductPrice}

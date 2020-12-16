@@ -22,11 +22,11 @@ const ProductGridSingle = ({
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
 
-  const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
-  const finalDiscountedPrice = +(
+  const discountedPrice = Math.ceil(getDiscountPrice(product.price, product.discount));
+  const finalProductPrice = Math.ceil(+(product.price * currency.currencyRate).toFixed(2));
+  const finalDiscountedPrice = Math.ceil(+(
     discountedPrice * currency.currencyRate
-  ).toFixed(2);
+  ).toFixed(2));
 
   return (
     <Fragment>
@@ -175,7 +175,7 @@ const ProductGridSingle = ({
                 ""
               )}
             <div className="product-price">
-              {discountedPrice !== null ? (
+              {discountedPrice !== null && discountedPrice !== 0 ? (
                 <Fragment>
                   <span style={{
                   fontSize: "25px",

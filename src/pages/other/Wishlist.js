@@ -6,6 +6,9 @@ import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { connect } from "react-redux";
 import { getDiscountPrice } from "../../helpers/product";
+import { Redirect } from "react-router-dom";
+import { useSelector } from 'react-redux'
+
 import {
   addToWishlist,
   deleteFromWishlist,
@@ -27,8 +30,14 @@ const Wishlist = ({
   const { addToast } = useToasts();
   const { pathname } = location;
 
+  const user = useSelector(state => state.userData.user)
+
   return (
     <Fragment>
+      { 
+        user && user.uid ? null : 
+        <Redirect to={{pathname: "/login-register", state: {from: "/wishlist"}}} />
+      }
       <MetaTags>
         <title>fitX | Wishlist</title>
         <meta
@@ -65,16 +74,16 @@ const Wishlist = ({
                         </thead>
                         <tbody>
                           {wishlistItems.map((wishlistItem, key) => {
-                            const discountedPrice = getDiscountPrice(
+                            const discountedPrice = Math.ceil(getDiscountPrice(
                               wishlistItem.price,
                               wishlistItem.discount
-                            );
-                            const finalProductPrice = (
+                            ));
+                            const finalProductPrice = Math.ceil((
                               wishlistItem.price * currency.currencyRate
-                            ).toFixed(2);
-                            const finalDiscountedPrice = (
+                            ).toFixed(2));
+                            const finalDiscountedPrice = Math.ceil((
                               discountedPrice * currency.currencyRate
-                            ).toFixed(2);
+                            ).toFixed(2));
                             const cartItem = cartItems.filter(
                               item => item.id === wishlistItem.id
                             )[0];
@@ -114,7 +123,7 @@ const Wishlist = ({
                                 </td>
 
                                 <td className="product-price-cart">
-                                  {discountedPrice !== null ? (
+                                  {discountedPrice !== null && discountedPrice !== 0 ? (
                                     <Fragment>
                                       <span className="amount old">
                                         {"₹" +
@@ -226,7 +235,9 @@ const Wishlist = ({
                 <div className="col-lg-12">
                   <div className="item-empty-area text-center">
                     <div className="item-empty-area__icon mb-30">
-                      <i className="pe-7s-like"></i>
+                      <i className="pe-7s-like" style={{
+                        color: "orange"
+                      }}></i>
                     </div>
                     <div className="item-empty-area__text">
                       No items found in wishlist <br />{" "}

@@ -14,7 +14,7 @@ import axios from 'axios'
 import PreLoader from '../../components/PreLoader'
 import { Redirect, useHistory } from 'react-router-dom'
 
-const Checkout = ({ location, cartItems, currency }) => {
+const Checkout = ({ location, cartItems, currency, match }) => {
 
   const { addToast } = useToasts()
   const history = useHistory()
@@ -67,13 +67,20 @@ const Checkout = ({ location, cartItems, currency }) => {
       alert("All inputs are necessary")
       return
     }
+    if(cartItems.length < 1) {
+      return alert("There should be atleast one item in your cart")
+    }
     setRequesting(true)
-    // const domain = "https://fit-x-backend.herokuapp.com/"
-    const domain = "http://localhost:3001/"
+    const domain = window.location.hostname === 'localhost' ? "http://localhost:3001/" : "https://fit-x-backend.herokuapp.com/"
+
+    const cartItemsObj = {}
+    cartItems.map(item => {
+     cartItemsObj[item.id] = {...item, status: 'order created'}
+    })
     const response = (await axios.post(domain + 'create-order', {
       amount: cartTotalPrice.toFixed(2),
       userInfo, 
-      cartItems: cartItems.map(item => ({...item, deliveryStatus: 'order sent'}))
+      cartItems: cartItemsObj,
     })).data
     console.log(response)
 
@@ -93,9 +100,10 @@ const Checkout = ({ location, cartItems, currency }) => {
       description: cartItems.length + " products",
       image: 'https://avatars1.githubusercontent.com/u/44310959?s=460&u=ba991aaa71f29a628093f19348452aafa9db1717&v=4',
       handler: function (response) {
-        alert(response.razorpay_payment_id)
-        alert(response.razorpay_order_id)
-        alert(response.razorpay_signature)
+        // alert(response.razorpay_payment_id)
+        // alert(response.razorpay_order_id)
+        // alert(response.razorpay_signature)
+        dispatch({ type: "DELETE_ALL_FROM_CART" });
         setRequesting(false)
         addToast("payment successful", {appearance: "success", autoDismiss: true  })
         history.push('/orders')
@@ -220,18 +228,18 @@ const Checkout = ({ location, cartItems, currency }) => {
                         <div className="your-order-middle">
                           <ul>
                             {cartItems.map((cartItem, key) => {
-                              const discountedPrice = getDiscountPrice(
+                              const discountedPrice = Math.ceil(getDiscountPrice(
                                 cartItem.price,
                                 cartItem.discount
-                              );
-                              const finalProductPrice = (
+                              ));
+                              const finalProductPrice = Math.ceil((
                                 cartItem.price * currency.currencyRate
-                              ).toFixed(2);
-                              const finalDiscountedPrice = (
+                              ).toFixed(2));
+                              const finalDiscountedPrice = Math.ceil((
                                 discountedPrice * currency.currencyRate
-                              ).toFixed(2);
+                              ).toFixed(2));
 
-                              discountedPrice != null
+                               discountedPrice != null && discountedPrice != 0  
                                 ? (cartTotalPrice +=
                                   finalDiscountedPrice * cartItem.quantity)
                                 : (cartTotalPrice +=
@@ -242,7 +250,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                                     {cartItem.productName} X {cartItem.quantity}
                                   </span>{" "}
                                   <span className="order-price">
-                                    {discountedPrice !== null
+                                    {discountedPrice !== null && discountedPrice !== 0
                                       ? "₹" +
                                       (
                                         finalDiscountedPrice *
@@ -294,7 +302,7 @@ const Checkout = ({ location, cartItems, currency }) => {
                       </div>
                       <div className="item-empty-area__text">
                         No items found in cart to checkout <br />{" "}
-                        <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                        <Link to={process.env.PUBLIC_URL + "/products/all"}>
                           Shop Now
                       </Link>
                       </div>

@@ -150,19 +150,19 @@ const Compare = ({
                           <tr>
                             <th className="title-column">Price</th>
                             {compareItems.map((compareItem, key) => {
-                              const discountedPrice = getDiscountPrice(
+                              const discountedPrice = Math.ceil(getDiscountPrice(
                                 compareItem.price,
                                 compareItem.discount
-                              );
-                              const finalProductPrice = (
+                              ));
+                              const finalProductPrice = Math.ceil((
                                 compareItem.price * currency.currencyRate
-                              ).toFixed(2);
-                              const finalDiscountedPrice = (
+                              ).toFixed(2));
+                              const finalDiscountedPrice = Math.ceil((
                                 discountedPrice * currency.currencyRate
-                              ).toFixed(2);
+                              ).toFixed(2));
                               return (
                                 <td className="product-price" key={key}>
-                                  {discountedPrice !== null ? (
+                                  {discountedPrice !== null && discountedPrice !== 0 ? (
                                     <Fragment>
                                       <span className="amount old">
                                         {"₹" +

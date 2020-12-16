@@ -9,9 +9,9 @@ import { connect } from "react-redux";
 function ProductModal(props) {
   const { product } = props;
   const { currency } = props;
-  const { discountedprice } = props;
+  const { discountedPrice } = props;
   const { finalproductprice } = props;
-  const { finaldiscountedprice } = props;
+  const { finaldiscountedPrice } = props;
 
   const [gallerySwiper, getGallerySwiper] = useState(null);
   const [thumbnailSwiper, getThumbnailSwiper] = useState(null);
@@ -140,10 +140,10 @@ function ProductModal(props) {
               <div className="product-details-content quickview-content">
                 <h2>{product.productName}</h2>
                 <div className="product-details-price">
-                  {discountedprice !== null ? (
+                  {discountedPrice !== null && discountedPrice !== 0 ? (
                     <Fragment>
                       <span>
-                        {"₹" + finaldiscountedprice}
+                        {"₹" + finaldiscountedPrice}
                       </span>{" "}
                       <span className="old">
                         {"₹" + finalproductprice}
@@ -354,8 +354,8 @@ ProductModal.propTypes = {
   cartitems: PropTypes.array,
   compareitem: PropTypes.object,
   currency: PropTypes.object,
-  discountedprice: PropTypes.number,
-  finaldiscountedprice: PropTypes.number,
+  discountedPrice: PropTypes.number,
+  finaldiscountedPrice: PropTypes.number,
   finalproductprice: PropTypes.number,
   onHide: PropTypes.func,
   product: PropTypes.object,

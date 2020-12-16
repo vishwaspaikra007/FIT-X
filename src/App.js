@@ -11,6 +11,7 @@ import BecomeVendor from "./pages/BecomeVendor";
 import useRazorPay from './useRazorPay'
 import PreLoader from "./components/PreLoader";
 import { useSelector } from 'react-redux'
+import Reviews from "./pages/other/Reviews";
 
 const Vendor = lazy(() => import("./pages/Vendor"));
 const Vendors = lazy(() => import("./pages/Vendors"));
@@ -250,6 +251,10 @@ const App = (props) => {
                   <Route
                     path={process.env.PUBLIC_URL + "/orders"}
                     component={Orders}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/reviews/:productId"}
+                    component={Reviews}
                   />
                   <Route
                     path={process.env.PUBLIC_URL + "/not-found"}

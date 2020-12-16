@@ -9,10 +9,12 @@ import RelatedProductSlider from "../../wrappers/product/RelatedProductSlider";
 import ProductDescriptionTab from "../../wrappers/product/ProductDescriptionTab";
 import ProductImageDescription from "../../wrappers/product/ProductImageDescription";
 import { firestore } from '../../firebase'
+import { useHistory } from "react-router-dom";
 
 const Product = ({ location, product: productS1, match }) => {
   const { params: {id} } = match;
   const { pathname } = location
+  const history = useHistory()
 
   let productS2
   if(location && location.state && location.state.product)
@@ -29,7 +31,11 @@ const Product = ({ location, product: productS1, match }) => {
       console.log(id)
       firestore.collection('products').doc(id).get().then(doc => {
         console.log("doc.data()", doc.data())
-        setProduct({ ...doc.data(), id: doc.id })
+        if(doc.data())
+          setProduct({ ...doc.data(), id: doc.id })
+        else {
+          history.push('/404')
+        }
       })
     }
   }, [])

@@ -11,35 +11,40 @@ import Class from './Orders.module.css'
 import { Link, Redirect } from "react-router-dom";
 import LoadContent from "../../components/LoadContent";
 
-export default function Orders({ location }) {
+export default function Orders({ location, match }) {
 
     const [lastDoc, setLastDoc] = useState()
     const [loadContent, setLoadContent] = useState(true)
     const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
-    const [products, setProducts] = useState([])
+    const [orders, setOrders] = useState([])
 
     const { pathname } = location;
     const limit = 5
     const user = useSelector(state => state.userData.user)
 
-    const getAndSetProducts = () => {
+    const getAndSetOrders = () => {
         if (user && user.uid) {
-            let ref
+            let ref = firestore.collection('orders')
+                .where('userId', "==", user.uid)
+                .orderBy('createdAt', 'desc')
             if (lastDoc)
-                ref = firestore.collection('orders').where('userId', "==", user.uid).startAfter(lastDoc)
-            else
-                ref = firestore.collection('orders').where('userId', "==", user.uid)
+                ref = ref.startAfter(lastDoc)
 
             ref.limit(limit).get()
                 .then(docs => {
                     if (docs.docs.length > 0) {
-                        let productList = JSON.parse(JSON.stringify(products))
+                        let orderList = JSON.parse(JSON.stringify(orders))
                         console.log(docs)
                         docs.forEach(doc => {
-                            productList.push(...doc.data().cartItems)
+                            orderList.push({
+                                list: doc.data().cartItems,
+                                couponDiscount: doc.data().couponDiscount,
+                                couponName: doc.data().couponName,
+                                id: doc.id
+                            })
                         })
                         setLoadContent(false)
-                        setProducts(productList)
+                        setOrders(orderList)
                         setLastDoc(docs.docs[docs.docs.length - 1])
                         if (docs.docs.length < limit)
                             setAllowFurtherFetch(false)
@@ -54,7 +59,7 @@ export default function Orders({ location }) {
 
     useEffect(() => {
         if (loadContent && allowFurtherFetch) {
-            getAndSetProducts()
+            getAndSetOrders()
         }
     }, [loadContent])
 
@@ -78,16 +83,29 @@ export default function Orders({ location }) {
         </BreadcrumbsItem>
             <LayoutOne headerTop="visible">
                 <Breadcrumb />
-                <div className={Class.itemsWrap}>
+                <div className={Class.orderWrap}>
                     {
-                        products.map((item, key) => (
-                            <div key={key} className={Class.itemBox}>
-                                <img className={Class.img} src={item.images[0]} />
-                                <div className={Class.description}>
-                                    <div className={Class.status}>{item.deliveryStatus}</div>
-                                    <div className={Class.text}>{item.productName}</div>
-                                    <Link to={'/product/' + item.id + '#review'} className={Class.link}>Write a review</Link>
+                        orders.map((order, key) => (
+                            <div key={key}>
+                                <div className={Class.itemsWrap}>
+                                    {
+                                        order.list && Object.keys(order.list).map((id, key2) => {
+                                            const item = order.list[id]
+                                            return (
+                                            <div key={key2} className={Class.itemBox}>
+                                                <img className={Class.img} src={item.images[0]} />
+                                                <div className={Class.description}>
+                                                    <div className={Class.status}>{item.status}</div>
+                                                    <div className={Class.text}>{item.productName}</div>
+                                                    <Link to={'/product/' + item.id + '#review'} className={Class.link}>Write a review</Link>
+                                                </div>
+                                            </div>
+                                        )})
+                                    }
                                 </div>
+                                <Link className={Class.orderLink} to={{ pathname: `order/${order.id}`, state: { order: order } }}>
+                                    >> order details
+                                </Link>
                             </div>
                         ))
                     }

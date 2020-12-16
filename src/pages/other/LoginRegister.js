@@ -159,7 +159,7 @@ const LoginRegister = ({ location }) => {
             email: email,
             createdAt: timestamp
           }).then(() => {
-            addToast('Registeration Successfull', { appearance: 'error', autoDismiss: true  })
+            addToast('Registeration Successfull', { appearance: 'success', autoDismiss: true  })
             console.log("Account linking success", user);
             setRequesting(false)
             // if (location && location.state && location.state.from)
@@ -203,7 +203,7 @@ const LoginRegister = ({ location }) => {
       .then(result => {
         console.log(result)
         setRequesting(false)
-        addToast('login Successfull', { appearance: 'error', autoDismiss: true  })
+        addToast('login Successfull', { appearance: 'success', autoDismiss: true  })
         if (location && location.state && location.state.from)
           history.push(location.state.from)
         else
@@ -238,7 +238,7 @@ const LoginRegister = ({ location }) => {
         setRequesting(false)
         setCredentialToChangePassword(undefined)
         setInitiateForgotPasswordProcess(false)
-        addToast('Password Successfully Changed', { appearance: 'error', autoDismiss: true  })
+        addToast('Password Successfully Changed', { appearance: 'success  ', autoDismiss: true  })
         history.push("/")
       }).catch(function (err) {
         setRequesting(false)

@@ -71,7 +71,7 @@ const ProductGridSingleFive = ({
                   </h3>
                 </div>
                 <div className="price-3">
-                  {discountedPrice !== null ? (
+                  {discountedPrice !== null && discountedPrice !== 0 ? (
                     <Fragment>
                       <span>
                         {"₹" + finalDiscountedPrice}

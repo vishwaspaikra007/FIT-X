@@ -194,9 +194,9 @@
 .single-review {
   display: flex;
   margin: 0 0 50px;
-  @media #{$xs-layout} {
-    display: block;
-  }
+  // @media #{$xs-layout} {
+  //   display: block;
+  // }
   @media #{$sm-layout} {
     display: flex;
   }
@@ -204,9 +204,14 @@
     width: 100%;
   }
   .review-img {
-    flex: 0 0 90px;
-
-    margin: 0 15px 0 0;
+    max-width: 90px;
+    .img {
+    height: 50px;
+    margin: auto;
+    display: block;
+    font-size: 28px;
+    width: 65%;
+    }
     @media #{$xs-layout} {
       margin: 0 0 20px 0;
     }
@@ -266,10 +271,15 @@
 
 .single-review.child-review {
   margin-bottom: 0;
-  margin-left: 70px;
+  padding: 10px;
+  box-shadow: 0 0 1px;
   @media #{$xs-layout} {
     margin-left: 0;
   }
+}
+
+.single-review:nth-last-child(1) {
+  border-bottom: none;
 }
 
 .ratting-form-wrapper {

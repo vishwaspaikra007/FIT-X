@@ -17,14 +17,14 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                 single.price,
                 single.discount
               );
-              const finalProductPrice = (
+              const finalProductPrice = Math.ceil((
                 single.price * currency.currencyRate
-              ).toFixed(2);
-              const finalDiscountedPrice = (
+              ).toFixed(2));
+              const finalDiscountedPrice = Math.ceil((
                 discountedPrice * currency.currencyRate
-              ).toFixed(2);
+              ).toFixed(2));
 
-              discountedPrice != null
+               discountedPrice != null && discountedPrice != 0  
                 ? (cartTotalPrice += finalDiscountedPrice * single.quantity)
                 : (cartTotalPrice += finalProductPrice * single.quantity);
 
@@ -52,7 +52,7 @@ const MenuCart = ({ cartData, currency, deleteFromCart }) => {
                     </h4>
                     <h6>Qty: {single.quantity}</h6>
                     <span>
-                      {discountedPrice !== null
+                      {discountedPrice !== null && discountedPrice !== 0
                         ? "₹" + finalDiscountedPrice
                         : "₹" + finalProductPrice}
                     </span>

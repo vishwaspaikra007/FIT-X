@@ -6,6 +6,9 @@ import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 import { connect } from "react-redux";
 import { getDiscountPrice } from "../../helpers/product";
+import { Redirect } from "react-router-dom";
+import { useSelector } from 'react-redux'
+
 import {
   addToCart,
   decreaseQuantity,
@@ -15,7 +18,7 @@ import {
 } from "../../redux/actions/cartActions";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import { firestore } from "../../firebase";
+import { auth } from "../../firebase";
 
 const Cart = ({
   location,
@@ -31,6 +34,8 @@ const Cart = ({
   const { pathname } = location;
   let cartTotalPrice = 0;
 
+  const user = useSelector(state => state.userData.user)
+
   const [couponCode, setCouponCode] = useState("")
 
   const handleClick = (e) => {
@@ -40,6 +45,10 @@ const Cart = ({
 
   return (
     <Fragment>
+      { 
+        user && user.uid ? null : 
+        <Redirect to={{pathname: "/login-register", state: {from: "/cart"}}} />
+      }
       <MetaTags>
         <title>fitX | Cart</title>
         <meta
@@ -77,18 +86,18 @@ const Cart = ({
                         </thead>
                         <tbody>
                           {cartItems.map((cartItem, key) => {
-                            const discountedPrice = getDiscountPrice(
+                            const discountedPrice = Math.ceil(getDiscountPrice(
                               cartItem.price,
                               cartItem.discount
-                            );
-                            const finalProductPrice = (
+                            ));
+                            const finalProductPrice = Math.ceil((
                               cartItem.price * currency.currencyRate
-                            ).toFixed(2);
-                            const finalDiscountedPrice = (
+                            ).toFixed(2));
+                            const finalDiscountedPrice = Math.ceil((
                               discountedPrice * currency.currencyRate
-                            ).toFixed(2);
+                            ).toFixed(2));
 
-                            discountedPrice != null
+                             discountedPrice != null && discountedPrice != 0  
                               ? (cartTotalPrice +=
                                   finalDiscountedPrice * cartItem.quantity)
                               : (cartTotalPrice +=
@@ -142,7 +151,7 @@ const Cart = ({
                                 </td>
 
                                 <td className="product-price-cart">
-                                  {discountedPrice !== null ? (
+                                  {discountedPrice !== null && discountedPrice !== 0 ? (
                                     <Fragment>
                                       <span className="amount old">
                                         {"₹" +
@@ -202,7 +211,7 @@ const Cart = ({
                                   </div>
                                 </td>
                                 <td className="product-subtotal">
-                                  {discountedPrice !== null
+                                  {discountedPrice !== null && discountedPrice !== 0
                                     ? "₹" +
                                       (
                                         finalDiscountedPrice * cartItem.quantity
@@ -301,11 +310,13 @@ const Cart = ({
                 <div className="col-lg-12">
                   <div className="item-empty-area text-center">
                     <div className="item-empty-area__icon mb-30">
-                      <i className="pe-7s-cart"></i>
+                      <i className="pe-7s-cart"  style={{
+                        color: "orange"
+                      }}></i>
                     </div>
                     <div className="item-empty-area__text">
                       No items found in cart <br />{" "}
-                      <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                      <Link to={process.env.PUBLIC_URL + "/products/all"}>
                         Shop Now
                       </Link>
                     </div>

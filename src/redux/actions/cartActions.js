@@ -18,7 +18,7 @@ export const addToCart = (
       requesting: true
     })
     firestore.collection('users').doc(auth.currentUser.uid)
-        .set({cartItems: {[item.id]: increment(1)}}, { merge: true })
+        .set({cartItems: {[item.id]: increment(quantityCount ? quantityCount : 1)}}, { merge: true })
       .then(result => {
         dispatch({
           type: ADD_TO_CART,
@@ -34,6 +34,10 @@ export const addToCart = (
       }).catch(err => {
         if (addToast) {
           addToast("Failed To Add To Cart", { appearance: "error", autoDismiss: true });
+          dispatch({
+            type: 'REQUESTING',
+            requesting: false
+          })
         }
       })
 
@@ -70,6 +74,10 @@ export const decreaseQuantity = (item, addToast, user) => {
             autoDismiss: true
           });
         }
+        dispatch({
+          type: 'REQUESTING',
+          requesting: false
+        })
       })
 
     
@@ -99,6 +107,10 @@ export const deleteFromCart = (item, addToast, user) => {
         if (addToast) {
           addToast("Failed To Remove From Cart", { appearance: "error", autoDismiss: true });
         }
+        dispatch({
+          type: 'REQUESTING',
+          requesting: false
+        })
       })
   };
 };
@@ -128,6 +140,10 @@ export const deleteAllFromCart = addToast => {
         if (addToast) {
           addToast("Failed To Remove From Cart", { appearance: "error", autoDismiss: true });
         }
+        dispatch({
+          type: 'REQUESTING',
+          requesting: false
+        })
       })
   };
 };

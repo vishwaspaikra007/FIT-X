@@ -2,11 +2,13 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
-import { firestore, arrayUnion } from '../../firebase'
+import { firestore, arrayUnion, timestamp } from '../../firebase'
 import { useToasts } from 'react-toast-notifications'
 import Rating from '@material-ui/lab/Rating';
 import { useSelector } from 'react-redux'
 import PreLoader from "../../components/PreLoader";
+import { Link } from 'react-router-dom'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   const [productReview, setProductReview] = useState({
@@ -15,7 +17,8 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   })
   const { addToast } = useToasts()
 
-  const [reviews, setReviews] = useState(product.reviews ? product.reviews : [])
+  const [reviews, setReviews] = useState([])
+  // const [reviews, setReviews] = useState(product.reviews ? product.reviews : [])
   const user = useSelector(state => state.userData.user)
   const [requesting, setRequesting] = useState(false)
 
@@ -26,26 +29,35 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
 
       case 'saveReview':
         setRequesting(true)
-        firestore.collection('products').doc(product.id).update({
-          reviews: arrayUnion({
-            userId: user.uid,
-            name: user.displayName,
-            ...productReview
-          })
+        firestore.collection('products').doc(product.id).collection('reviews').add({
+          userId: user.uid,
+          name: user.displayName,
+          createdAt: timestamp,
+          ...productReview
         })
           .then(() => {
-            addToast("review submitted successfully", { appearance: 'success' })
+            addToast("review submitted successfully", { appearance: 'success', autoDismiss: true })
             setReviews([...reviews, productReview])
             setRequesting(false)
           }).catch(err => {
             console.log(err)
             setRequesting(false)
-            addToast(err.message, { appearance: 'error' })
+            addToast(err.message, { appearance: 'error', autoDismiss: true })
           })
 
       default: break;
     }
   }
+
+  useEffect(() => {
+    firestore.collection('products').doc(product.id).collection('reviews').limit(3).get().then(docs => {
+      const reviewsCopy = []
+      docs.forEach(doc => {
+        reviewsCopy.push(doc.data())
+      })
+      setReviews(reviewsCopy)
+    })
+  }, [])
   return (
     <div className={`description-review-area ${spaceBottomClass}`}>
       <div className="container" id="review">
@@ -78,7 +90,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                   <div className="col-lg-7">
                     <div className="review-wrapper">
                       {
-                        product.reviews && product.reviews.map((review, key) => (
+                        reviews.map((review, key) => (
                           <div key={key} className="single-review child-review">
                             <div className="review-img">
                               {/* <img
@@ -88,6 +100,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                                 }
                                 alt=""
                               /> */}
+                              <AccountCircleIcon className={'img'} />
                             </div>
                             <div className="review-content">
                               <div className="review-top-wrap">
@@ -95,7 +108,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                                   <div className="review-name">
                                     <h4>{review.name}</h4>
                                   </div>
-                                  <Rating value={review.rating} readOnly />
+                                  <Rating value={review.rating ? review.rating : 0} readOnly />
                                 </div>
                               </div>
                               <div className="review-bottom">
@@ -110,6 +123,16 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                         ))
                       }
                     </div>
+                    <Link style={{
+                      background: "#bdbdbd",
+                      padding: "5px",
+                      borderRadius: "10px",
+                      margin: "5px",
+                      display: "block",
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: "bold",
+                    }} to={`/reviews/${product.id}`}>See All >></Link>
                   </div>
                   {
                     user && user.uid ?
