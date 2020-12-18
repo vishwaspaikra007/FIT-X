@@ -67,7 +67,7 @@ const Checkout = ({ location, cartItems, currency, match }) => {
       alert("All inputs are necessary")
       return
     }
-    if(cartItems.length < 1) {
+    if (cartItems.length < 1) {
       return alert("There should be atleast one item in your cart")
     }
     setRequesting(true)
@@ -75,12 +75,15 @@ const Checkout = ({ location, cartItems, currency, match }) => {
 
     const cartItemsObj = {}
     cartItems.map(item => {
-     cartItemsObj[item.id] = {...item, status: 'order created'}
+      cartItemsObj[item.id] = { ...item, status: 'order created' }
     })
     const response = (await axios.post(domain + 'create-order', {
-      amount: cartTotalPrice.toFixed(2),
-      userInfo, 
+      amount: Math.ceil(location.state.coupon ? (cartTotalPrice + location.state.deliveryCharges - location.state.coupon.discount).toFixed(2)
+        : (cartTotalPrice + location.state.deliveryCharges).toFixed(2)),
+      userInfo,
       cartItems: cartItemsObj,
+      deliveryCharges: location.state.deliveryCharges,
+      coupon: location.state.coupon,
     })).data
     console.log(response)
 
@@ -105,15 +108,15 @@ const Checkout = ({ location, cartItems, currency, match }) => {
         // alert(response.razorpay_signature)
         dispatch({ type: "DELETE_ALL_FROM_CART" });
         setRequesting(false)
-        addToast("payment successful", {appearance: "success", autoDismiss: true  })
+        addToast("payment successful", { appearance: "success", autoDismiss: true })
         history.push('/orders')
       },
       modal: {
         escape: false,
-        ondismiss: function(){
-            alert("payment cancelled")
-            setRequesting(false)
-         }
+        ondismiss: function () {
+          alert("payment cancelled")
+          setRequesting(false)
+        }
       },
       prefill: {
         name: userInfo.name,
@@ -134,6 +137,9 @@ const Checkout = ({ location, cartItems, currency, match }) => {
         background: "#ffffff56",
         backdropFilter: "blur(2px)",
       }} /> : null}
+      {
+        location.state && location.state.deliveryCharges ? null : <Redirect to={'/cart'} />
+      }
       <MetaTags>
         <title>fitX | Checkout</title>
         <meta
@@ -239,7 +245,7 @@ const Checkout = ({ location, cartItems, currency, match }) => {
                                 discountedPrice * currency.currencyRate
                               ).toFixed(2));
 
-                               discountedPrice != null && discountedPrice != 0  
+                              discountedPrice != null && discountedPrice != 0
                                 ? (cartTotalPrice +=
                                   finalDiscountedPrice * cartItem.quantity)
                                 : (cartTotalPrice +=
@@ -268,16 +274,31 @@ const Checkout = ({ location, cartItems, currency, match }) => {
                         </div>
                         <div className="your-order-bottom">
                           <ul>
-                            <li className="your-order-shipping">Shipping</li>
-                            <li>Free shipping</li>
+                            <li className="your-order-shipping">Total</li>
+                            <li>{"₹" + cartTotalPrice}</li>
                           </ul>
                         </div>
+                        <div className="your-order-bottom">
+                          <ul>
+                            <li className="your-order-shipping">Shipping</li>
+                            <li>{"₹" + location.state.deliveryCharges}</li>
+                          </ul>
+                        </div>
+                        {
+                          !location.state.coupon ? null :
+                            <div className="your-order-bottom">
+                              <ul>
+                                <li className="your-order-shipping">Coupon : {location.state.coupon.name}</li>
+                                <li>{"- ₹" + location.state.coupon.discount}</li>
+                              </ul>
+                            </div>
+                        }
                         <div className="your-order-total">
                           <ul>
-                            <li className="order-total">Total</li>
+                            <li className="order-total">Grand Total</li>
                             <li>
-                              {"₹" +
-                                cartTotalPrice.toFixed(2)}
+                              {location.state.coupon ? "₹" + (cartTotalPrice + location.state.deliveryCharges - location.state.coupon.discount).toFixed(2)
+                                : "₹" + (cartTotalPrice + location.state.deliveryCharges).toFixed(2)}
                             </li>
                           </ul>
                         </div>

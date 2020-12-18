@@ -7,12 +7,13 @@ import { multilanguage, loadLanguages } from "redux-multilanguage";
 import { connect } from "react-redux";
 import { BreadcrumbsProvider } from "react-breadcrumbs-dynamic";
 import useFirebase from "./useFirebase";
-import BecomeVendor from "./pages/BecomeVendor";
 import useRazorPay from './useRazorPay'
 import PreLoader from "./components/PreLoader";
 import { useSelector } from 'react-redux'
-import Reviews from "./pages/other/Reviews";
 
+const Reviews = lazy(() => import("./pages/other/Reviews"));
+const Order = lazy(() => import("./pages/other/Order"));
+const BecomeVendor = lazy(() => import("./pages/BecomeVendor"));
 const Vendor = lazy(() => import("./pages/Vendor"));
 const Vendors = lazy(() => import("./pages/Vendors"));
 
@@ -251,6 +252,10 @@ const App = (props) => {
                   <Route
                     path={process.env.PUBLIC_URL + "/orders"}
                     component={Orders}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/order/:orderId"}
+                    component={Order}
                   />
                   <Route
                     path={process.env.PUBLIC_URL + "/reviews/:productId"}

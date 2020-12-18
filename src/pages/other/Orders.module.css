@@ -48,3 +48,43 @@
     width: max-content;
     transform: translate(-50%, -35px);
 }
+.extraDetails {
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    padding: 10px;
+}
+.extraHeight {
+    height: auto
+}
+.vendorName {
+    color: #3e3e3e;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.finalPrice {
+    color: green;
+    text-align: right;
+}
+.originalPrice {
+    color: darkgrey;
+    text-decoration: line-through;
+    text-align: right;
+}
+.h_center {
+    text-align: center;
+}
+.noGrid {
+    display: block;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 70% 30%;
+}
+.grid > div:nth-child(2), .grid > b:nth-child(2) {
+    text-align: right;
+}
+.grid:nth-last-child(1) > b:nth-child(2) {
+    color: red;
+}

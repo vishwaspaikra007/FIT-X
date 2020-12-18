@@ -3,6 +3,6 @@
   "name": "Running Towards The Future",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#3e3e3e",
+  "theme_color": "#1a1a1a",
   "background_color": "#ffffff"
 }

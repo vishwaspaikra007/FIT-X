@@ -38,9 +38,14 @@ export default function Orders({ location, match }) {
                         docs.forEach(doc => {
                             orderList.push({
                                 list: doc.data().cartItems,
+                                paymentMethod: doc.data().paymentCaptureDetails ? doc.data().paymentCaptureDetails.payload.payment.entity.method : undefined,
                                 couponDiscount: doc.data().couponDiscount,
                                 couponName: doc.data().couponName,
-                                id: doc.id
+                                id: doc.id,
+                                address: doc.data().userInfo.address,
+                                city: doc.data().userInfo.city,
+                                state: doc.data().userInfo.state,
+                                pincode: doc.data().userInfo.pincode,
                             })
                         })
                         setLoadContent(false)
@@ -92,15 +97,16 @@ export default function Orders({ location, match }) {
                                         order.list && Object.keys(order.list).map((id, key2) => {
                                             const item = order.list[id]
                                             return (
-                                            <div key={key2} className={Class.itemBox}>
-                                                <img className={Class.img} src={item.images[0]} />
-                                                <div className={Class.description}>
-                                                    <div className={Class.status}>{item.status}</div>
-                                                    <div className={Class.text}>{item.productName}</div>
-                                                    <Link to={'/product/' + item.id + '#review'} className={Class.link}>Write a review</Link>
+                                                <div key={key2} className={Class.itemBox}>
+                                                    <img className={Class.img} src={item.images[0]} />
+                                                    <div className={Class.description}>
+                                                        <div className={Class.status}>{item.status}</div>
+                                                        <div className={Class.text}>{item.productName}</div>
+                                                        <Link to={'/product/' + item.id + '#review'} className={Class.link}>Write a review</Link>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )})
+                                            )
+                                        })
                                     }
                                 </div>
                                 <Link className={Class.orderLink} to={{ pathname: `order/${order.id}`, state: { order: order } }}>

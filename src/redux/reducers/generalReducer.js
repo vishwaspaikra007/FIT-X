@@ -22,6 +22,14 @@ const generalReducer = (state = initialState, action) => {
         case "REQUESTING":
             stateCopy.requesting = action.requesting
             return { ...stateCopy }
+
+        case "COUPONS":
+            stateCopy.coupons = action.coupons
+            return { ...stateCopy }
+
+        case "CHARGES":
+            stateCopy.charges = action.charges
+            return { ...stateCopy }
     }
     return state
 }
