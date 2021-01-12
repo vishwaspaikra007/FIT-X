@@ -505,7 +505,7 @@
 
       visibility: hidden;
 
-      width: 125px;
+      width: 180px;
       padding: 8px 12px 10px;
 
       transition: all 0.5s ease 0s;
@@ -2294,14 +2294,14 @@
   flex-direction: column;
 
   height: 100%;
-  padding: 20px 35px 0;
+  padding: 70px 25px 0;
 
   overflow: hidden;
   height: max-content;
 
-  @media #{$sm-layout} {
-    padding: 70px 25px 0;
-  }
+  // @media #{$sm-layout} {
+  //   padding: 70px 25px 0;
+  // }
 }
 
 .offcanvas-navigation {

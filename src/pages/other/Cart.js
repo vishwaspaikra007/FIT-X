@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
@@ -31,6 +31,7 @@ const Cart = ({
   deleteFromCart,
   deleteAllFromCart
 }) => {
+  const history = useHistory()
   const [quantityCount] = useState(1);
   const { addToast } = useToasts();
   const { pathname } = location;
@@ -46,17 +47,18 @@ const Cart = ({
   const [deliveryCharges, setDeliveryCharges] = useState()
 
   useEffect(() => {
-
-    if(!charges) {
+    if (!charges) {
       firestore.collection('web_config').doc('charges').get()
-      .then(doc => {
-        dispatch({ type: "CHARGES", charges: doc.data() })
-        setDeliveryCharges(doc.data().deliveryCharges)
-      })
+        .then(doc => {
+          dispatch({ type: "CHARGES", charges: doc.data() })
+          setDeliveryCharges(doc.data().deliveryCharges)
+        })
     } else {
       setDeliveryCharges(charges.deliveryCharges)
     }
-    
+    return () => {
+      setDeliveryCharges(undefined)
+    }
   }, [])
 
   const handleClick = (e) => {
@@ -71,18 +73,22 @@ const Cart = ({
 
             dispatch({ type: "COUPONS", coupons: docs.data() })
             if (docs.data()[couponCode]) {
-              setCoupon({
-                ...docs.data()[couponCode],
-                discount: (Math.min(cartTotalPrice * docs.data()[couponCode].discountPercentage / 100, docs.data()[couponCode].max)).toFixed( ),
-              })
-              setRequesting(false)
-              addToast("Coupon applied", { appearance: "success", autoDismiss: true})
+              if(docs.data()[couponCode].forOrderAbove < cartTotalPrice 
+              && docs.data()[couponCode].validity.seconds*1000 > Date.now()) {
+                setCoupon({
+                  ...docs.data()[couponCode],
+                  discount: (Math.min(cartTotalPrice * docs.data()[couponCode].discountPercentage / 100, docs.data()[couponCode].max)).toFixed(),
+                })
+                setRequesting(false)
+                addToast("Coupon applied", { appearance: "success", autoDismiss: true })
+              } else {
+                addToast("Coupon is not applicable", { appearance: 'error', autoDismiss: true })
+                setRequesting(false)
+              }
             }
             else {
               addToast("No coupon found", { appearance: 'error', autoDismiss: true })
               setRequesting(false)
-              addToast("No coupon found", { appearance: "error", autoDismiss: true})
-
             }
           }
         })
@@ -90,16 +96,15 @@ const Cart = ({
       if (coupons[couponCode]) {
         setCoupon({
           ...coupons[couponCode],
-          discount: Math.min(cartTotalPrice * coupons[couponCode].discountPercentage   / 100, coupons[couponCode].max),
+          discount: Math.min(cartTotalPrice * coupons[couponCode].discountPercentage / 100, coupons[couponCode].max),
         })
         setRequesting(false)
-        addToast("Coupon applied", { appearance: "success", autoDismiss: true})
+        addToast("Coupon applied", { appearance: "success", autoDismiss: true })
 
       }
       else {
         addToast("No coupon found", { appearance: 'error', autoDismiss: true })
         setRequesting(false)
-        addToast("No coupon found", { appearance: "error", autoDismiss: true})
       }
     }
 
@@ -253,7 +258,8 @@ const Cart = ({
                                         addToCart(
                                           cartItem,
                                           addToast,
-                                          quantityCount
+                                          quantityCount,
+                                          history
                                         )
                                       }
                                       disabled={
@@ -369,12 +375,12 @@ const Cart = ({
                       </h5>
 
                       {
-                        !coupon? null :
+                        !coupon ? null :
                           <h5>
                             Coupon : {coupon.name}
                             <span>
                               {"- ₹" + coupon.discount}
-                              <CancelIcon onClick={e => setCoupon()}/>
+                              <CancelIcon onClick={e => setCoupon()} />
                             </span>
                           </h5>
                       }
@@ -383,13 +389,15 @@ const Cart = ({
                         Grand Total{" "}
                         <span>
                           {coupon ? "₹" + (cartTotalPrice + deliveryCharges - coupon.discount).toFixed(2)
-                           : "₹" + (cartTotalPrice + deliveryCharges).toFixed(2)}
+                            : "₹" + (cartTotalPrice + deliveryCharges).toFixed(2)}
                         </span>
                       </h4>
-                      <Link disabled={!deliveryCharges} to={{pathname:process.env.PUBLIC_URL + "/checkout", state: {
-                        coupon: coupon,
-                        deliveryCharges: deliveryCharges,
-                      }}}>
+                      <Link disabled={!deliveryCharges} to={{
+                        pathname: process.env.PUBLIC_URL + "/checkout", state: {
+                          coupon: coupon,
+                          deliveryCharges: deliveryCharges,
+                        }
+                      }}>
                         Proceed to Checkout
                       </Link>
                     </div>
@@ -441,8 +449,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addToCart: (item, addToast, quantityCount) => {
-      dispatch(addToCart(item, addToast, quantityCount));
+    addToCart: (item, addToast, quantityCount, history) => {
+      dispatch(addToCart(item, addToast, quantityCount, history));
     },
     decreaseQuantity: (item, addToast) => {
       dispatch(decreaseQuantity(item, addToast));

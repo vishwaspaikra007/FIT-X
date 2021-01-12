@@ -35,7 +35,9 @@ export default function VendorWhatWeDo(props) {
               padding: "10px",
               borderRadius: "10px",
               border: "1px solid gray",
-              margin: "10px"
+              margin: "10px",
+              display: "grid",
+              gridTemplateRows: "100px  50px auto"
             }}
           >
             <Img

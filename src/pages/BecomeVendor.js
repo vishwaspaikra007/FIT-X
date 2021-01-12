@@ -80,9 +80,11 @@ export default function BecomeVendor(props) {
                     } else {
                         batch.set(firestore.collection("vendors").doc(user.uid), {
                             ...sellerInfo,
-                            createdAt: sellerInfoRedux && sellerInfoRedux.createdAt ? sellerInfoRedux.createdAt : timestamp
+                            verified: false,
+                            createdAt: timestamp
                         })
                         batch.update(firestore.collection('analytics').doc('count'), { vendors: increment })
+                        batch.update(firestore.collection('users').doc(user.uid), { isVendor: true })
                         ref = batch.commit()
                     }
                     ref.then(doc => {
@@ -203,7 +205,9 @@ export default function BecomeVendor(props) {
                                                                 <div className="billing-btn">
                                                                     <button onClick={e => handleChange(e, 'cancel')} >Cancel</button>
                                                                 </div>
-                                                                <div className="billing-btn">
+                                                                <div className="billing-btn" style={{
+                                                                    marginLeft: "15px",
+                                                                }}>
                                                                     <button onClick={e => handleChange(e, 'save')} >Save</button>
                                                                 </div>
                                                             </div>

@@ -7,6 +7,7 @@ import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
 import { addToCompare } from "../../redux/actions/compareActions";
 import { firestore } from "../../firebase";
+import { useHistory } from "react-router-dom";
 
 const ProductGrid = ({
   currency,
@@ -22,7 +23,7 @@ const ProductGrid = ({
 }) => {
 
   const [products, setProducts] = useState([])
-
+  const history = useHistory()
   useEffect(() => {
     let productsList = []
     firestore.collection("products")
@@ -101,16 +102,14 @@ const mapDispatchToProps = dispatch => {
       item,
       addToast,
       quantityCount,
-      selectedProductColor,
-      selectedProductSize
+      history
     ) => {
       dispatch(
         addToCart(
           item,
           addToast,
           quantityCount,
-          selectedProductColor,
-          selectedProductSize
+          history
         )
       );
     },

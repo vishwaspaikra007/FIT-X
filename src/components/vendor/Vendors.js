@@ -24,11 +24,12 @@ export default function Vendors(props) {
                     let list = JSON.parse(JSON.stringify(vendors))
                     docs.forEach(doc => {
                         list.push({ ...doc.data(), id: doc.id })
+                        console.log(JSON.stringify(doc.data()))
                     })
                     setLastDoc(docs.docs[docs.docs.length - 1])
                     setVendors(list)
                     setLoadNewContent(false)
-                    if(docs.docs.length < limit)
+                    if (docs.docs.length < limit)
                         setAllowFurtherFetch(false)
                 }
             })
@@ -113,8 +114,6 @@ export default function Vendors(props) {
                             </Link>
                         ))
                     }
-                    <LoadContent onChange={(bool) => setLoadNewContent(bool)} />
-
                     <Link to="/vendors" style={{
                         display: props.asComponent && vendors.length > 0 ? "flex" : "none"
                     }}>
@@ -128,9 +127,16 @@ export default function Vendors(props) {
                                 color: "white"
                             }}>
                             Show more
-                </div>
+                        </div>
                     </Link>
                 </div>
+                {
+                    allowFurtherFetch ? <LoadContent onChange={bool => setLoadNewContent(bool)} style={{
+                        height: "100px",
+                        width: "200px",
+                        margin: "auto"
+                    }} /> : null
+                }
             </div>
         </div>
     )

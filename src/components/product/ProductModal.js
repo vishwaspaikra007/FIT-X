@@ -5,8 +5,10 @@ import { getProductCartQuantity } from "../../helpers/product";
 import { Modal } from "react-bootstrap";
 import Rating from "./sub-components/ProductRating";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 function ProductModal(props) {
+  const history = useHistory()
   const { product } = props;
   const { currency } = props;
   const { discountedPrice } = props;
@@ -294,8 +296,7 @@ function ProductModal(props) {
                               product,
                               addToast,
                               quantityCount,
-                              selectedProductColor,
-                              selectedProductSize
+                              history
                             )
                           }
                           disabled={productCartQty >= productStock}

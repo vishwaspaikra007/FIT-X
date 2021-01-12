@@ -18,34 +18,40 @@ export default function Order({ location, match }) {
     const history = useHistory()
 
     const [orderDetails, setOrderDetails] = useState(location.state ? location.state.order : undefined)
+
+    const handleOrderDetails = (orderDetails) => {
+        let total = 0
+        Object.keys(orderDetails.cartItems).map(key => {
+            let item = orderDetails.cartItems[key]
+            total += (item.discount ? Math.ceil(item.price - item.price * (item.discount / 100)) : item.price) * item.quantity
+        })
+        setOrderDetails({
+            list: orderDetails.cartItems,
+            paymentMethod: orderDetails.paymentCaptureDetails ? orderDetails.paymentCaptureDetails.payload.payment.entity.method : undefined,
+            coupon: orderDetails.coupon,
+            deliveryCharges: orderDetails.deliveryCharges,
+            total: total,
+            grandTotal: orderDetails.amount / 100,
+            id: orderDetails.id,
+            address: orderDetails.userInfo.address,
+            city: orderDetails.userInfo.city,
+            state: orderDetails.userInfo.state,
+            pincode: orderDetails.userInfo.pincode,
+        })
+    }
     useEffect(() => {
         if (user && params && params.orderId && !orderDetails) {
             firestore.collection('orders').doc(params.orderId).get()
                 .then(doc => {
                     console.log(doc.data())
                     if (doc.data()) {
-                        let total = 0
-                        Object.keys(doc.data().cartItems).map(key => {
-                            let item = doc.data().cartItems[key]
-                            total += (item.discount ? Math.ceil(item.price - item.price * (item.discount / 100)) : item.price)*item.quantity
-                        })
-                        setOrderDetails({
-                            list: doc.data().cartItems,
-                            paymentMethod: doc.data().paymentCaptureDetails ? doc.data().paymentCaptureDetails.payload.payment.entity.method : undefined,
-                            coupon: doc.data().coupon,
-                            deliveryCharges: doc.data().deliveryCharges,
-                            total: total,
-                            grandTotal: doc.data().amount/100,
-                            id: doc.id,
-                            address: doc.data().userInfo.address,
-                            city: doc.data().userInfo.city,
-                            state: doc.data().userInfo.state,
-                            pincode: doc.data().userInfo.pincode,
-                        })
+                        handleOrderDetails({...doc.data(), id: doc.id})
                     } else {
                         history.push('/404')
                     }
                 })
+        } else if(user && orderDetails) {
+            handleOrderDetails(orderDetails)
         }
     }, [])
     return (
@@ -65,6 +71,7 @@ export default function Order({ location, match }) {
             <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>Order Details</BreadcrumbsItem>
             <LayoutOne headerTop="visible">
                 <Breadcrumb />
+                <div className="container">
                 {!orderDetails ? null :
                     <>
                         <div className={Class.orderWrap}>
@@ -143,6 +150,7 @@ export default function Order({ location, match }) {
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </LayoutOne>
         </>

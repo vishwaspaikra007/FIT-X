@@ -9,7 +9,7 @@ import { auth } from '../../../firebase'
 const MobileNavMenu = ({ strings }) => {
   const categories = useSelector(state => state.generalData.categories)
   const user = useSelector(state => state.userData.user)
-
+  const userInfo = useSelector(state => state.generalData.userInfo)
   return (
     <nav className="offcanvas-navigation" id="offcanvas-navigation">
       <ul>
@@ -26,28 +26,32 @@ const MobileNavMenu = ({ strings }) => {
               textAlign: "center"
             }} >{user && user.uid ? null : "Login"}</span>
           </Link>
-
+        </li>
+      <li className="menu-item-has-children">
+          <Link to={process.env.PUBLIC_URL + "/"}>{strings["home"]}</Link>
+        </li>
           {
             user && user.uid ?
-              <ul className="submenu">
-                <li  style={{
-                textAlign: "center",
-                lineHeight: "5px",
-              }} className="menu-item-has-children" onClick={() => auth.signOut()}><a>Logout</a></li>
-                <li>
-                  <Link to={"/my-account"}>Profile</Link>
-                </li>
+            <li className="menu-item-has-children ">
+
+              <Link to={"/my-account"}>Profile</Link>
+              <ul className="sub-menu">
                 <li>
                   <Link to={"/orders"}>Orders</Link>
                 </li>
+                <li>
+                  <Link to={"/purchases"}>Purchases</Link>
+                </li>
+                {
+                  userInfo ? userInfo.isVendor ? <li><a href="https://admin-fitx.firebaseapp.com/" target="blank">Vendor Dashboard</a></li>
+                    : <li><Link to={"/become-vendor"}>Become Vendor</Link></li> : null
+                }
+                <li onClick={() => auth.signOut()}><a>Logout</a></li>
               </ul>
+              </li>
               : null
           }
-        </li>
-        <li className="menu-item-has-children">
-          <Link to={process.env.PUBLIC_URL + "/"}>{strings["home"]}</Link>
-        </li>
-
+  
         <li className="menu-item-has-children active">
           <Link to={process.env.PUBLIC_URL + "/products/all"}>
             {strings["shop"]}
@@ -82,8 +86,6 @@ const MobileNavMenu = ({ strings }) => {
         <li>
           <Link to={process.env.PUBLIC_URL + "/contact"}>
             {strings["contact_us"]}
-          </Link>
-          <Link to={"/become-vendor"}>Become Vendor
           </Link>
         </li>
         <li>

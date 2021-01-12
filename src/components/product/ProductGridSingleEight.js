@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { getDiscountPrice } from "../../helpers/product";
 import Rating from "./sub-components/ProductRating";
@@ -19,6 +19,7 @@ const ProductGridSingleEight = ({
   spaceBottomClass,
   colorClass
 }) => {
+  const history = useHistory()
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
 
@@ -123,7 +124,7 @@ const ProductGridSingleEight = ({
                   </Link>
                 ) : product.stock && product.stock > 0 ? (
                   <button
-                    onClick={() => addToCart(product, addToast)}
+                    onClick={() => addToCart(product, addToast, undefined, history)}
                     className={
                       cartItem !== undefined && cartItem.quantity > 0
                         ? "active"

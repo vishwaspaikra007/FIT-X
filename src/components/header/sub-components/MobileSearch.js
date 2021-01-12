@@ -1,10 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
+import { useHistory } from "react-router-dom";
 
-const MobileSearch = () => {
+const MobileSearch = (props) => {
+  const [search, setSearch] = useState("")
+  const history = useHistory()
+  const searchProduct = e => {
+    e.preventDefault()
+    if(search) {
+     history.push({pathname: `/products/${search}`})
+     props.closeMobileMenu()
+    }
+  }
   return (
     <div className="offcanvas-mobile-search-area">
-      <form action="#">
-        <input type="search" placeholder="Search ..." />
+      <form onSubmit={e => searchProduct(e)}>
+        <input type="text" placeholder="Search ..." value={search} onChange={e => setSearch(e.target.value)} />
         <button type="submit">
           <i className="fa fa-search" />
         </button>

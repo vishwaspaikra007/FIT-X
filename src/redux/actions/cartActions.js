@@ -10,19 +10,27 @@ export const addToCart = (
   item,
   addToast,
   quantityCount,
+  history
 ) => {
 
   return dispatch => {
+
+    if (!auth.currentUser) {
+      if (history)
+        history.push({pathname: '/login-register', state: {from: window.location.pathname}})
+      return null
+    }
+
     dispatch({
       type: 'REQUESTING',
       requesting: true
     })
     firestore.collection('users').doc(auth.currentUser.uid)
-        .set({cartItems: {[item.id]: increment(quantityCount ? quantityCount : 1)}}, { merge: true })
+      .set({ cartItems: { [item.id]: increment(quantityCount ? quantityCount : 1) } }, { merge: true })
       .then(result => {
         dispatch({
           type: ADD_TO_CART,
-          payload: {...item, quantity: quantityCount}
+          payload: { ...item, quantity: quantityCount }
         });
         dispatch({
           type: 'REQUESTING',
@@ -41,7 +49,7 @@ export const addToCart = (
         }
       })
 
-    
+
   };
 };
 //decrease from cart
@@ -52,7 +60,7 @@ export const decreaseQuantity = (item, addToast, user) => {
       requesting: true
     })
     firestore.collection('users').doc(auth.currentUser.uid)
-    .set({cartItems: {[item.id]: increment(-1)}}, { merge: true })
+      .set({ cartItems: { [item.id]: increment(-1) } }, { merge: true })
       .then(result => {
         dispatch({
           type: DECREASE_QUANTITY, payload: item
@@ -80,7 +88,7 @@ export const decreaseQuantity = (item, addToast, user) => {
         })
       })
 
-    
+
   };
 };
 //delete from cart
@@ -91,7 +99,7 @@ export const deleteFromCart = (item, addToast, user) => {
       requesting: true
     })
     firestore.collection('users').doc(auth.currentUser.uid)
-    .set({cartItems: {[item.id]: _delete}}, { merge: true })
+      .set({ cartItems: { [item.id]: _delete } }, { merge: true })
       .then(result => {
         dispatch({
           type: DELETE_FROM_CART, payload: item
@@ -122,7 +130,7 @@ export const deleteAllFromCart = addToast => {
       requesting: true
     })
     firestore.collection('users').doc(auth.currentUser.uid)
-    .set({cartItems: _delete}, { merge: true })
+      .set({ cartItems: _delete }, { merge: true })
       .then(result => {
         dispatch({
           type: 'REQUESTING',
@@ -135,7 +143,7 @@ export const deleteAllFromCart = addToast => {
           });
         }
         dispatch({ type: DELETE_ALL_FROM_CART });
-        
+
       }).catch(err => {
         if (addToast) {
           addToast("Failed To Remove From Cart", { appearance: "error", autoDismiss: true });

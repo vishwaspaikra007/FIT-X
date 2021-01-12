@@ -16,20 +16,20 @@ function Img(props) {
         <div style={{
             position: "relative",
             width: '100%',
-            height: '100%'
+            height: props.style && props.style.height ? props.style.height : '100%'
         }}>
                 <LazyLoadImage 
                 className={[props.className, props.className].join(" ")}
                 scrollPosition={props.scrollPosition}
                 src={props.src} style={{
                     display: "block",
-                    transition: isLoaded ? "1s ease-out" : 0,
+                    transition: isLoaded && props.style && props.style.transition ? props.style.transition : "none",
                     opacity: isLoaded ? 1 : 0,
                     transform: isLoaded ? "scale(1)" : "scale(0.1)",
                     position: loaded ? "relative" : "absolute", 
                     top: 0, left: 0,
                     zIndex: loaded ? 0 : -1,
-                    width: loaded ? 'auto' : "100%",
+                    width: loaded ? '' : "100%",
                     objectFit: "cover",
                     ...props.style, 
                     }} afterLoad={() => setLoaded(true)} />

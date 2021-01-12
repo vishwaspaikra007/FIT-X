@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { getProductCartQuantity } from "../../helpers/product";
 import { addToCart } from "../../redux/actions/cartActions";
@@ -23,6 +23,7 @@ const ProductDescriptionInfo = ({
   addToWishlist,
   addToCompare
 }) => {
+  const history = useHistory()
   const [selectedProductColor, setSelectedProductColor] = useState(
     product.variation ? product.variation[0].color : ""
   );
@@ -47,7 +48,7 @@ const ProductDescriptionInfo = ({
       <div className="product-details-price">
         {discountedPrice !== null && discountedPrice !== 0 ? (
           <Fragment>
-            <span>{ finalDiscountedPrice}</span>{" "}
+            <span>{"₹" + finalDiscountedPrice}</span>{" "}
             <span className="old">
               {"₹" + finalProductPrice}
             </span>
@@ -189,8 +190,7 @@ const ProductDescriptionInfo = ({
                     product,
                     addToast,
                     quantityCount,
-                    selectedProductColor,
-                    selectedProductSize
+                    history
                   )
                 }
                 disabled={productCartQty >= productStock}
@@ -323,16 +323,14 @@ const mapDispatchToProps = dispatch => {
       item,
       addToast,
       quantityCount,
-      selectedProductColor,
-      selectedProductSize
+      history
     ) => {
       dispatch(
         addToCart(
           item,
           addToast,
           quantityCount,
-          selectedProductColor,
-          selectedProductSize
+          history
         )
       );
     },

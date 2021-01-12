@@ -3,8 +3,12 @@ import LayoutOne from '../layouts/LayoutOne'
 import VendorProfileCard from '../components/vendorProfileCard/VendorProfileCard'
 import VendorWhatWeDo from '../components/vendorWhatWeDo/VendorWhatWeDo'
 import VendorPointOfSale from '../components/vendorPointOfSale/VendorPointOfSale'
-import VendorPricing from '../components/vendorPricing/VendorPricing'
+import VendorServices from '../components/vendorServices/VendorServices'
+// import VendorPricing from '../components/vendorPricing/VendorPricing'
 import VendorTestimonials from '../components/vendorTestimonials/VendorTestimonials'
+import VendorPage from '../components/VendorPage/VendorPage'
+
+
 import PreLoader from '../components/PreLoader'
 import { firestore } from '../firebase'
 
@@ -18,6 +22,7 @@ export default function Vendor(props) {
             firestore.collection('vendors').doc(id).get()
                 .then(doc => {
                     setVendor({ id: id, ...doc.data() })
+                    console.log(doc.data())
                 })
         }
     }, [])
@@ -25,13 +30,18 @@ export default function Vendor(props) {
         <LayoutOne>
             {
                 !vendor ? <PreLoader /> :
-                    <div>
+                    <div className={'container'}>
                         {
                             !vendor ? null :
                                 <VendorProfileCard vendor={vendor} />
                         }
 
                         {
+                            !vendor.vendorPage ? null :
+                                <VendorPage vendor={vendor} />
+                        }
+
+                        {/* {
                             !vendor.whatWeDo ? null :
                                 <VendorWhatWeDo vendor={vendor} />
                         }
@@ -42,14 +52,19 @@ export default function Vendor(props) {
                         }
 
                         {
-                            !vendor.pricings ? null :
+                            !vendor.pricingTable ? null :
                                 <VendorPricing vendor={vendor} />
+                        }
+
+                        {
+                            !vendor.services ? null :
+                                <VendorServices vendor={vendor} />
                         }
 
                         {
                             !vendor.testimonials ? null :
                                 <VendorTestimonials vendor={vendor} />
-                        }
+                        } */}
 
                     </div>
             }

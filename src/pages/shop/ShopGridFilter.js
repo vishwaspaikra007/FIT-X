@@ -23,10 +23,10 @@ const ShopGridFilter = ({ location, match }) => {
     if (match && match.params && match.params.tags)
         tag2 = match.params.tags
 
-    const tag = tag1 ? tag1 : tag2 ? tag2 : undefined
+    const tag = tag1 ? tag1 : tag2 ? tag2 : "all"
 
     const [products, setProducts] = useState([])
-
+    console.log(tag)
     const getAndSetProducts = () => {
         let ref
         if (lastDoc)
@@ -37,7 +37,7 @@ const ShopGridFilter = ({ location, match }) => {
         if (tag == "all")
             ref = ref.limit(limit).get()
         else
-            ref = ref.where(tag.slice(0,tag.indexOf(" ")), '==', tag.slice(tag.indexOf(" ")+1,).toLowerCase()).limit(limit).get()
+            ref = ref.where('tags', "array-contains-any", (tag).split(" ")).limit(limit).get()
 
         ref.then(docs => {
             if (docs.docs.length > 0) {
@@ -49,7 +49,7 @@ const ShopGridFilter = ({ location, match }) => {
                 setLoadContent(false)
                 setProducts(productList)
                 setLastDoc(docs.docs[docs.docs.length - 1])
-                if(docs.docs.length < limit)
+                if (docs.docs.length < limit)
                     setAllowFurtherFetch(false)
             } else {
                 setAllowFurtherFetch(false)
@@ -64,15 +64,12 @@ const ShopGridFilter = ({ location, match }) => {
     }, [loadContent])
 
     useEffect(() => {
-        if(tagState != tag)
-        {
             setTagState(tag)
             setProducts([])
             setLastDoc(undefined)
             setAllowFurtherFetch(true)
             setLoadContent(true)
-        }
-    }, [tag])
+    }, [tag2])
 
     const [layout, setLayout] = useState('grid three-column');
     const [currentData, setCurrentData] = useState([]);
@@ -99,7 +96,13 @@ const ShopGridFilter = ({ location, match }) => {
 
                     {/* shop page content default */}
                     <ShopProducts layout={layout} products={products} />
-                    <LoadContent onChange={bool => setLoadContent(bool)} />
+                    {
+                        allowFurtherFetch ? <LoadContent onChange={bool => setLoadContent(bool)} style={{
+                            height: "100px",
+                            width: "200px",
+                            margin: "auto"
+                        }} /> : null
+                    }
                     {/* shop product pagination */}
                     <div className="pro-pagination-style text-center mt-30"></div>
                 </div>

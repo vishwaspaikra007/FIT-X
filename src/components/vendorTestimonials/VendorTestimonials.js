@@ -17,7 +17,16 @@ export default function VendorTestimonials(props) {
         }}>
         <Carousel>
         {vendor.testimonials.map((card, i) => (
-            <VendorProfileCard vendor={card} key={i}/>
+          <div key={i}>
+            <VendorProfileCard vendor={card}/>
+            <p style={{
+              padding: "0 20px",
+              height: "100px",
+              overflow: "hidden",
+              color: 'grey',
+              textAlign: 'center',
+            }}>"{card.testimony}"</p>
+            </div>
         ))}
         </Carousel>
         </div>

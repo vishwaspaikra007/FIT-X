@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import MetaTags from "react-meta-tags";
 import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
@@ -27,6 +27,7 @@ const Wishlist = ({
   deleteFromWishlist,
   deleteAllFromWishlist
 }) => {
+  const history = useHistory()
   const { addToast } = useToasts();
   const { pathname } = location;
 
@@ -163,7 +164,7 @@ const Wishlist = ({
                                     wishlistItem.stock > 0 ? (
                                     <button
                                       onClick={() =>
-                                        addToCart(wishlistItem, addToast)
+                                        addToCart(wishlistItem, addToast, undefined, history)
                                       }
                                       className={
                                         cartItem !== undefined &&
@@ -276,8 +277,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addToCart: (item, addToast, quantityCount) => {
-      dispatch(addToCart(item, addToast, quantityCount));
+    addToCart: (item, addToast, quantityCount, history) => {
+      dispatch(addToCart(item, addToast, quantityCount, history));
     },
     addToWishlist: (item, addToast, quantityCount) => {
       dispatch(addToWishlist(item, addToast, quantityCount));

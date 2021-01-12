@@ -14,7 +14,9 @@ export default function Vendors() {
                 headerPaddingClass="header-padding-1"
             >
                 <Breadcrumb />
+                <div className={'container'}>
                 <VendorsComponent />
+                </div>
             </LayoutOne>
         </div>
     )

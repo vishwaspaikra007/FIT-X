@@ -64,15 +64,12 @@ const NavMenu = ({ strings, menuWhiteClass, sidebarMenu }) => {
             </ul>
           </li>
           <li>
+          <Link to={"/vendors"}>See All Vendors</Link>
+          </li>
+          <li>
             <Link to={process.env.PUBLIC_URL + "/contact"}>
               {strings["contact_us"]}
             </Link>
-          </li>
-          <li>
-          <Link to={"/become-vendor"}>Become Vendor</Link>
-          </li>
-          <li>
-          <Link to={"/vendors"}>See All Vendors</Link>
           </li>
         </ul>
       </nav>

@@ -17,6 +17,7 @@ const ProductGridSingleFive = ({
   sliderClassName,
   spaceBottomClass
 }) => {
+  const history = useHistory()
   const [modalShow, setModalShow] = useState(false);
   const { addToast } = useToasts();
 
@@ -119,7 +120,7 @@ const ProductGridSingleFive = ({
                       </Link>
                     ) : product.stock && product.stock > 0 ? (
                       <button
-                        onClick={() => addToCart(product, addToast)}
+                        onClick={() => addToCart(product, addToast, undefined, history)}
                         className={
                           cartItem !== undefined && cartItem.quantity > 0
                             ? "active"

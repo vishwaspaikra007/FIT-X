@@ -1,0 +1,105 @@
+.wrap {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    margin: 10px;
+    display: grid;
+    grid-template-rows: 100px 50px auto 30px 50px;
+    transition: 500ms;
+}
+.wrap:hover {
+    transform: scale(1.05);
+}
+.h {
+    text-align: center;
+    padding: 20px;
+}
+.img {
+    width: 100px;
+    object-fit: cover;
+    margin: auto;
+    border-radius: 50%;
+    height: 100px;
+}
+.ul {
+    list-style: inside;
+}
+.price {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.price span {
+    color: green;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.mg10 {
+    margin: 10px;
+}
+.button {
+    border: none;
+    background: orange;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 5px;
+    margin: 10px;
+
+}
+.button:active {
+    transform: scale(0.9);
+}
+.pre {
+    white-space: pre-wrap;
+    height: calc(100vh - 350px);
+    max-height: 350px;
+    min-height: 100px;
+}
+.serviceCheckoutWrap {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    margin: auto;
+    background: #ffffff7d;
+    z-index: 20000;
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.maxWidth {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    grid-template-rows: 100px 40px 30px 30px auto 20px 20px 60px;
+    position: relative;
+    max-height: 100vh;
+    overflow: auto;
+}
+.maxWidth:hover {
+    transform: none;
+}
+.p {
+    padding: 5px;
+    color: grey;
+    font-weight: bold;
+    text-align: center;
+}
+.checkbox {
+    height: 20px;
+}
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+.cancel {
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+    z-index: 2;
+}

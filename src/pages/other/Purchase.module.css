@@ -1,0 +1,51 @@
+.PurchaseWrap {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.ServiceWrap {
+    display: grid;
+    grid-template-rows: 100px 35px 20px auto 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px -5px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding-bottom: 10px;
+}
+.imgWrap {
+    background: green;
+    overflow: hidden;
+    padding: 10px calc(50% - 40px);
+}
+.red {
+    background: red;
+}
+.title, .name, .ul {
+    background: white;
+    padding-left: 10px;
+    text-align: center;
+}
+.title {
+    margin: 8px 15px 0 15px;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ul {
+    text-align: left;
+    height: 100px;
+    overflow: auto;
+    margin: 20px;
+    list-style: inside;
+}
+.id {
+    text-align: center;
+    color: green;
+}
+.redText {
+    color: red;
+}

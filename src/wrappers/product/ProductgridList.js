@@ -5,6 +5,7 @@ import { addToCart } from "../../redux/actions/cartActions";
 import { addToWishlist } from "../../redux/actions/wishlistActions";
 import { addToCompare } from "../../redux/actions/compareActions";
 import ProductGridListSingle from "../../components/product/ProductGridListSingle";
+import { useHistory } from "react-router-dom";
 
 const ProductGrid = ({
   products,
@@ -18,6 +19,7 @@ const ProductGrid = ({
   sliderClassName,
   spaceBottomClass
 }) => {
+  const history = useHistory()
   return (
     <Fragment>
       {products.map(product => {
@@ -79,16 +81,14 @@ const mapDispatchToProps = dispatch => {
       item,
       addToast,
       quantityCount,
-      selectedProductColor,
-      selectedProductSize
+      history
     ) => {
       dispatch(
         addToCart(
           item,
           addToast,
           quantityCount,
-          selectedProductColor,
-          selectedProductSize
+          history
         )
       );
     },

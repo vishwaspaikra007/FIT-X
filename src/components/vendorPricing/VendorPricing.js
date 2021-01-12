@@ -32,7 +32,7 @@ export default function VendorPricing(props) {
               src={card.imgURLS[0]}
               style={{
                 margin: "auto",
-                borderRadius: "50%",
+                borderRadius: "0%",
                 width: "100px",
                 height: "100px",
                 objectFit: "cover"

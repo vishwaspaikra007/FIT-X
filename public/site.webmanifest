@@ -1,6 +1,7 @@
 {
-    "name": "FIT-X",
+    "name": "FIT-X Running Towards Future",
     "short_name": "FIT-X",
+    "start_url": ".",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

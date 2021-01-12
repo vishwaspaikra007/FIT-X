@@ -1,4 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react'
+import PreLoader from './PreLoader'
 
 export default function LoadContent(props) {
     const ref = useRef()
@@ -22,6 +23,13 @@ export default function LoadContent(props) {
         <div ref={ref} style={{
             width: "100%",
             height: "100%"
-        }}></div>
+        }}>
+            <PreLoader style={{
+            position: "relative",
+            background: "transparent",
+            zIndex: 1,
+            ...props.style,
+          }} />
+        </div>
     )
 }

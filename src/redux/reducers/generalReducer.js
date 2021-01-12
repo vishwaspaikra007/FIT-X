@@ -2,6 +2,7 @@ let initialState = {
     categories: {},
     sellerInfo: undefined,
     requesting: false,
+    termsAndConditions: {}
 }
 
 const generalReducer = (state = initialState, action) => {
@@ -30,6 +31,11 @@ const generalReducer = (state = initialState, action) => {
         case "CHARGES":
             stateCopy.charges = action.charges
             return { ...stateCopy }
+
+        case "TERMS-AND-CONDITIONS":
+            stateCopy.termsAndConditions[action.vendorId] = action.termsAndConditions
+            return { ...stateCopy }
+
     }
     return state
 }

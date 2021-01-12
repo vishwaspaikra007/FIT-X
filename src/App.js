@@ -10,6 +10,7 @@ import useFirebase from "./useFirebase";
 import useRazorPay from './useRazorPay'
 import PreLoader from "./components/PreLoader";
 import { useSelector } from 'react-redux'
+import Purchases from "./pages/other/Purchases";
 
 const Reviews = lazy(() => import("./pages/other/Reviews"));
 const Order = lazy(() => import("./pages/other/Order"));
@@ -248,6 +249,10 @@ const App = (props) => {
                   <Route
                     path={process.env.PUBLIC_URL + "/checkout"}
                     component={Checkout}
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/purchases"}
+                    component={Purchases}
                   />
                   <Route
                     path={process.env.PUBLIC_URL + "/orders"}

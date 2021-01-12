@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import MenuCart from "./sub-components/MenuCart";
@@ -18,6 +18,8 @@ const IconGroup = ({
 
   const dispatch = useDispatch()
   const user = useSelector(state => state.userData.user)
+  const userInfo = useSelector(state => state.generalData.userInfo)
+  const [search, setSearch] = useState("")
 
   const history = useHistory()
 
@@ -39,6 +41,14 @@ const IconGroup = ({
     })
   }
 
+  const searchProduct = e => {
+    e.preventDefault()
+    if (search){
+      history.push({ pathname: `/products/${search.split(" ")}` })
+      e.currentTarget.parentElement.classList.toggle("active");
+    }
+  }
+
   return (
     <div
       className={`header-right-wrap ${iconWhiteClass ? iconWhiteClass : ""}`}
@@ -48,8 +58,8 @@ const IconGroup = ({
           <i className="pe-7s-search" />
         </button>
         <div className="search-content">
-          <form action="#">
-            <input type="text" placeholder="Search" />
+          <form onSubmit={e => searchProduct(e)}>
+            <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} />
             <button className="button-search">
               <i className="pe-7s-search" />
             </button>
@@ -70,6 +80,11 @@ const IconGroup = ({
                 <>
                   <li><Link to={process.env.PUBLIC_URL + "/my-account"}>my account</Link></li>
                   <li><Link to={process.env.PUBLIC_URL + "/orders"}>my orders</Link></li>
+                  <li><Link to={process.env.PUBLIC_URL + "/purchases"}>Purchases</Link></li>
+                  {
+                    userInfo ? userInfo.isVendor ? <li><a href="https://admin-fitx.firebaseapp.com/" target="blank">Vendor Dashboard</a></li>
+                      : <li><Link to={"/become-vendor"}>Become Vendor</Link></li> : null
+                  }
                   <li onClick={() => logout()}><a>Logout</a></li>
                 </>
                 : <li><Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link></li>
@@ -77,14 +92,14 @@ const IconGroup = ({
           </ul>
         </div>
       </div>
-      <div className="same-style header-compare">
+      {/* <div className="same-style header-compare">
         <Link to={process.env.PUBLIC_URL + "/compare"}>
           <i className="pe-7s-shuffle" />
           <span className="count-style">
             {compareData && compareData.length ? compareData.length : 0}
           </span>
         </Link>
-      </div>
+      </div> */}
       <div className="same-style header-wishlist">
         <Link to={process.env.PUBLIC_URL + "/wishlist"}>
           <i className="pe-7s-like" />

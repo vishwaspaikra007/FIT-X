@@ -7,16 +7,17 @@ import { useSelector, useDispatch } from 'react-redux'
 import MetaTags from "react-meta-tags";
 import PreLoader from '../../components/PreLoader'
 import LayoutOne from "../../layouts/LayoutOne";
-import Class from './Orders.module.css'
+import Class from './Purchase.module.css'
 import { Link, Redirect } from "react-router-dom";
 import LoadContent from "../../components/LoadContent";
+import Img from '../../components/Img';
 
-export default function Orders({ location, match }) {
+export default function Purchases({ location, match }) {
 
     const [lastDoc, setLastDoc] = useState()
     const [loadContent, setLoadContent] = useState(true)
     const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
-    const [orders, setOrders] = useState([])
+    const [purchaseList, setPurchaseList] = useState([])
 
     const { pathname } = location;
     const limit = 5
@@ -24,7 +25,7 @@ export default function Orders({ location, match }) {
 
     const getAndSetOrders = () => {
         if (user && user.uid) {
-            let ref = firestore.collection('orders')
+            let ref = firestore.collection('services')
                 .where('userId', "==", user.uid)
                 .orderBy('createdAt', 'desc')
             if (lastDoc)
@@ -33,23 +34,17 @@ export default function Orders({ location, match }) {
             ref.limit(limit).get()
                 .then(docs => {
                     if (docs.docs.length > 0) {
-                        let orderList = JSON.parse(JSON.stringify(orders))
+                        let purchaseListCopy = JSON.parse(JSON.stringify(purchaseList))
                         console.log(docs)
                         docs.forEach(doc => {
-                            orderList.push({
+                            purchaseListCopy.push({
                                 ...doc.data(),
                                 paymentMethod: doc.data().paymentCaptureDetails ? doc.data().paymentCaptureDetails.payload.payment.entity.method : undefined,
-                                couponDiscount: doc.data().couponDiscount,
-                                couponName: doc.data().couponName,
                                 id: doc.id,
-                                address: doc.data().userInfo.address,
-                                city: doc.data().userInfo.city,
-                                state: doc.data().userInfo.state,
-                                pincode: doc.data().userInfo.pincode,
                             })
                         })
                         setLoadContent(false)
-                        setOrders(orderList)
+                        setPurchaseList(purchaseListCopy)
                         setLastDoc(docs.docs[docs.docs.length - 1])
                         if (docs.docs.length < limit)
                             setAllowFurtherFetch(false)
@@ -76,42 +71,41 @@ export default function Orders({ location, match }) {
             }
 
             <MetaTags>
-                <title>fitX | orders</title>
+                <title>fitX | Purchases</title>
                 <meta
                     name="description"
-                    content="Orders of fitX Running Towards The Future."
+                    content="Purchases of fitX Running Towards The Future."
                 />
             </MetaTags>
             <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Home</BreadcrumbsItem>
             <BreadcrumbsItem to={process.env.PUBLIC_URL + pathname}>
-                Orders
+                Purchases
         </BreadcrumbsItem>
             <LayoutOne headerTop="visible">
                 <Breadcrumb />
-                <div className={[Class.orderWrap, "container"].join(" ")}>
+                <div className={[Class.PurchaseWrap, 'container'].join(" ")}>
                     {
-                        orders.map((order, key) => (
-                            <div key={key}>
-                                <div className={Class.itemsWrap}>
-                                    {
-                                        order.cartItems && Object.keys(order.cartItems).map((id, key2) => {
-                                            const item = order.cartItems[id]
-                                            return (
-                                                <div key={key2} className={Class.itemBox}>
-                                                    <img className={Class.img} src={item.images[0]} />
-                                                    <div className={Class.description}>
-                                                        <div className={Class.status}>{item.status}</div>
-                                                        <div className={Class.text}>{item.productName}</div>
-                                                        <Link to={'/product/' + item.id + '#review'} className={Class.link}>Write a review</Link>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
+                        purchaseList.map((item, key) => (
+                            <div className={Class.ServiceWrap} key={key}>
+                                <div className={[Class.imgWrap, item.paymentCaptureDetails ? null : Class.red].join(" ")}>
+                                    <Img src={item.service.imgURL} style={{
+                                        height: "100%",
+                                        width: "100%",
+                                        objectFit: 'cover',
+                                        borderRadius: "50%",
+                                        border: "5px solid white",
+                                    }}/>
                                 </div>
-                                <Link className={Class.orderLink} to={{ pathname: `order/${order.id}`, state: { order: order } }}>
-                                    >> order details
-                                </Link>
+                                <h3 className={Class.title}>{item.service.title}</h3>
+                                <div className={Class.name}>from {item.vendorName}</div>
+                                <ul className={Class.ul}>
+                                    {
+                                        item.service.points.map((point, key) => (
+                                            <li key={key}>{point}</li>
+                                        ))
+                                    }
+                                </ul>
+                                <div className={Class.id}>{item.paymentCaptureDetails ? item.id : <span className={Class.redText}>Payment failed</span>}</div>
                             </div>
                         ))
                     }

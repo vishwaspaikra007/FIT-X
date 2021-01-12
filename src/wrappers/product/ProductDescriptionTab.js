@@ -79,7 +79,11 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
             <Tab.Content className="description-review-bottom">
               <Tab.Pane eventKey="additionalInfo">
                 <div className="product-anotherinfo-wrapper">
-                  {product.specification}
+                  <pre style={{
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                  {JSON.parse(product.specification)}
+                  </pre>
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="productDescription">
@@ -123,16 +127,20 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                         ))
                       }
                     </div>
-                    <Link style={{
-                      background: "#bdbdbd",
-                      padding: "5px",
-                      borderRadius: "10px",
-                      margin: "5px",
-                      display: "block",
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                    }} to={`/reviews/${product.id}`}>See All >></Link>
+                    {
+                      reviews && reviews.length ?
+                      <Link style={{
+                        background: "#bdbdbd",
+                        padding: "5px",
+                        borderRadius: "10px",
+                        margin: "5px",
+                        display: "block",
+                        textAlign: "center",
+                        color: "white",
+                        fontWeight: "bold",
+                      }} to={`/reviews/${product.id}`}>See All >></Link> : null
+                    }
+                    
                   </div>
                   {
                     user && user.uid ?
