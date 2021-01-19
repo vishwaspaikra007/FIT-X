@@ -36,7 +36,7 @@ export default function Reviews({ location, match }) {
             let reviewsList = JSON.parse(JSON.stringify(reviews))
             console.log(docs)
             docs.forEach(doc => {
-              reviewsList.push(doc.data())
+              reviewsList.push({...doc.data(), id: doc.id})
             })
             setLoadContent(false)
             setReviews(reviewsList)
@@ -108,6 +108,7 @@ export default function Reviews({ location, match }) {
                       }
                     </p>
                   </div>
+                  <span>id: {review.id}</span>
                 </div>
               </div>
             ))

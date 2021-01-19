@@ -41,7 +41,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
         />
         <div className="" style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
           gridGap: "20px"
         }}>
           {/* <Swiper {...settings}> */}

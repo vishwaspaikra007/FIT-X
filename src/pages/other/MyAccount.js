@@ -52,15 +52,15 @@ const MyAccount = ({ location }) => {
       firestore.collection('users').doc(user.uid).get()
         .then(doc => {
           if (doc && doc.data()) {
-            setUserInfo({...userInfo,...doc.data(), uid: doc.id})
-            setUserInfoOld({...userInfoOld,...doc.data(), uid: doc.id})
-            dispatch({ type: "USER_INFO", userInfo: {...doc.data(),uid: doc.id} })
+            setUserInfo({ ...userInfo, ...doc.data(), uid: doc.id })
+            setUserInfoOld({ ...userInfoOld, ...doc.data(), uid: doc.id })
+            dispatch({ type: "USER_INFO", userInfo: { ...doc.data(), uid: doc.id } })
           }
         })
     } else if (userInfoRedux) {
-      setUserInfo({...userInfo,...userInfoRedux})
-      setUserInfoOld({...userInfoOld,...userInfoRedux})
-  }
+      setUserInfo({ ...userInfo, ...userInfoRedux })
+      setUserInfoOld({ ...userInfoOld, ...userInfoRedux })
+    }
 
   }, [user])
 
@@ -77,19 +77,22 @@ const MyAccount = ({ location }) => {
       case 'opwd': setOpwd(e.target.value); break;
 
       case 'save':
-        setLoading(true)
-        if (user && user.uid)
-          firestore.collection("users").doc(user.uid).update(userInfo)
+        if (user && user.uid) {
+          setLoading(true)
+          const userInfoCopy = { ...userInfo }
+          delete userInfoCopy.phoneNumber
+          firestore.collection("users").doc(user.uid).update(userInfoCopy)
             .then(doc => {
               setLoading(false)
               setStateChanged(false)
               dispatch({ type: "USER_INFO", userInfo: userInfo })
               setUserInfoOld(userInfo)
-              addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
+              addToast('Saved Successfully', { appearance: 'success', autoDismiss: true })
             })
             .catch(err => {
-              addToast("error occured", { appearance: 'error', autoDismiss: true  })
+              addToast("error occured", { appearance: 'error', autoDismiss: true })
             }); break;
+        }
       case 'changePwd':
         if (cpwd == pwd) {
           setLoading(true)
@@ -104,17 +107,17 @@ const MyAccount = ({ location }) => {
               setPwd("")
               setCpwd("")
               setLoading(false)
-              addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
+              addToast('Saved Successfully', { appearance: 'success', autoDismiss: true })
             }).catch(function (err) {
               setLoading(false)
-              addToast("error occured", { appearance: 'error', autoDismiss: true  })
+              addToast("error occured", { appearance: 'error', autoDismiss: true })
             });
           }).catch(function (err) {
             setLoading(false)
-            addToast("error occured", { appearance: 'error', autoDismiss: true  })
+            addToast("error occured", { appearance: 'error', autoDismiss: true })
           });
         } else {
-          addToast("password did not match", { appearance: 'error', autoDismiss: true  })
+          addToast("password did not match", { appearance: 'error', autoDismiss: true })
         }
 
         break;
@@ -124,9 +127,9 @@ const MyAccount = ({ location }) => {
 
   return (
     <Fragment>
-      { 
-        user && user.uid ? null : 
-        <Redirect to={{pathname: "/login-register", state: {from: location.pathname}}} />
+      {
+        user && user.uid ? null :
+          <Redirect to={{ pathname: "/login-register", state: { from: location.pathname } }} />
       }
       {
         loading ? <PreLoader style={{
@@ -185,7 +188,7 @@ const MyAccount = ({ location }) => {
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
                                   <label>Phone Number</label>
-                                  <input name="phoneNumber" value={userInfo.phoneNumber} onChange={e => handleChange(e, 'userInfo')} type="text" />
+                                  <input disabled name="phoneNumber" value={userInfo.phoneNumber} onChange={e => handleChange(e, 'userInfo')} type="text" />
                                 </div>
                               </div>
 
@@ -218,7 +221,7 @@ const MyAccount = ({ location }) => {
                               <div className="col-lg-6 col-md-6">
                                 <div className="billing-info">
                                   <label>Pincode</label>
-                                  <input name="pincode" value={userInfo.pincode} onChange={e => handleChange(e, 'userInfo')} type="text" maxLength="6"/>
+                                  <input name="pincode" value={userInfo.pincode} onChange={e => handleChange(e, 'userInfo')} type="text" maxLength="6" />
                                 </div>
                               </div>
                               <div className="col-lg-6 col-md-6">

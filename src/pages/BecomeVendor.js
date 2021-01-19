@@ -15,14 +15,16 @@ export default function BecomeVendor(props) {
     const { addToast } = useToasts()
     const dispatch = useDispatch()
     const user = useSelector(state => state.userData.user)
+    const userInfo = useSelector(state => state.generalData.userInfo)
     const sellerInfoRedux = useSelector(state => state.generalData.sellerInfo)
 
     const [sellerInfo, setSellerInfo] = useState({
         firstName: "",
+        name: "",
         lastName: "",
         email: "",
-        phoneNumber: "",
-        shopAddress: "",
+        phoneNumber: user && user.phoneNumber ? user.phoneNumber.slice(-10) : "",
+        address: "",
         bankAccountNumber: "",
         bankIFSCCode: "",
     })
@@ -30,8 +32,8 @@ export default function BecomeVendor(props) {
         firstName: "",
         lastName: "",
         email: "",
-        phoneNumber: "",
-        shopAddress: "",
+        phoneNumber: user && user.phoneNumber ? user.phoneNumber.slice(-10) : "",
+        address: "",
         bankAccountNumber: "",
         bankIFSCCode: "",
     })
@@ -68,6 +70,18 @@ export default function BecomeVendor(props) {
                 setStateChanged(false); break;
 
             case 'save':
+
+                for(let key in sellerInfo) {
+                    if(sellerInfo[key] === "") {
+                        alert("all inputs are required")
+                        const ref = document.querySelector(`#${key}`)
+                        if(ref) {
+                            ref.scrollIntoView(false)
+                            ref.select()
+                        }
+                        return
+                    }
+                }
                 setLoading(true)
 
                 if (user && user.uid) {
@@ -83,7 +97,7 @@ export default function BecomeVendor(props) {
                             verified: false,
                             createdAt: timestamp
                         })
-                        batch.update(firestore.collection('analytics').doc('count'), { vendors: increment })
+                        batch.update(firestore.collection('analytics').doc('count'), { vendors: increment(1) })
                         batch.update(firestore.collection('users').doc(user.uid), { isVendor: true })
                         ref = batch.commit()
                     }
@@ -92,7 +106,8 @@ export default function BecomeVendor(props) {
                         setStateChanged(false)
                         setSellerInfoOld(sellerInfo)
                         dispatch({ type: "SELLER_INFO", sellerInfo: sellerInfo })
-                        addToast('Saved Successfully', { appearance: 'error', autoDismiss: true  })
+                        addToast('Saved Successfully', { appearance: 'success', autoDismiss: true  })
+                        alert("Your request to become vendor have been sent contact FITX for further information")
                     }).catch(err => {
                         addToast("error occured", { appearance: 'error', autoDismiss: true  })
                     });
@@ -140,25 +155,31 @@ export default function BecomeVendor(props) {
                                                     <div className="col-lg-6 col-md-6">
                                                         <div className="billing-info">
                                                             <label>First Name</label>
-                                                            <input name="firstName" value={sellerInfo.firstName} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                            <input id="firstName" name="firstName" value={sellerInfo.firstName} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
                                                         </div>
                                                     </div>
                                                     <div className="col-lg-6 col-md-6">
                                                         <div className="billing-info">
                                                             <label>Last Name</label>
-                                                            <input name="lastName" value={sellerInfo.lastName} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                            <input id="lastName" name="lastName" value={sellerInfo.lastName} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-12 col-md-12">
+                                                        <div className="billing-info">
+                                                            <label>shop / service name</label>
+                                                            <input id="name" name="name" value={sellerInfo.name} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
                                                         </div>
                                                     </div>
                                                     <div className="col-lg-12 col-md-12">
                                                         <div className="billing-info">
                                                             <label>Email Address</label>
-                                                            <input name="email" value={sellerInfo.email} onChange={e => handleChange(e, 'sellerInfo')} type="email" />
+                                                            <input id="email" name="email" value={sellerInfo.email} onChange={e => handleChange(e, 'sellerInfo')} type="email" />
                                                         </div>
                                                     </div>
                                                     <div className="col-lg-6 col-md-6">
                                                         <div className="billing-info">
                                                             <label>Phone Number</label>
-                                                            <input name="phoneNumber" value={sellerInfo.phoneNumber} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                            <input disabled id="phoneNumber" name="phoneNumber" value={sellerInfo.phoneNumber} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
                                                         </div>
                                                     </div>
 
@@ -178,7 +199,7 @@ export default function BecomeVendor(props) {
                                                                     width: "100%",
                                                                 }}>
                                                                     <label>Shop Address</label>
-                                                                    <textarea name="shopAddress" value={sellerInfo.shopAddress} onChange={e => handleChange(e, 'sellerInfo')}></textarea>
+                                                                    <textarea id="address" name="address" value={sellerInfo.address} onChange={e => handleChange(e, 'sellerInfo')}></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -190,13 +211,13 @@ export default function BecomeVendor(props) {
                                                     <div className="col-lg-6 col-md-6">
                                                         <div className="billing-info">
                                                             <label>Bank Account Number</label>
-                                                            <input name="bankAccountNumber" value={sellerInfo.bankAccountNumber} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                            <input id="bankAccountNumber" name="bankAccountNumber" value={sellerInfo.bankAccountNumber} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
                                                         </div>
                                                     </div>
                                                     <div className="col-lg-6 col-md-6">
                                                         <div className="billing-info">
                                                             <label>Bank IFSC Code</label>
-                                                            <input name="bankIFSCCode" value={sellerInfo.bankIFSCCode} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
+                                                            <input id="bankIFSCCode" name="bankIFSCCode" value={sellerInfo.bankIFSCCode} onChange={e => handleChange(e, 'sellerInfo')} type="text" />
                                                         </div>
                                                     </div>
                                                     {

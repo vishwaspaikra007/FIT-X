@@ -7,7 +7,7 @@ import { useToasts } from 'react-toast-notifications'
 import Rating from '@material-ui/lab/Rating';
 import { useSelector } from 'react-redux'
 import PreLoader from "../../components/PreLoader";
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
@@ -16,8 +16,10 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
     review: '',
   })
   const { addToast } = useToasts()
+  const history = useHistory()
 
   const [reviews, setReviews] = useState([])
+  const [specification, setSpecification] = useState("")
   // const [reviews, setReviews] = useState(product.reviews ? product.reviews : [])
   const user = useSelector(state => state.userData.user)
   const [requesting, setRequesting] = useState(false)
@@ -28,22 +30,46 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
       // case 'productReview': setProductReview({...productReview,[]: e.target.value}); break
 
       case 'saveReview':
+        if(!user) {
+          history.push({pathname: '/login', state: {from: `/product/${product.id}`}})
+          return
+        } else if(!productReview.rating) {
+          alert("please give rating")
+          return
+        } else if(!productReview.review) {
+          alert("please give review")
+          return
+        }
         setRequesting(true)
-        firestore.collection('products').doc(product.id).collection('reviews').add({
-          userId: user.uid,
-          name: user.displayName,
-          createdAt: timestamp,
-          ...productReview
+        firestore.collection('orders')
+        .where(`cartItems.${product.id}.id`, '==', product.id)
+        .where('userId', '==', user.uid).get()
+        .then(docs => {
+          if(docs.docs && docs.docs.length > 0) {
+            firestore.collection('products').doc(product.id).collection('reviews').add({
+              userId: user.uid,
+              name: user.displayName,
+              createdAt: timestamp,
+              ...productReview
+            })
+              .then((doc) => {
+                addToast("review submitted successfully", { appearance: 'success', autoDismiss: true })
+                setReviews([...reviews, {
+                  ...productReview, 
+                  userId: user.uid, 
+                  id: doc.id,
+                  name: user.displayName,}])
+                setRequesting(false)
+              }).catch(err => {
+                console.log(err)
+                setRequesting(false)
+                addToast(err.message, { appearance: 'error', autoDismiss: true })
+              })
+          } else {
+            alert("you have to buy the product in order to give review")
+            setRequesting(false)
+          }
         })
-          .then(() => {
-            addToast("review submitted successfully", { appearance: 'success', autoDismiss: true })
-            setReviews([...reviews, productReview])
-            setRequesting(false)
-          }).catch(err => {
-            console.log(err)
-            setRequesting(false)
-            addToast(err.message, { appearance: 'error', autoDismiss: true })
-          })
 
       default: break;
     }
@@ -53,11 +79,26 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
     firestore.collection('products').doc(product.id).collection('reviews').limit(3).get().then(docs => {
       const reviewsCopy = []
       docs.forEach(doc => {
-        reviewsCopy.push(doc.data())
+        reviewsCopy.push({...doc.data(), id: doc.id})
       })
       setReviews(reviewsCopy)
     })
   }, [])
+
+  useEffect(() => {
+    try {
+      let spec = JSON.parse(product.specification)
+      setSpecification(spec)
+    } catch (error) {
+      try {
+        let spec = JSON.parse(JSON.stringify(product.specification))
+        setSpecification(spec)
+      } catch (error) {
+        setSpecification(product.specification)
+      }
+    }
+  }, [])
+
   return (
     <div className={`description-review-area ${spaceBottomClass}`}>
       <div className="container" id="review">
@@ -73,7 +114,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                 <Nav.Link eventKey="productDescription">Description</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="productReviews">{reviews.length > 0 ? `Reviews(${reviews.length})` : "No Reviews"}</Nav.Link>
+                <Nav.Link eventKey="productReviews">{reviews.length > 0 ? `Reviews` : "No Reviews"}</Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content className="description-review-bottom">
@@ -82,7 +123,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                   <pre style={{
                     whiteSpace: 'pre-wrap'
                   }}>
-                  {JSON.parse(product.specification)}
+                    {specification}
                   </pre>
                 </div>
               </Tab.Pane>
@@ -122,6 +163,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                                   }
                                 </p>
                               </div>
+                                <span>id: {review.id}</span>
                             </div>
                           </div>
                         ))
@@ -129,18 +171,18 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                     </div>
                     {
                       reviews && reviews.length ?
-                      <Link style={{
-                        background: "#bdbdbd",
-                        padding: "5px",
-                        borderRadius: "10px",
-                        margin: "5px",
-                        display: "block",
-                        textAlign: "center",
-                        color: "white",
-                        fontWeight: "bold",
-                      }} to={`/reviews/${product.id}`}>See All >></Link> : null
+                        <Link style={{
+                          background: "#bdbdbd",
+                          padding: "5px",
+                          borderRadius: "10px",
+                          margin: "5px",
+                          display: "block",
+                          textAlign: "center",
+                          color: "white",
+                          fontWeight: "bold",
+                        }} to={`/reviews/${product.id}`}>See All >></Link> : null
                     }
-                    
+
                   </div>
                   {
                     user && user.uid ?

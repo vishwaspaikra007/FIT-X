@@ -51,26 +51,22 @@ const ProductGridSingle = ({
             <Link
               product={product}
               style={{
-                width: '100%',
+                position: "absolute",
                 height: "100%",
-                position: "absolute"
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
               }}
               to={{
                 pathname: process.env.PUBLIC_URL + "/product/" + product.id,
                 state: { product: product }
               }}>
-              <Img
-                style={{
-                  // width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  transition: '0s',
-                }}
+              <img
                 className="default-img"
-                src={process.env.PUBLIC_URL + product.images[0]}
+                src={product.images ? process.env.PUBLIC_URL + product.images[0] : '/android-chrome-512x512.png'}
                 alt=""
               />
-              {product.images.length > 1 ? (
+              {product.images && product.images.length > 1 ? (
                 <img
                   style={{
                     height: "100%",

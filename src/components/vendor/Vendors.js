@@ -14,9 +14,9 @@ export default function Vendors(props) {
     useEffect(() => {
         let ref
         if (!lastDoc)
-            ref = firestore.collection('vendors').orderBy('name').limit(3).get()
+            ref = firestore.collection('vendors').where('verified', '==', true).limit(limit).get()
         else
-            ref = firestore.collection('vendors').orderBy('name').startAfter(lastDoc).limit(limit).get()
+            ref = firestore.collection('vendors').where('verified', '==', true).startAfter(lastDoc).limit(limit).get()
         if (loadNewContent) {
             ref.then(docs => {
                 console.log(allowFurtherFetch)

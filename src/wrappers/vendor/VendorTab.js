@@ -24,26 +24,26 @@ const TabVendor = ({
             variant="pills"
             className="product-tab-list pt-30 pb-55 text-center"
           >
-            <Nav.Item>
+            {/* <Nav.Item>
               <Nav.Link eventKey="newVendors">
                 <h4>New Vendors</h4>
               </Nav.Link>
-            </Nav.Item>
+            </Nav.Item> */}
             <Nav.Item>
               <Nav.Link eventKey="bestSeller">
-                <h4>Best Sellers</h4>
+                <h4>Best Services</h4>
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
+            {/* <Nav.Item>
               <Nav.Link eventKey="bestCombos">
                 <h4>Best Combos</h4>
               </Nav.Link>
-            </Nav.Item>
+            </Nav.Item> */}
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="newVendors">
               <div style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>
@@ -57,7 +57,7 @@ const TabVendor = ({
             </Tab.Pane>
             <Tab.Pane eventKey="bestSeller">
               <div style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>
@@ -71,7 +71,7 @@ const TabVendor = ({
             </Tab.Pane>
             <Tab.Pane eventKey="bestCombos">
               <div style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
                 display: "grid",
                 gridGap: "20px"
               }}>

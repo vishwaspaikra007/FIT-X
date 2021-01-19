@@ -25,7 +25,7 @@ export default function VendorWhatWeDo(props) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))"
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))"
         }}
       >
         {vendor.whatWeDoCards.map((card, i) => (

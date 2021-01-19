@@ -95,7 +95,8 @@ const LoginRegister = ({ location }) => {
       return
     }
 
-    e.preventDefault()
+    if(e)
+      e.preventDefault()
     setRequesting(true)
     setUpReCaptcha("authentication")
 
@@ -251,7 +252,8 @@ const LoginRegister = ({ location }) => {
   }
 
   const verifyPhoneNumberToChangePassword = (e) => {
-    e.preventDefault()
+    if(e)
+      e.preventDefault()
     setRequesting(true)
     var applicationVerifier = new firebase.auth.RecaptchaVerifier(
       'sign-in-button');
@@ -498,9 +500,9 @@ const LoginRegister = ({ location }) => {
                               <div className="button-box">
                                 <button
                                   disabled={requesting}
-                                  onClick={
-                                    pwd.length > 5 ? e => verifyPhoneNumber(e, "register")
-                                      : e => alert("password must have atleast 6 characters")
+                                  onClick={ e =>
+                                    pwd.length > 5 ?  verifyPhoneNumber(e, "register")
+                                      : alert("password must have atleast 6 characters")
                                   }>
                                   <span>Continue</span>
                                 </button>

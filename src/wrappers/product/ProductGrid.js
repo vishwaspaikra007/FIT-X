@@ -19,15 +19,17 @@ const ProductGrid = ({
   compareItems,
   sliderClassName,
   spaceBottomClass,
-  limit
+  limit,
+  orderBy
 }) => {
 
   const [products, setProducts] = useState([])
   const history = useHistory()
   useEffect(() => {
     let productsList = []
+    let limit = 8
     firestore.collection("products")
-      .orderBy('productName').limit(8).get().then(docs => {
+      .orderBy('sales', 'desc').limit(limit).get().then(docs => {
         docs.forEach(doc => {
           productsList.push({...doc.data(), id: doc.id})
         })

@@ -22,7 +22,7 @@ export default function Vendor(props) {
             firestore.collection('vendors').doc(id).get()
                 .then(doc => {
                     setVendor({ id: id, ...doc.data() })
-                    console.log(doc.data())
+                    // console.log(doc.data())
                 })
         }
     }, [])

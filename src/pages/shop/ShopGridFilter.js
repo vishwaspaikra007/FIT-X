@@ -13,7 +13,6 @@ const ShopGridFilter = ({ location, match }) => {
 
     const [loadContent, setLoadContent] = useState(true)
     const [lastDoc, setLastDoc] = useState()
-    const [tagState, setTagState] = useState()
     const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
 
     let tag1, tag2
@@ -37,11 +36,19 @@ const ShopGridFilter = ({ location, match }) => {
         if (tag == "all")
             ref = ref.limit(limit).get()
         else
-            ref = ref.where('tags', "array-contains-any", (tag).split(" ")).limit(limit).get()
+        {
+            if((tag).split(" ")[0] === "category") {
+                ref = ref.where('category', "==", tag.slice(tag.indexOf(" ")+1,) ).limit(limit).get()
+            } else if((tag).split(" ")[0] === "subCategory") {
+                ref = ref.where('category', "==", tag.slice(tag.indexOf(" ")+1,) ).limit(limit).get()
+            } else
+                ref = ref.where('tags', "array-contains-any", (tag).split(" ")).limit(limit).get()
+        }
 
         ref.then(docs => {
             if (docs.docs.length > 0) {
-                let productList = JSON.parse(JSON.stringify(products))
+                let productList = [...products]
+                // let productList = JSON.parse(JSON.stringify(products))
                 console.log(docs)
                 docs.forEach(doc => {
                     productList.push({ id: doc.id, ...doc.data() })
@@ -53,6 +60,7 @@ const ShopGridFilter = ({ location, match }) => {
                     setAllowFurtherFetch(false)
             } else {
                 setAllowFurtherFetch(false)
+                setLoadContent(false)
             }
         })
     }
@@ -64,7 +72,6 @@ const ShopGridFilter = ({ location, match }) => {
     }, [loadContent])
 
     useEffect(() => {
-            setTagState(tag)
             setProducts([])
             setLastDoc(undefined)
             setAllowFurtherFetch(true)
@@ -102,6 +109,10 @@ const ShopGridFilter = ({ location, match }) => {
                             width: "200px",
                             margin: "auto"
                         }} /> : null
+                    }
+                    {
+                        !allowFurtherFetch && !loadContent && !products.length ? 
+                        <p style={{textAlign: 'center'}}>No Product found</p> : null 
                     }
                     {/* shop product pagination */}
                     <div className="pro-pagination-style text-center mt-30"></div>

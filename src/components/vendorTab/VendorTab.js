@@ -7,7 +7,7 @@ export default function VendorTab() {
     const [vendors, setVendors] = useState([])
     useEffect(() => {
         let vendorsCopy = []
-        firestore.collection('vendors').limit(5).get()
+        firestore.collection('vendors').where('verified', '==', true).orderBy('serviceSales', 'desc').limit(5).get()
             .then(docs => {
                 docs.forEach(doc => {
                     vendorsCopy.push({ id: doc.id, ...doc.data() })

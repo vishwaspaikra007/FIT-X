@@ -16,9 +16,10 @@ export default function useFirebase() {
 
                         const wishlistRefs = []
 
-                        dispatch({ type: "USER_INFO", userInfo: docs.data() })
+                        if(docs.data())
+                            dispatch({ type: "USER_INFO", userInfo: docs.data() })
 
-                        if (docs.data().cartItems === null ||
+                        if (!docs.data() || docs.data().cartItems === null ||
                             docs.data().cartItems === undefined ||
                             Object.keys(docs.data().cartItems).length < 1)
                             return

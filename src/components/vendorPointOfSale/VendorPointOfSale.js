@@ -10,7 +10,7 @@ export default function VendorPointOfSale(props) {
         }}>POINT OF SALE</h1>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))"
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))"
         }}>
         {vendor.pointOfSale.map((card, i) => (
           <div

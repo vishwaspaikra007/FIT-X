@@ -15,7 +15,7 @@ export default function VendorPricing(props) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))"
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))"
         }}
       >
         {vendor.pricingTable.map((card, i) => (

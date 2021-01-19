@@ -20,7 +20,7 @@ const Checkout = ({ location, cartItems, currency, match }) => {
   const history = useHistory()
   const { pathname } = location;
   let cartTotalPrice = 0;
-
+  let cartTotalPriceCopy = 0
   const [requesting, setRequesting] = useState(false)
   const userInfoRedux = useSelector(state => state.generalData.userInfo)
   const user = useSelector(state => state.userData.user)
@@ -35,19 +35,20 @@ const Checkout = ({ location, cartItems, currency, match }) => {
     state: "",
   })
 
-
   useEffect(() => {
-    if (user && user.uid && userInfo.displayName == "" && !userInfoRedux) {
-      console.log(user)
-      firestore.collection('users').doc(user.uid).get()
-        .then(doc => {
-          if (doc && doc.data()) {
-            setUserInfo({ ...userInfo, ...doc.data(), uid: doc.id })
-            dispatch({ type: "USER_INFO", userInfo: { ...doc.data(), uid: doc.id } })
-          }
-        })
-    } else if (userInfoRedux) {
-      setUserInfo({ ...userInfo, ...userInfoRedux })
+    if (location.state && location.state.charges) {
+      if (user && user.uid && userInfo.displayName == "" && !userInfoRedux) {
+        console.log(user)
+        firestore.collection('users').doc(user.uid).get()
+          .then(doc => {
+            if (doc && doc.data()) {
+              setUserInfo({ ...userInfo, ...doc.data(), uid: doc.id })
+              dispatch({ type: "USER_INFO", userInfo: { ...doc.data(), uid: doc.id } })
+            }
+          })
+      } else if (userInfoRedux) {
+        setUserInfo({ ...userInfo, ...userInfoRedux })
+      }
     }
 
   }, [user])
@@ -75,14 +76,28 @@ const Checkout = ({ location, cartItems, currency, match }) => {
 
     const cartItemsObj = {}
     cartItems.map(item => {
-      cartItemsObj[item.id] = { ...item, status: 'order created' }
+      cartItemsObj[item.id] = {
+        id: item.id,
+        images: [item.images[0]],
+        vendorId: item.vendorId,
+        vendorName: item.vendorName,
+        bankAccountId: item.bankAccountId,
+        quantity: item.quantity,
+        price: item.price,
+        discount: item.discount,
+        productName: item.productName,
+        productSKU: item.productSKU,
+        status: 'order created'
+      }
     })
+    const chargesCopy = location.state.charges['product charge to customers']
     const response = (await axios.post(domain + 'create-order', {
-      amount: Math.ceil(location.state.coupon ? (cartTotalPrice + location.state.deliveryCharges - location.state.coupon.discount).toFixed(2)
-        : (cartTotalPrice + location.state.deliveryCharges).toFixed(2)),
+      amount: (location.state.coupon ? (cartTotalPrice + cartTotalPriceCopy - location.state.coupon.discount).toFixed(2)
+        : (cartTotalPrice + cartTotalPriceCopy).toFixed(2)),
       userInfo,
       cartItems: cartItemsObj,
-      deliveryCharges: location.state.deliveryCharges,
+      charges: chargesCopy,
+      chargesAmt: location.state.chargesAmt,
       coupon: location.state.coupon,
     })).data
     console.log(response)
@@ -101,7 +116,7 @@ const Checkout = ({ location, cartItems, currency, match }) => {
       order_id: response.id,
       name: 'FitX',
       description: cartItems.length + " products",
-      image: 'https://avatars1.githubusercontent.com/u/44310959?s=460&u=ba991aaa71f29a628093f19348452aafa9db1717&v=4',
+      image: 'android-chrome-512x512.png',
       handler: function (response) {
         // alert(response.razorpay_payment_id)
         // alert(response.razorpay_order_id)
@@ -138,7 +153,7 @@ const Checkout = ({ location, cartItems, currency, match }) => {
         backdropFilter: "blur(2px)",
       }} /> : null}
       {
-        location.state && location.state.deliveryCharges ? null : <Redirect to={'/cart'} />
+        location.state && location.state.charges ? null : <Redirect to={'/cart'} />
       }
       <MetaTags>
         <title>fitX | Checkout</title>
@@ -278,12 +293,24 @@ const Checkout = ({ location, cartItems, currency, match }) => {
                             <li>{"₹" + cartTotalPrice}</li>
                           </ul>
                         </div>
-                        <div className="your-order-bottom">
-                          <ul>
-                            <li className="your-order-shipping">Shipping</li>
-                            <li>{"₹" + location.state.deliveryCharges}</li>
-                          </ul>
-                        </div>
+                        {
+                          location.state.charges && location.state.charges['product charge to customers'] && Object.keys(location.state.charges['product charge to customers']).map((key, index) => {
+                            let _charge = location.state.charges['product charge to customers']
+                            let amt = _charge[key].chargePercentage ?
+                              _charge[key].chargeValue ?
+                                Math.min(cartTotalPrice * _charge[key].chargePercentage / 100, _charge[key].chargeValue) :
+                                cartTotalPrice * _charge[key].chargePercentage / 100 :
+                              _charge[key].chargeValue
+                            console.log(parseInt(amt))
+                            cartTotalPriceCopy += parseFloat(amt)
+                            return <div className="your-order-bottom" key={index}>
+                              <ul>
+                                <li className="your-order-shipping">{_charge[key].chargeName}</li>
+                                <li>{"₹" + amt}</li>
+                              </ul>
+                            </div>
+                          })
+                        }
                         {
                           !location.state.coupon ? null :
                             <div className="your-order-bottom">
@@ -297,8 +324,8 @@ const Checkout = ({ location, cartItems, currency, match }) => {
                           <ul>
                             <li className="order-total">Grand Total</li>
                             <li>
-                              {location.state.coupon ? "₹" + (cartTotalPrice + location.state.deliveryCharges - location.state.coupon.discount).toFixed(2)
-                                : "₹" + (cartTotalPrice + location.state.deliveryCharges).toFixed(2)}
+                              {location.state.coupon ? "₹" + (cartTotalPrice + cartTotalPriceCopy - location.state.coupon.discount).toFixed(2)
+                                : "₹" + (cartTotalPrice + cartTotalPriceCopy).toFixed(2)}
                             </li>
                           </ul>
                         </div>

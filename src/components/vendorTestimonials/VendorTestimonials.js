@@ -13,7 +13,7 @@ export default function VendorTestimonials(props) {
         }}>Testimonials</h1>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))"
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))"
         }}>
         <Carousel>
         {vendor.testimonials.map((card, i) => (

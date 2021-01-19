@@ -11,9 +11,11 @@ import { useToasts } from 'react-toast-notifications'
 import PreLoader from '../PreLoader'
 import { usehistory } from 'react-router-dom'
 
-export default function VendorServiceCheckout({ service, vendorId, vendorName, setCheckingOut }) {
+export default function VendorServiceCheckout({ service, vendorId, vendorName, setCheckingOut, bankAccountId }) {
 
   const termsAndConditions = useSelector(state => state.generalData.termsAndConditions)
+  const charges = useSelector(state => state.generalData.charges)
+  const [_charges, set_charges] = useState("")
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -25,43 +27,61 @@ export default function VendorServiceCheckout({ service, vendorId, vendorName, s
         })
     }
 
+    if (!charges) {
+      firestore.collection('web_config').doc('charges').get()
+        .then(doc => {
+          if (doc.data()) {
+            dispatch({ type: "CHARGES", charges: doc.data() ? doc.data() : {} })
+            set_charges(doc.data())
+          }
+        })
+    } else {
+      set_charges(charges)
+    }
+
   }, [])
 
-  return ReactDOM.createPortal(<Component service={service} vendorId={vendorId} termsAndConditions={termsAndConditions} vendorName={vendorName} setCheckingOut={setCheckingOut} />, document.getElementById('modal'))
+  return ReactDOM.createPortal(<Component service={service} vendorId={vendorId} termsAndConditions={termsAndConditions} vendorName={vendorName} setCheckingOut={setCheckingOut} charges={_charges} bankAccountId={bankAccountId} />, document.getElementById('modal'))
 }
 
-function Component({ service, vendorId, termsAndConditions, vendorName, setCheckingOut }) {
+function Component({ service, vendorId, termsAndConditions, vendorName, setCheckingOut, charges, bankAccountId }) {
   const [agree, setAgree] = useState(false)
   const user = useSelector(state => state.userData.user)
   const userInfo = useSelector(state => state.generalData.userInfo)
   const [requesting, setRequesting] = useState(false)
+  const chargesAmt = {}
+  let serviceTotalPrice = 0
+
   const { addToast } = useToasts()
   const history = useHistory()
-  
+
   useEffect(() => {
     console.log(agree)
   }, [agree])
 
   const checkout = async () => {
     setRequesting(true)
-    // const domain = window.location.hostname === 'localhost' ? "http://localhost:3001/" : "https://fit-x-backend.herokuapp.com/"
-    const domain = "https://fit-x-backend.herokuapp.com/"
+    const domain = window.location.hostname === 'localhost' ? "http://localhost:3001/" : "https://fit-x-backend.herokuapp.com/"
+    // const domain = "https://fit-x-backend.herokuapp.com/"
 
+    const chargesCopy = charges['vendor service charge to customers']
     const response = (await axios.post(domain + 'create-order', {
-      amount: service.price,
+      amount: (parseFloat(service.price) + parseFloat(serviceTotalPrice)).toFixed(2),
+      chargesAmt: chargesAmt,
+      chargesCopy: chargesCopy,
       type: 'service',
-      userName : userInfo.displayName,
+      userName: userInfo.displayName,
       userId: user.uid,
       userPhoneNumber: user.phoneNumber,
       userEmail: user.email,
       vendorId: vendorId,
       vendorName: vendorName,
+      bankAccountId: bankAccountId,
       service: {
-        imgURL: service.imgURL, 
-        imagePath: service.imagePath,
-        price: service.price, 
-        points: service.list, 
-        title: service.header
+        imgURL: service.imgURL,
+        price: service.price,
+        points: service.list,
+        title: service.header,
       },
       agreedToTermsAndConditions: agree,
     })).data
@@ -135,10 +155,42 @@ function Component({ service, vendorId, termsAndConditions, vendorName, setCheck
           <p className={style.p}>from {vendorName}</p>
           <div className={style.price}
           >
-            <div>
-              Service Charge: ₹{" "}
+            <span>
+              {"Service Fees: ₹ "}
+            </span>
+            <span>
+              {service.price}
+            </span>
+          </div>
+          <div>
+            {
+              charges && charges['vendor service charge to customers'] && Object.keys(charges['vendor service charge to customers']).map((key, index) => {
+                let _charges = charges['vendor service charge to customers']
+                let amt = _charges[key].chargePercentage ?
+                  _charges[key].chargeValue ?
+                    Math.min(service.price * _charges[key].chargePercentage / 100, _charges[key].chargeValue) :
+                    service.price * _charges[key].chargePercentage / 100 :
+                  _charges[key].chargeValue
+                console.log(parseFloat(amt))
+                chargesAmt[key] = parseFloat(amt)
+                serviceTotalPrice += parseFloat(amt)
+                return <div key={index} className={style.price}>
+                  <span>
+                    {_charges[key].chargeName} {": ₹ "}
+                  </span>
+                  <span>
+                    {amt}
+                  </span>
+                </div>
+              })
+            }
+            <div className={style.price}
+            >
               <span>
-                {service.price}
+                {"Total Price: ₹ "}
+              </span>
+              <span>
+                {(parseFloat(service.price) + parseFloat(serviceTotalPrice)).toFixed(2)}
               </span>
             </div>
           </div>

@@ -29,6 +29,7 @@ export default function Order({ location, match }) {
             list: orderDetails.cartItems,
             paymentMethod: orderDetails.paymentCaptureDetails ? orderDetails.paymentCaptureDetails.payload.payment.entity.method : undefined,
             coupon: orderDetails.coupon,
+            chargesAmt: orderDetails.chargesAmt,
             deliveryCharges: orderDetails.deliveryCharges,
             total: total,
             grandTotal: orderDetails.amount / 100,
@@ -91,11 +92,15 @@ export default function Order({ location, match }) {
                                                     <div className={Class.extraDetails}>
                                                         <div>
                                                             <div>Qty : {item.quantity}</div>
-                                                            <div className={Class.vendorName}>Sold by : {item.vendorName}</div>
+                                                            Sold by : 
+                                                            <div className={Class.vendorName}>{item.vendorName}</div>
                                                         </div>
                                                         <div>
                                                             <div className={Class.finalPrice}>
-                                                                ₹ {item.discount ? Math.ceil(item.price - item.price * (item.discount / 100)) : item.price}
+                                                                {item.quantity + "*"}
+                                                                {item.discount ? Math.ceil(item.price - item.price * (item.discount / 100)) : item.price}
+                                                                {"= ₹"} 
+                                                                {item.discount ? Math.ceil(item.price - item.price * (item.discount / 100))*item.quantity : item.price*item.quantity}
                                                             </div>
                                                             {item.discount ? <div className={Class.originalPrice}>₹ {item.price}</div> : null}
                                                         </div>
@@ -132,7 +137,15 @@ export default function Order({ location, match }) {
                         <h4 className={Class.h_center}>Payment Details</h4>
                         <div className={[Class.itemsWrap, Class.noGrid].join(" ")}>
                             <div className={Class.grid}><div>Order Total</div><div>₹ {orderDetails.total}</div></div>
-                            <div className={Class.grid}><div>Delivery Charges</div><div>₹ {orderDetails.deliveryCharges}</div></div>
+                            {
+                                orderDetails.chargesAmt && Object.keys(orderDetails.chargesAmt).map((key, index) => (
+                                    <div key={index} className={Class.grid}>
+                                        <div>{key}</div>
+                                        <div>₹ {orderDetails.chargesAmt[key]}</div>
+                                    </div>
+                                ))
+                            }
+                            {orderDetails.deliveryCharges ? <div className={Class.grid}><div>Delivery Charges</div><div>₹ {orderDetails.deliveryCharges}</div></div> : null}
                             {!orderDetails.coupon ? null : <div className={Class.grid}><div>Discount : {orderDetails.coupon.name}</div><div>- ₹ {orderDetails.coupon.discount}</div></div>}
                             <div className={Class.grid}><b>Grand Total</b><b>₹ {orderDetails.grandTotal}</b></div>
                         </div>

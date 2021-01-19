@@ -37,28 +37,32 @@ const Cart = ({
   const { pathname } = location;
   // const [cartTotalPrice, setCartTotalPrice] = useState(0)
   let cartTotalPrice = 0
+  let cartTotalPriceCopy = 0
+  const chargesAmt = {}
   const user = useSelector(state => state.userData.user)
   const coupons = useSelector(state => state.generalData.coupons)
   const charges = useSelector(state => state.generalData.charges)
   const [couponCode, setCouponCode] = useState("")
   const [coupon, setCoupon] = useState()
+  const [_charges, set_charges] = useState("")
   const [requesting, setRequesting] = useState(false)
   const dispatch = useDispatch()
-  const [deliveryCharges, setDeliveryCharges] = useState()
 
   useEffect(() => {
-    if (!charges) {
-      firestore.collection('web_config').doc('charges').get()
+    if(user && user.uid) {
+      if (!charges) {
+        firestore.collection('web_config').doc('charges').get()
         .then(doc => {
-          dispatch({ type: "CHARGES", charges: doc.data() })
-          setDeliveryCharges(doc.data().deliveryCharges)
-        })
-    } else {
-      setDeliveryCharges(charges.deliveryCharges)
+            if (doc.data()) {
+              dispatch({ type: "CHARGES", charges: doc.data() ? doc.data() : {} })
+              set_charges(doc.data())
+            }
+          })
+      } else {
+        set_charges(charges)
+      }
     }
-    return () => {
-      setDeliveryCharges(undefined)
-    }
+    return () => dispatch({ type: "COUPONS", coupons: undefined })
   }, [])
 
   const handleClick = (e) => {
@@ -68,15 +72,17 @@ const Cart = ({
 
       firestore.collection('web_config').doc('coupons').get()
         .then(docs => {
-          if (docs) {
+          if (docs && docs.data()) {
             console.log(docs.data(), docs.data()[couponCode])
 
             dispatch({ type: "COUPONS", coupons: docs.data() })
             if (docs.data()[couponCode]) {
-              if(docs.data()[couponCode].forOrderAbove < cartTotalPrice 
-              && docs.data()[couponCode].validity.seconds*1000 > Date.now()) {
+              if (docs.data()[couponCode].forOrderAbove < cartTotalPrice &&
+                  docs.data()[couponCode].count > 0
+                && docs.data()[couponCode].validity.seconds * 1000 > Date.now()) {
                 setCoupon({
                   ...docs.data()[couponCode],
+                  couponCode: couponCode,
                   discount: (Math.min(cartTotalPrice * docs.data()[couponCode].discountPercentage / 100, docs.data()[couponCode].max)).toFixed(),
                 })
                 setRequesting(false)
@@ -93,7 +99,10 @@ const Cart = ({
           }
         })
     } else {
-      if (coupons[couponCode]) {
+      if (coupons[couponCode] && coupons[couponCode].forOrderAbove < cartTotalPrice && 
+          coupons[couponCode].count > 0 && 
+          coupons[couponCode].validity.seconds*1000 > Date.now()
+        ) {
         setCoupon({
           ...coupons[couponCode],
           discount: Math.min(cartTotalPrice * coupons[couponCode].discountPercentage / 100, coupons[couponCode].max),
@@ -366,14 +375,25 @@ const Cart = ({
                           {"₹" + (cartTotalPrice.toFixed(2))}
                         </span>
                       </h5>
-
-                      <h5>
-                        Deliver Charges{" "}
-                        <span>
-                          {"₹" + (deliveryCharges)}
-                        </span>
-                      </h5>
-
+                      {
+                        _charges && _charges['product charge to customers'] && Object.keys(_charges['product charge to customers']).map((key, index) => {
+                            let _charge = _charges['product charge to customers']
+                            let amt = _charge[key].chargePercentage ? 
+                              _charge[key].chargeValue ?
+                                Math.min(cartTotalPrice * _charge[key].chargePercentage / 100, _charge[key].chargeValue) : 
+                                cartTotalPrice * _charge[key].chargePercentage / 100 :
+                                 _charge[key].chargeValue
+                            console.log(parseFloat(amt))
+                            chargesAmt[key] = parseFloat(amt)
+                            cartTotalPriceCopy += parseFloat(amt)
+                            return <h5 key={index}>
+                              {_charge[key].chargeName}
+                              <span>
+                                {"₹" + amt}
+                              </span>
+                            </h5>
+                        })
+                      }
                       {
                         !coupon ? null :
                           <h5>
@@ -388,14 +408,15 @@ const Cart = ({
                       <h4 className="grand-totall-title">
                         Grand Total{" "}
                         <span>
-                          {coupon ? "₹" + (cartTotalPrice + deliveryCharges - coupon.discount).toFixed(2)
-                            : "₹" + (cartTotalPrice + deliveryCharges).toFixed(2)}
+                          {coupon ? "₹" + (cartTotalPrice  + cartTotalPriceCopy - coupon.discount).toFixed(2)
+                            : "₹" + (cartTotalPrice + cartTotalPriceCopy).toFixed(2)}
                         </span>
                       </h4>
-                      <Link disabled={!deliveryCharges} to={{
+                      <Link disabled={!_charges} to={{
                         pathname: process.env.PUBLIC_URL + "/checkout", state: {
                           coupon: coupon,
-                          deliveryCharges: deliveryCharges,
+                          charges: _charges,
+                          chargesAmt: chargesAmt
                         }
                       }}>
                         Proceed to Checkout

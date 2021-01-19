@@ -7,7 +7,7 @@
 }
 .itemsWrap {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 20px;
     margin: 20px;
     padding: 20px;
@@ -16,6 +16,8 @@
 .img {
     height: 100px;
     margin: 0 auto;
+    width: 100%;
+    object-fit: contain;
 }
 .text {
     height: 24px;
@@ -51,7 +53,7 @@
 .extraDetails {
     grid-column: 1 / span 2;
     display: grid;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 50% 50%;
     padding: 10px;
 }
 .extraHeight {
@@ -59,9 +61,9 @@
 }
 .vendorName {
     color: #3e3e3e;
-    overflow: hidden;
+    /* overflow: hidden; */
     white-space: nowrap;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
 }
 .finalPrice {
     color: green;
