@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
-import { firestore, arrayUnion, timestamp } from '../../firebase'
+import { firestore, arrayUnion, timestamp, increment } from '../../firebase'
 import { useToasts } from 'react-toast-notifications'
 import Rating from '@material-ui/lab/Rating';
 import { useSelector } from 'react-redux'
@@ -24,56 +24,60 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   const user = useSelector(state => state.userData.user)
   const [requesting, setRequesting] = useState(false)
 
-  const handleChange = e => {
-    e.preventDefault()
-    switch (e.target.name) {
-      // case 'productReview': setProductReview({...productReview,[]: e.target.value}); break
+  // const handleChange = e => {
+  //   e.preventDefault()
+  //   switch (e.target.name) {
+  //     // case 'productReview': setProductReview({...productReview,[]: e.target.value}); break
 
-      case 'saveReview':
-        if(!user) {
-          history.push({pathname: '/login', state: {from: `/product/${product.id}`}})
-          return
-        } else if(!productReview.rating) {
-          alert("please give rating")
-          return
-        } else if(!productReview.review) {
-          alert("please give review")
-          return
-        }
-        setRequesting(true)
-        firestore.collection('orders')
-        .where(`cartItems.${product.id}.id`, '==', product.id)
-        .where('userId', '==', user.uid).get()
-        .then(docs => {
-          if(docs.docs && docs.docs.length > 0) {
-            firestore.collection('products').doc(product.id).collection('reviews').add({
-              userId: user.uid,
-              name: user.displayName,
-              createdAt: timestamp,
-              ...productReview
-            })
-              .then((doc) => {
-                addToast("review submitted successfully", { appearance: 'success', autoDismiss: true })
-                setReviews([...reviews, {
-                  ...productReview, 
-                  userId: user.uid, 
-                  id: doc.id,
-                  name: user.displayName,}])
-                setRequesting(false)
-              }).catch(err => {
-                console.log(err)
-                setRequesting(false)
-                addToast(err.message, { appearance: 'error', autoDismiss: true })
-              })
-          } else {
-            alert("you have to buy the product in order to give review")
-            setRequesting(false)
-          }
-        })
+  //     case 'saveReview':
+  //       if(!user) {
+  //         history.push({pathname: '/login', state: {from: `/product/${product.id}`}})
+  //         return
+  //       } else if(!productReview.rating) {
+  //         alert("please give rating")
+  //         return
+  //       } else if(!productReview.review) {
+  //         alert("please give review")
+  //         return
+  //       }
+  //       setRequesting(true)
+  //       firestore.collection('orders')
+  //       .where(`cartItems.${product.id}.id`, '==', product.id)
+  //       .where('userId', '==', user.uid).limit(1).get()
+  //       .then(async docs => {
+  //         if(docs.docs && docs.docs.length > 0) {
+           
+  //           await firestore.collection('products').doc(product.id)
+  //             .set({ratings: {[productReview.rating]: increment(1)}}, {merge: true})
 
-      default: break;
-    }
-  }
+  //           firestore.collection('products').doc(product.id).collection('reviews').add({
+  //             userId: user.uid,
+  //             name: user.displayName,
+  //             createdAt: timestamp,
+  //             ...productReview
+  //           })
+  //             .then((doc) => {
+  //               addToast("review submitted successfully", { appearance: 'success', autoDismiss: true })
+  //               setReviews([...reviews, {
+  //                 ...productReview, 
+  //                 userId: user.uid, 
+  //                 id: doc.id,
+  //                 name: user.displayName,}])
+  //               setRequesting(false)
+  //             }).catch(err => {
+  //               console.log(err)
+  //               setRequesting(false)
+  //               addToast(err.message, { appearance: 'error', autoDismiss: true })
+  //             })
+  //         } else {
+  //           alert("you have to buy the product in order to give review")
+  //           setRequesting(false)
+  //         }
+  //       })
+
+  //     default: break;
+  //   }
+  // }
 
   useEffect(() => {
     firestore.collection('products').doc(product.id).collection('reviews').limit(3).get().then(docs => {
@@ -184,7 +188,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                     }
 
                   </div>
-                  {
+                  {/* {
                     user && user.uid ?
                       <div className="col-lg-5">
                         {
@@ -228,7 +232,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                           </div>
                         </div>
                       </div> : null
-                  }
+                  } */}
                 </div>
               </Tab.Pane>
             </Tab.Content>

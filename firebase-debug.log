@@ -1,0 +1,64 @@
+[debug] [2021-01-19T17:26:11.073Z] ----------------------------------------------------------------------
+[debug] [2021-01-19T17:26:11.077Z] Command:       /snap/node/3292/bin/node /usr/bin/firebase deploy --only hosting:fitx
+[debug] [2021-01-19T17:26:11.077Z] CLI Version:   6.7.2
+[debug] [2021-01-19T17:26:11.077Z] Platform:      linux
+[debug] [2021-01-19T17:26:11.077Z] Node Version:  v12.19.0
+[debug] [2021-01-19T17:26:11.078Z] Time:          Tue Jan 19 2021 22:56:11 GMT+0530 (India Standard Time)
+[debug] [2021-01-19T17:26:11.079Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-01-19T17:26:11.135Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-01-19T17:26:11.136Z] > authorizing via signed-in user
+[debug] [2021-01-19T17:26:11.136Z] [iam] checking project fitx-c9b1d for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-01-19T17:26:11.139Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-01-19T17:26:11.140Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-01-19T17:26:11.729Z] <<< HTTP RESPONSE 200
+[debug] [2021-01-19T17:26:11.794Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fitx-c9b1d:testIamPermissions  
+
+[debug] [2021-01-19T17:26:13.677Z] <<< HTTP RESPONSE 200
+[debug] [2021-01-19T17:26:13.679Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fitx-c9b1d  
+ 
+[debug] [2021-01-19T17:26:14.537Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'fitx-c9b1d'...
+[info] 
+[info] i  deploying hosting
+[info] 
+[info] ✔  Deploy complete!
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/fitx-c9b1d/overview
+[debug] [2021-01-19T17:26:15.060Z] TypeError: Cannot read property 'deploys' of undefined
+    at /usr/lib/node_modules/firebase-tools/lib/deploy/index.js:88:36
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2021-01-19T17:27:00.531Z] ----------------------------------------------------------------------
+[debug] [2021-01-19T17:27:00.536Z] Command:       /snap/node/3292/bin/node /usr/bin/firebase deploy --only hosting:fitx
+[debug] [2021-01-19T17:27:00.537Z] CLI Version:   6.7.2
+[debug] [2021-01-19T17:27:00.537Z] Platform:      linux
+[debug] [2021-01-19T17:27:00.537Z] Node Version:  v12.19.0
+[debug] [2021-01-19T17:27:00.538Z] Time:          Tue Jan 19 2021 22:57:00 GMT+0530 (India Standard Time)
+[debug] [2021-01-19T17:27:00.538Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-01-19T17:27:00.559Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-01-19T17:27:00.560Z] > authorizing via signed-in user
+[debug] [2021-01-19T17:27:00.561Z] [iam] checking project fitx-c9b1d for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-01-19T17:27:00.565Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fitx-c9b1d:testIamPermissions  
+
+[debug] [2021-01-19T17:27:01.241Z] <<< HTTP RESPONSE 200
+[debug] [2021-01-19T17:27:01.260Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fitx-c9b1d  
+ 
+[debug] [2021-01-19T17:27:02.056Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'fitx-c9b1d'...
+[info] 
+[info] i  deploying hosting
+[info] 
+[info] ✔  Deploy complete!
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/fitx-c9b1d/overview
+[debug] [2021-01-19T17:27:02.532Z] TypeError: Cannot read property 'deploys' of undefined
+    at /usr/lib/node_modules/firebase-tools/lib/deploy/index.js:88:36
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+[error] 
+[error] Error: An unexpected error has occurred.
