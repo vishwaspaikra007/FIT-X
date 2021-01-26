@@ -1,0 +1,14 @@
+.filterMobWrap {
+    display: grid;
+    grid-template-columns: auto 100px;
+    grid-gap: 20px;
+    margin: auto;
+}
+
+.filterMobWrap > select {
+    border: 1px solid;
+}  
+
+.filterMobWrap > button {
+    background: transparent;
+}

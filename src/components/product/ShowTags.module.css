@@ -1,0 +1,21 @@
+.wrap {
+	padding: 10px
+}
+.wrap > span {
+    padding: 5px 10px;
+    background: #ffbd61;
+    border-radius: 10px;
+    margin: 10px;
+}
+.wrap > span::after {
+    content: "X";
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    border-radius: 50%;
+    display: inline-block;
+    background: white;
+    line-height: 28px;
+    margin-left: 10px;
+    cursor: pointer;
+}

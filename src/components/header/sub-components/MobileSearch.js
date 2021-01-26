@@ -14,7 +14,7 @@ const MobileSearch = (props) => {
   return (
     <div className="offcanvas-mobile-search-area">
       <form onSubmit={e => searchProduct(e)}>
-        <input type="text" placeholder="Search ..." value={search} onChange={e => setSearch(e.target.value)} />
+        <input type="text" placeholder="Search ..." value={search} onChange={e => setSearch(e.target.value.toLowerCase())} />
         <button type="submit">
           <i className="fa fa-search" />
         </button>

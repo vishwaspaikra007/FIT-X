@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import PreLoader from "../../components/PreLoader";
 import { Link, useHistory } from 'react-router-dom'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import style from  './ProductdescriptionTab.module.css'
 
 const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   const [productReview, setProductReview] = useState({
@@ -46,7 +47,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
   //       .where('userId', '==', user.uid).limit(1).get()
   //       .then(async docs => {
   //         if(docs.docs && docs.docs.length > 0) {
-           
+
   //           await firestore.collection('products').doc(product.id)
   //             .set({ratings: {[productReview.rating]: increment(1)}}, {merge: true})
 
@@ -83,7 +84,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
     firestore.collection('products').doc(product.id).collection('reviews').limit(3).get().then(docs => {
       const reviewsCopy = []
       docs.forEach(doc => {
-        reviewsCopy.push({...doc.data(), id: doc.id})
+        reviewsCopy.push({ ...doc.data(), id: doc.id })
       })
       setReviews(reviewsCopy)
     })
@@ -102,6 +103,31 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
       }
     }
   }, [])
+
+  const renderRatings = (ratings) => {
+    let ones = ratings[1] ? ratings[1] : 0
+    let twos = ratings[2] ? ratings[2] : 0
+    let threes = ratings[3] ? ratings[3] : 0
+    let fours = ratings[4] ? ratings[4] : 0
+    let fives = ratings[5] ? ratings[5] : 0
+    let totalRatings = parseInt(ones) + parseInt(twos) + parseInt(threes) + parseInt(fours) + parseInt(fives)
+    let overAllRating =
+      (
+        (1 * ones) + 2 * (twos) + 3 * (threes) + 4 * (fours) + 5 * (fives)
+      ) / totalRatings
+
+    return (
+      <div className={style.ratingWrap}>
+        <h2>Ratings</h2>
+        <Rating precision={0.1} readOnly value={overAllRating} size="large"/><h3 className={style.h3}>: {overAllRating.toFixed(1)}</h3>
+        <div className={style.rating}>1: {ones}<span style={{width: `${ones*100/totalRatings}%`}}></span></div>
+        <div className={style.rating}>2: {twos}<span style={{width: `${twos*100/totalRatings}%`}}></span></div>
+        <div className={style.rating}>3: {threes}<span style={{width: `${threes*100/totalRatings}%`}}></span></div>
+        <div className={style.rating}>4: {fours}<span style={{width: `${fours*100/totalRatings}%`}}></span></div>
+        <div className={style.rating}>5: {fives}<span style={{width: `${fives*100/totalRatings}%`}}></span></div>
+      </div>
+    )
+  }
 
   return (
     <div className={`description-review-area ${spaceBottomClass}`}>
@@ -167,7 +193,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                                   }
                                 </p>
                               </div>
-                                <span>id: {review.id}</span>
+                              <span>id: {review.id}</span>
                             </div>
                           </div>
                         ))
@@ -188,6 +214,9 @@ const ProductDescriptionTab = ({ spaceBottomClass, product }) => {
                     }
 
                   </div>
+                  {
+                    product.ratings ? renderRatings(product.ratings) : null
+                  }
                   {/* {
                     user && user.uid ?
                       <div className="col-lg-5">

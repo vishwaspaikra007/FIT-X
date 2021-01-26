@@ -21,7 +21,7 @@ export default function Search() {
         <div className={Style.searchWrap}>
             <div className={Style.inputWrap}>
                 <form onSubmit={e => showSearch(e)}>
-                    <input className={Style.input} name="search" type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search" />
+                    <input className={Style.input} name="search" type="text" value={search} onChange={e => setSearch(e.target.value.toLowerCase())} placeholder="Search" />
                     {/* {
                     !search ? null :
                         <SearchOptions searchOptions={searchOptions} />

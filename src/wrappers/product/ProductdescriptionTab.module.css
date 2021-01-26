@@ -1,0 +1,24 @@
+.ratingWrap {
+    width: 250px;
+    padding-left: 20px;
+}
+.rating {
+    border-radius: 10px;
+    background: aliceblue;
+    padding-left: 10px;
+    position: relative;
+    margin: 10px;
+    overflow: hidden;
+}
+.rating span {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #4da3fd5c;
+}
+.h3 {
+    display: inline;
+    top: -7px;
+    position: relative;
+}

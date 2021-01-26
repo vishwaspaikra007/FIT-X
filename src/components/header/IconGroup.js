@@ -59,7 +59,7 @@ const IconGroup = ({
         </button>
         <div className="search-content">
           <form onSubmit={e => searchProduct(e)}>
-            <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} />
+            <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value.toLowerCase())} />
             <button className="button-search">
               <i className="pe-7s-search" />
             </button>

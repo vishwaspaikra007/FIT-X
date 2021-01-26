@@ -8,12 +8,15 @@ import Breadcrumb from '../../wrappers/breadcrumb/Breadcrumb';
 import ShopProducts from '../../wrappers/product/ShopProducts';
 import { firestore } from '../../firebase'
 import LoadContent from "../../components/LoadContent";
+import FilterProduct from "../../components/product/FilterProduct";
+import ShowTags from '../../components/product/ShowTags'
 
 const ShopGridFilter = ({ location, match }) => {
 
     const [loadContent, setLoadContent] = useState(true)
     const [lastDoc, setLastDoc] = useState()
     const [allowFurtherFetch, setAllowFurtherFetch] = useState(true)
+    const [orderBy, setOrderBy] = useState("popularity")
 
     let tag1, tag2
     const limit = 3
@@ -27,25 +30,33 @@ const ShopGridFilter = ({ location, match }) => {
     const [products, setProducts] = useState([])
     console.log(tag)
     const getAndSetProducts = () => {
-        let ref
+        let ref = firestore.collection('products') 
+
+        switch(orderBy) {
+            case 'alphabetically': ref = ref.orderBy('productName'); break;
+            case 'price low to high': ref = ref.orderBy('price'); break;
+            case 'price high to low': ref = ref.orderBy('price', 'desc'); break;
+            case 'percentage discount': ref = ref.orderBy('discount', 'desc'); break;
+            case 'popularity': ref = ref.orderBy('sales', 'desc'); break;
+        }
+
         if (lastDoc)
-            ref = firestore.collection('products').startAfter(lastDoc)
-        else
-            ref = firestore.collection('products')
+            ref = ref.startAfter(lastDoc)
 
         if (tag == "all")
             ref = ref.limit(limit).get()
         else
         {
             if((tag).split(" ")[0] === "category") {
-                ref = ref.where('category', "==", tag.slice(tag.indexOf(" ")+1,) ).limit(limit).get()
+                ref = ref.where('tags', "array-contains-any", [tag.slice(tag.indexOf(" ")+1,)] ).limit(limit).get()
             } else if((tag).split(" ")[0] === "subCategory") {
-                ref = ref.where('category', "==", tag.slice(tag.indexOf(" ")+1,) ).limit(limit).get()
+                ref = ref.where('tags', "array-contains-any", [tag.slice(tag.indexOf(" ")+1,)] ).limit(limit).get()
             } else
                 ref = ref.where('tags', "array-contains-any", (tag).split(" ")).limit(limit).get()
         }
 
         ref.then(docs => {
+            console.log(docs)
             if (docs.docs.length > 0) {
                 let productList = [...products]
                 // let productList = JSON.parse(JSON.stringify(products))
@@ -62,6 +73,8 @@ const ShopGridFilter = ({ location, match }) => {
                 setAllowFurtherFetch(false)
                 setLoadContent(false)
             }
+        }).catch(err => {
+            console.log(err)
         })
     }
 
@@ -83,6 +96,19 @@ const ShopGridFilter = ({ location, match }) => {
 
     const { pathname } = location;
 
+    const onSort = (e) => {
+        console.log(e.target.value)
+        setOrderBy(e.target.value)
+        setProducts([])
+        setLastDoc(undefined)
+        setAllowFurtherFetch(true)
+        setLoadContent(true)
+    }
+
+    const onFilter = () => {
+
+    }
+
     return (
         <Fragment>
             <MetaTags>
@@ -98,9 +124,10 @@ const ShopGridFilter = ({ location, match }) => {
                 <Breadcrumb />
 
                 <div className="shop-area pt-95 pb-100">
+                    <ShowTags search={tag}/>
                     {/* shop topbar filter */}
                     {/* <ShopTopbarFilter getLayout={getLayout} getFilterSortParams={getFilterSortParams} productCount={products.length} sortedProductCount={currentData.length} products={products} getSortParams={getSortParams}/> */}
-
+                    <FilterProduct onFilter={onFilter} onSort={onSort}/>
                     {/* shop page content default */}
                     <ShopProducts layout={layout} products={products} />
                     {

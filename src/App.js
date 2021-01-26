@@ -217,10 +217,10 @@ const App = (props) => {
                     path={process.env.PUBLIC_URL + "/about"}
                     component={About}
                   />
-                  <Route
+                  {/* <Route
                     path={process.env.PUBLIC_URL + "/contact"}
                     component={Contact}
-                  />
+                  /> */}
                   <Route
                     path={process.env.PUBLIC_URL + "/my-account"}
                     component={MyAccount}
