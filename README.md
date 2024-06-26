@@ -1,68 +1,77 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> OTP based login/other features may run slowly in the begining as firebase takes time to start the system
 
-## Available Scripts
+## E-Commerce Website for Nutritional Products (React, Firebase, Node.js, Razorpay) - Nov. 2020 - Jan. 2021
 
-In the project directory, you can run:
+**Project Overview**
 
-### `yarn start`
+This E-commerce platform, built using React, Firebase, Node.js, Razorpay, and hosted on Firebase, empowers users to easily manage the sale of nutritional products online. It provides a seamless user experience for both customers and sellers.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**Key Features**
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+* **Customer Navigation:**
+  * **Product Search:** Customers can find the nutritional products they need with a robust search bar.
+  * **Categorized Listings:** Products are organized into clear categories for easy browsing.
+  * **Cart Management:** Users can add, remove, and update items in their shopping cart.
+  * **Streamlined Checkout Process:** A user-friendly checkout flow facilitates quick and secure purchases.
+  * **Orders Page:** User can see a list of all the orders.
 
-### `yarn test`
+* **Seller Dashboard:**
+  * **Product Management:** Sellers have a dedicated dashboard where they can efficiently manage their product inventory.
+      - Add new nutritional products/services.
+      - Modify existing product/services details.
+      - Delete products/services as needed.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Technical Stack**
 
-### `yarn build`
+* **Front-End:** React (JavaScript framework)
+* **Back-End:** Node.js (server-side JavaScript runtime environment)
+* **Database:** Firebase (cloud-based NoSQL database)
+* **Payment Gateway:** Razorpay (payment processing platform)
+* **Version Control:** GitHub (code hosting platform)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Technologies Used**
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+* **React:** Used to create a dynamic and interactive user interface for both customers and sellers.
+* **Firebase:** Provides secure user authentication, a real-time database for efficient product information storage, and scalable cloud storage for product images.
+* **Node.js:** Powers the back-end server, handling product data access, order processing, and integration with the payment gateway.
+* **Razorpay:** Ensures secure and reliable payment processing for customer purchases.
+* **GitHub:** Facilitates version control, collaboration, and deployment of the application.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Project Highlights**
 
-### `yarn eject`
+* **Efficient product management for sellers through a dedicated dashboard.**
+* **Real-time data synchronization using Firebase for a seamless experience.**
+* **Secure payment processing with Razorpay.**
+* **Scalable cloud infrastructure with Firebase for future growth.**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Screenshot of FitX app
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Screenshot of FitX app](/readmeImages/app.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Screenshot of FitX Vendor dashboard
+![Screenshot of FitX Vendor dashboard](/readmeImages/dashboard.png)
 
-## Learn More
+# Additional Features in Detail
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Order Information:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* **Products:** List of all items you ordered, including their:
+    * Content (name/description)
+    * Quantity
+* **Total Price:** The combined cost of all items in your order.
+* **Delivery Information:**
+    * Billing Address
+    * Delivery Address (if different)
 
-### Code Splitting
+**Product Ratings (Optional):**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+* After reviewing your order, you may have the option to rate each product out of 5 stars.
+* You can also leave a brief comment for each product (optional).
 
-### Analyzing the Bundle Size
+**Benefits:**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+* Verifies order accuracy before confirmation.
+* Allows you to provide feedback on purchased products.
 
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+![alt text](<readmeImages/fitX _ Orders Details.png>)
