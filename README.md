@@ -1,5 +1,6 @@
 > OTP based login/other features may run slowly in the begining as firebase takes time to start the system
 
+> Application is live here https://fitx-c9b1d.web.app/
 ## E-Commerce Website for Nutritional Products (React, Firebase, Node.js, Razorpay) - Nov. 2020 - Jan. 2021
 
 **Project Overview**
